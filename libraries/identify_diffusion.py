@@ -11,8 +11,7 @@ from sklearn.metrics import silhouette_score
 
 sns.set_theme()
 
-"""
-Definition of the class to extract the diffusion information. Only VASP simulations are considered as yet
+"""Definition of the class to extract the diffusion information. Only VASP simulations are considered as yet.
 """
 
 # Defining the information lines of the file
@@ -180,10 +179,8 @@ class xdatcar:
         """The diffusive path is obtained from the number of clusters.
         """
         
-        if method == 'K-means':
-            clustering = KMeans(n_clusters=n_clusters, **kmeans_kwargs)
-        elif method == 'Spectral':
-            clustering = SpectralClustering(n_clusters=n_clusters, **spectral_kwargs)
+        if   method == 'K-means':  clustering = KMeans(n_clusters=n_clusters,             **kmeans_kwargs)
+        elif method == 'Spectral': clustering = SpectralClustering(n_clusters=n_clusters, **spectral_kwargs)
 
         # Getting the labels and centers
         
@@ -234,6 +231,8 @@ class xdatcar:
                                                                                          args.classifier,
                                                                                          args.distance_thd)
             
+            # Whenever any group change is found, the initial and ending configurations are obtained regarding the distance threshold
+            
             if cluster_change.size:
                 for change in cluster_change:
                     idx_0 = np.where(vibration[1:change] != vibration[:change-1])[0]
@@ -244,13 +243,18 @@ class xdatcar:
                     if idx_1.size: idx_1 = idx_1[0] + change
                     else:          idx_1 = -1
                     
-                    hoppings.append([particle, idx_0, idx_1])
+                    # Checking that the new diffusion process is not already saved
+                    # This can happen due to the distance threshold, gathering two consecutive, spatially-close diffusions
                     
-                    if args.make_plot:
-                        ax.scatter(coordinates[idx_0:idx_1, 0], coordinates[idx_0:idx_1, 1], coordinates[idx_0:idx_1, 2],
-                                   color=np.random.rand(3),
-                                   marker='o',
-                                   label=f'Diffusion')
+                    new_hoppings = [particle, idx_0, idx_1]
+                    if new_hoppings not in hoppings:
+                        hoppings.append(new_hoppings)
+                        
+                        if args.make_plot:
+                            ax.scatter(coordinates[idx_0:idx_1, 0], coordinates[idx_0:idx_1, 1], coordinates[idx_0:idx_1, 2],
+                                       color=np.random.rand(3),
+                                       marker='o',
+                                       label=f'Diffusion')
         
             if args.make_plot:
                 for i in range(n_clusters):
