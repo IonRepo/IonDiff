@@ -42,9 +42,9 @@ The repository is divided into independent functionalities:
 - *analyze_correlations*: analyzes the correlations between the diffusion events of a series of simulations (the **DIFFUSION** file for these simulations will be generated if it does not exist yet).
 - *analyze_descriptors*: extracts and analyzes spatio-temporal descriptors for the diffusions of a simulation (still under active development).
 
-The minimal input needed (besides the file containing the actual atomistic trajectories) consists in a INCAR file with **POTIM** and **NBLOCK** flags (indicating the simulation time step and the frequency with which the configurations are recorded, respectively). After installation, all routines are easily controlled from the command line. More detailed information can be found in the documentation of the project (including specific **README**s within each folder).
+The minimal input needed (besides the file containing the actual atomistic trajectories) consists in a **INCAR** file with **POTIM** and **NBLOCK** flags (indicating the simulation time step and the frequency with which the configurations are recorded, respectively). After installation, all routines are easily controlled from the command line. More detailed information can be found in the documentation of the project (including specific **README**s within each folder).
 
-The script also allows graphing, for each simulated particle, the detected diffusion paths, as well as printing the confidence with which the algorithm obtains the results. An example from a real simulation is shown in \autoref{fig:diffusion-detection}, with data available at a SEE database based on *ab initio* MD (AIMD) simulations [@database], extensively analized in a previous work [@horizons].
+The script allows graphing the identified diffusion paths for each simulated particle and provides the confidence interval associated to the results retrieved by the algorithm. An example of the analysis performed on an *ab initio* MD (AIMD) simulation based on density functional theory (DFT) is shown in \autoref{fig:diffusion-detection}. The AIMD configurations file employed in this example is available online at [@database], along with many other AIMD simulations comprehensively analyzed in a previous work [@horizons].
 
 ![Example of the performance of our unsupervised algorithm at extracting the diffusive path for one random particle of an *ab initio* MD simulation of Li\textsubscript{7}La\textsubscript{3}Zr\textsubscript{2}O\textsubscript{12} at a temperature of 400K.\label{fig:diffusion-detection}](figure.svg){width=70%}
 
@@ -54,7 +54,7 @@ Mainly, our code is based on the sklearn [@scikit] implementation of k-means clu
 
 The current version is only able to read information from VASP [@vasp] simulations, although future releases (already under active development) will extend its scope to simulations from LAMMPS [@lammps] and other molecular dynamics (either *ab initio* or classical) software packages.
 
-Future releases will also include libraries for analyzing these diffusions with the extraction of key descriptors and inclusion of novel statistical analysis, which are currently under active development.
+Future releases will also include libraries for analyzing these diffusions with the extraction of key descriptors and the inclusion of novel statistical analysis.
 
 # Methods
 
