@@ -44,7 +44,7 @@ The repository is divided into independent functionalities:
 
 The minimal input needed (besides the file containing the actual atomistic trajectories) consists in a INCAR file with **POTIM** and **NBLOCK** flags (indicating the simulation time step and the frequency with which the configurations are recorded, respectively). After installation, all routines are easily controlled from the command line. More detailed information can be found in the documentation of the project (including specific **README**s within each folder).
 
-The script also allows graphing, for each simulated particle, the detected diffusion paths, as well as printing the confidence with which the algorithm obtains the results. An example from a real simulation is shown in \autoref{fig:diffusion-detection}, with data available at a SEE database [@database] based on *ab initio* MD simulations, extensively analized in a previous work [@horizons].
+The script also allows graphing, for each simulated particle, the detected diffusion paths, as well as printing the confidence with which the algorithm obtains the results. An example from a real simulation is shown in \autoref{fig:diffusion-detection}, with data available at a SEE database based on *ab initio* MD (AIMD) simulations [@database], extensively analized in a previous work [@horizons].
 
 ![Example of the performance of our unsupervised algorithm at extracting the diffusive path for one random particle of an *ab initio* MD simulation of Li\textsubscript{7}La\textsubscript{3}Zr\textsubscript{2}O\textsubscript{12} at a temperature of 400K.\label{fig:diffusion-detection}](figure.svg){width=70%}
 
