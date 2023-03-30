@@ -81,7 +81,7 @@ class xdatcar:
         if (delta_t is None) or (n_steps is None):
             exit('POTIM or NBLOCK are not correctly defined in the INCAR file.')
         return delta_t, n_steps
-     
+    
     def read_simulation(self, args):
         """Reads VASP XDATCAR files.
         """

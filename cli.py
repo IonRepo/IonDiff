@@ -5,7 +5,9 @@ import settings
 
 import numpy as np
 
-from libraries import identify_diffusion as ID_library
+from libraries import identify_diffusion   as ID_library
+from libraries import analyze_correlations as AC_library
+
 from datetime  import datetime
 from os        import system, getcwd, chdir, mkdir, remove, path
 
@@ -13,7 +15,7 @@ from os        import system, getcwd, chdir, mkdir, remove, path
 The command line variables are read. Three options are considered:
     - Identification of diffusive paths from a molecular dynamics simulation.
     - Analysis of correlations among diffusive paths.
-    - Analysis of atomistic descriptors extracted from the diffusive paths.
+    - Analysis of atomistic descriptors extracted from the diffusive paths (under active development).
 
 At the input folder, and XDATCAR file with all the configurations of the system through simulation is required. Optionally, a POSCAR can be supplied with the initial configuration. As well, an INCAR specifyin POTIM (simulation step) and NBLOCK (number of simulation steps between consecutive configurations in the XDATCAR) are necessary.
 """
@@ -67,12 +69,18 @@ ID_parser.add_argument(
 AC_parser = task_subparser.add_parser('analyze_correlations')  # Analysis of correlations (AC)
 
 AC_parser.add_argument(
-    '--data_path',
+    '--MD_path',
     default='.',
-    help='Path to the input simulations dynamics simulation files.',
+    help='Path to the input database of molecular dynamics simulations.',
 )
 
 AD_parser = task_subparser.add_parser('analyze_descriptors')  # Analysis of descriptors (AD)
+
+AD_parser.add_argument(
+    '--MD_path',
+    default='.',
+        help='Path to the input database of molecular dynamics simulations.',
+)
 
 # Computing the vibrational paths
 
@@ -119,17 +127,18 @@ if __name__ == '__main__':
     elif args.task == 'analyze_correlations':
         # Saving logging information
         
-        logging.info(f'Task: Analysing N-body correlations from MD simulation at {args.MD_path}.')
+        logging.info(f'Task: Analysing N-body correlations from MD simulations database at {args.MD_path}.')
         
         # Calling the library and loading the class
         
-        something
+        inp = AC_library.database(args)
     
     elif args.task == 'analyze_descriptors':
         # Saving logging information
         
-        logging.info(f'Task: Analysing atomistic descriptors from MD simulation at {args.MD_path}.')
+        logging.info(f'Task: Analysing atomistic descriptors from MD simulations database at {args.MD_path}.')
         
         # Calling the library and loading the class
         
-        something
+        print('This branch is under active development, its usage is still not implemented.')
+        logging.info(f'This branch is under active development, its usage is still not implemented.')
