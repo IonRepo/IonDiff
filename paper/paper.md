@@ -39,7 +39,7 @@ Here, we introduce a completely unsupervised approach for analysing ion-hopping 
 The repository is divided into independent functionalities:
 
 - *identify_diffusion*: extracts the migrating paths from a given MD simulation, generating a file named **DIFFUSION** with all the necessary information in the folder containing the given simulation.
-- *analyze_correlations*: analyzes the correlations between the diffusion events of a series of simulations (the **DIFFUSION** file for these simulations will be generated if it does not exist yet).
+- *analyze_correlations*: analyzes the correlations between the diffusion events of a series of simulations (the **DIFFUSION** file for each of these simulations will be generated if it does not exist yet).
 - *analyze_descriptors*: extracts and analyzes spatio-temporal descriptors for the diffusions of a simulation (under active development).
 
 The minimal input needed (besides the file containing the actual atomistic trajectories) consists in a **INCAR** file with **POTIM** and **NBLOCK** flags (indicating the simulation time step and the frequency with which the configurations are recorded, respectively). After installation, all routines are easily controlled from the command line. More detailed information can be found in the documentation of the project (including specific **README**s within each folder).

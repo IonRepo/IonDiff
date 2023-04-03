@@ -2,31 +2,20 @@
 import numpy             as np
 import matplotlib.pyplot as plt
 import seaborn           as sns
+import libraries.common_library    as CL
+import multiprocess      as mp
 
-from os              import path
-from sys             import argv, exit
-from scipy.fftpack   import fft, fftfreq
-from sklearn.cluster import KMeans, SpectralClustering
-from sklearn.metrics import silhouette_score
+from sys            import exit
+from scipy.optimize import curve_fit
+from os             import path
 
 sns.set_theme()
 
-"""Definition of the class to analyse correlations among diffusive paths. A database with more than one simulation must be provided.
+"""Definition of the class to analyse correlations among diffusive paths. A database with more than one simulation must be provided, as well as paths to every interesting DIFFUSION file, extracted from the simulation.
 """
 
-# Defining the information lines of the file
-
-scale_line         = 1  # Line for the scale of the simulation box
-s_cell_line        = 2  # Start of the definition of the simulation box
-e_cell_line        = 4  # End of the definition of the simulation box
-name_line          = 5  # Composition of the compound
-concentration_line = 6  # Concentration of the compound
-x_line             = 7  # Start of the simulation data
-
-# Defining the basic parameters for k-means and spectral clustering algorithms
-
-kmeans_kwargs   = dict(init='random', n_init=10, max_iter=300, tol=1e-04,                          random_state=0)
-spectral_kwargs = dict(affinity='nearest_neighbors', n_neighbors=1000, assign_labels='cluster_qr', random_state=0)
+fontsize = 10
+dpi      = 100
 
 # Defining the class
 
@@ -36,111 +25,197 @@ class database:
 
     def __init__(self, args):
         """Important variables added to the class and reading of the simulation data.
+        If temp_matrix already exists, it is not computing it again, but loading its data.
         """
         
-        # Loading intervals step and number of simulation steps between records
+        correlations_matrix_path = f'{args.MD_path}/temp_matrix'
+        DIFFUSION_paths          = f'{args.MD_path}/DIFFUSION_paths'
         
-        delta_t, n_steps = self.read_INCAR(args)
-        
-        # Time step between consecutive XDATCAR configurations
-        
-        self.time_step = n_steps * delta_t
-        
-        # Reading the simulation data
-        
-        if path.exists(f'{args.MD_path}/XDATCAR'):
-            self.read_simulation(args)
-    
-    def read_INCAR(self, args):
-        """Reads VASP INCAR files. It is always expected to find these parameters.
-        """
-        
-        # Predefining the variable, so later we check if they were found
-        
-        delta_t = None
-        n_steps = None
-        
-        # Loading the INCAR file
-        
-        with open(f'{args.MD_path}/INCAR', 'r') as INCAR_file:
-            INCAR_lines = INCAR_file.readlines()
-        
-        # Looking for delta_t and n_steps
-        
-        for line in INCAR_lines:
-            split_line = line.split('=')
-            if len(split_line) > 1:  # Skipping empty lines
-                label = split_line[0].split()[0]
-                value = split_line[1].split()[0]
-                
-                if   label == 'POTIM':  delta_t = float(value)
-                elif label == 'NBLOCK': n_steps = float(value)
-        
-        # Checking if they were found
-        
-        if (delta_t is None) or (n_steps is None):
-            exit('POTIM or NBLOCK are not correctly defined in the INCAR file.')
-        return delta_t, n_steps
-     
-    def read_simulation(self, args):
-        """Reads VASP XDATCAR files.
-        """
-        
-        # Loading data from XDATCAR file
-        
-        with open(f'{args.MD_path}/XDATCAR', 'r') as POSCAR_file:
-            inp = POSCAR_file.readlines()
-        
-        # Extracting the data
-        
-        try:
-            scale = float(inp[scale_line])
-        except:
-            exit('Wrong definition of the scale in the XDATCAR.')
-        
-        try:
-            self.cell = np.array([line.split() for line in inp[s_cell_line:e_cell_line+1]], dtype=float)
-            self.cell *= scale
-        except:
-            exit('Wrong definition of the cell in the XDATCAR.')
+        if path.exists(correlations_matrix_path):
+            print('As temp_matrix already exists, its information is being loaded.')
+            
+            with open(correlations_matrix_path, 'r') as file:
+                lines = file.readlines()
+            
+            n = int(len(lines) / 3)
+            length = len(lines[0].split())
 
-        self.TypeName = inp[name_line].split()
-        self.Nelem    = np.array(inp[concentration_line].split(), dtype=int)
+            corr_matrix = np.zeros((n, length))
+            temp_matrix = np.zeros((n, length))
+            fami_matrix = np.zeros((n, length), dtype=object)
+            for i in range(n):
+                corr_matrix[i] = np.array(lines[i].split(), dtype=float)
+                temp_matrix[i] = np.array(lines[i+n].split(), dtype=float)
+                fami_matrix[i] = np.array(lines[i+2*n].split(), dtype=object)
         
-        if len(self.TypeName) != len(self.Nelem):
-            exit('Wrong definition of the composition of the compound in the XDATCAR.')
+        elif path.exists(DIFFUSION_paths):
+            print('As temp_matrix does not exist, it is being computed.')
+            
+            with open(DIFFUSION_paths, 'r') as file:
+                paths_to_DIFFUSION = file.readlines()
+            
+            # The computation of correlations for each element are parallelized
+            
+            pool    = mp.Pool(mp.cpu_count())  # Number of CPUs in the PC
+            metrics = [pool.apply(self.parallel_calculation, (element, args,)) for element in paths_to_DIFFUSION]
+            pool.close()
+            
+            n_events = 0
+            for lines in metrics:
+                line = lines[0]
+                if len(line) > n_events:
+                    n_events = len(line)
+
+            n_simulations = len(metrics)
+
+            corr_matrix = np.zeros((n_simulations, n_events))
+            temp_matrix = np.ones((n_simulations, n_events)) * np.NaN
+            fami_matrix = np.zeros((n_simulations, n_events), object)
+
+            for i in range(n_simulations):
+                corr_temporal = np.array(metrics[i][0])
+                temp_temporal = np.array(metrics[i][1])
+                fami_temporal = np.array(metrics[i][2])
+                
+                corr_matrix[i] = np.hstack([corr_temporal, np.zeros(n_events - len(corr_temporal))])
+                temp_matrix[i] = np.hstack([temp_temporal, np.ones(n_events  - len(temp_temporal)) * np.NaN])
+                fami_matrix[i] = np.hstack([fami_temporal, ['0']*(n_events - len(fami_temporal))])
+            
+            np.savetxt(correlations_matrix_path, np.vstack([corr_matrix, temp_matrix, fami_matrix]), fmt='%s')
         
-        self.Ntype = len(self.TypeName)
-        self.Nions = self.Nelem.sum()
+        else:
+            exit(f'File with previous data ({correlations_matrix_path}) and file with paths to DIFFUSIONs ({DIFFUSION_paths}) are missing.')
         
-        # Shaping the configurations data into the positions attribute
+        # Extracting main data from the correlation matrix
         
-        pos = np.array([line.split() for line in inp[x_line:] if not line.split()[0][0].isalpha()], dtype=float)
+        n_simulations, n_events = np.shape(corr_matrix)
+
+        x = np.arange(1, n_events+1)  # Number of correlated bodies (list)
+        y = np.sum(corr_matrix, axis=0)  # Number of particles with which each particle correlates
+
+        # Representing some elements and passing to probability
+
+        x = x[1:args.max_corr]
+        y = y[1:args.max_corr]
+
+        # Normalizing y
+
+        y = y / np.sum(y)
+
+        # Fitting an exponential function to the the distribution of correlated bodies
+
+        [A, B, C], _ = curve_fit(self.exp_function, x, y, p0=[0.01, 0.1, 0.1])
+
+        # Plotting fitting and computed points
         
-        # Checking if the number of configurations is correct
+        ran_c = np.arange(min(x), max(x), 0.01)
+        exp_c = self.exp_function(ran_c, A, B, C)
         
-        if not (len(pos) / self.Nions).is_integer():
-            exit('The number of lines is not correct in the XDATCAR file.')
+        plt.plot(ran_c, exp_c,  label='Exponential fitting')
+        plt.plot(x,     y, 'o', label='Computed groups')
+
+        plt.tick_params(axis='x', labelsize=fontsize)
+        plt.tick_params(axis='y', labelsize=fontsize)
+
+        plt.xlabel(f'Correlated bodies',            fontsize=fontsize)
+        plt.ylabel(f'Probability density function', fontsize=fontsize)
+
+        plt.legend(loc='best', fontsize=fontsize)
+        plt.savefig(f'{args.MD_path}/PDOS_correlations.eps', dpi=dpi, bbox_inches='tight')
+        plt.show()
+
+    def exp_function(self, x, A, B, C):
+        """Definition of an decreasing and always positive (given that A = abs(A)), expotential function.
+        """
         
-        self.position  = pos.ravel().reshape((-1, self.Nions, 3))
-        self.positionC = np.zeros_like(self.position)
-        self.Niter     = self.position.shape[0]
+        A = np.abs(A)
+        return A + B * np.exp(-C * x)
+     
+    def parallel_calculation(self, element, args):
+        """Definition of an auxiliar function to parallelize calculations.
+        The obtained distribution is compared with a random distribution.
+        """
         
-        # Getting the variation in positions and applying periodic boundary condition
+        path_to_simulation, material, mode, temperature = element.split()
         
-        dpos = np.diff(self.position, axis=0)
-        dpos[dpos > 0.5]  -= 1.0
-        dpos[dpos < -0.5] += 1.0
+        # Loading the data
         
-        # Getting the positions and variations in cell units
+        coordinates, hoppings, cell, compounds, concentration = CL.load_data(path_to_simulation)
+        (n_conf, n_particles, _) = np.shape(coordinates)
+
+        # Expanding the hoppings
+
+        key, expanded_hoppings = CL.get_expanded_hoppings(n_conf, n_particles, concentration,
+                                                          compounds, hoppings, 'separate')
+
+        # No filter
+
+        Z_ngs, _ = CL.get_correlation_matrix(expanded_hoppings, gaussian_smoothing=False)
+
+        # Gaussian smoothing
+
+        Z, Z_corr = CL.get_correlation_matrix(expanded_hoppings, gaussian_smoothing=True)
         
-        for i in range(self.Niter-1):
-            self.positionC[i] = np.dot(self.position[i], self.cell)
-            dpos[i]           = np.dot(dpos[i],          self.cell)
+        if args.threshold == 2:
+            threshold_aux = []  # Cumulative of thresholds
+            for _ in range(200):
+                # Defining a uniformly-random distributed position of hoppings
+
+                n_random_particles = np.shape(expanded_hoppings)[1]
+
+                diffusion_length = int(np.mean(np.sum(Z_ngs, axis=0)))
+
+                random_positions = np.random.randint(0, n_conf-diffusion_length, n_random_particles)
+
+                Z_random_ngs = np.zeros((n_conf, n_random_particles))
+                for i in range(n_random_particles):
+                    pos1 = random_positions[i]
+                    pos2 = pos1 + diffusion_length
+
+                    Z_random_ngs[pos1:pos2, i] = 1
+
+                # No filter
+
+                Z_random_ngs, _ = CL.get_correlation_matrix(Z_random_ngs, gaussian_smoothing=False)
+
+                # Gaussian smoothing
+
+                Z_random, Z_random_corr = CL.get_correlation_matrix(Z_random_ngs, gaussian_smoothing=True)
+
+                # Calculating the threshold
+
+                Z_random_corr[np.diag_indices(len(Z_random_corr))] = np.NaN
+                aux = Z_random_corr.flatten()
+                aux = aux[~np.isnan(aux)]
+                threshold_aux.append(np.mean(aux))
+            
+            # A threshold is defined in correspondence to a random distribution, so less-correlated particles are not considered
+            
+            threshold = np.mean(threshold_aux)
         
-        self.positionC[-1] = np.dot(self.position[-1], self.cell)
+        else:
+            threshold = args.threshold
+
+        # Applying the threshold
+
+        binary_Z_corr = np.zeros_like(Z_corr)
         
-        # Defining the attribute of window=1 variation in position and velocity
+        binary_Z_corr[Z_corr >  threshold] = 1
+        binary_Z_corr[Z_corr <= threshold] = 0
+
+        # The number of particles with which each particle correlates is obtained from the binary matrix of correlations
         
-        self.velocity = dpos / self.time_step
-        self.d1pos    = dpos
+        binary_sum = np.sum(binary_Z_corr, axis=0)
+        n = int(max(binary_sum))  # Maximum number of correlated bodies
+        
+        # Defining the matrixes with information regarding the correlations, and temperatures and diffusive families of the respective simulations
+        
+        corr_cum = np.zeros(n)
+        temp_cum = np.ones(n) * np.NaN
+        fami_cum = np.zeros(n, object)
+        for i in range(n):
+            corr_cum[i] = np.sum(binary_sum == (i+1))  # Number of bodies exhibiting the respective correlation
+            if np.sum(binary_sum == (i+1)) > 0:  # Else, np.NaN
+                temp_cum[i] = float(temperature[:-1])
+                fami_cum[i] = CL.obtain_diffusive_family(material)
+        return list(corr_cum), list(temp_cum), list(fami_cum)

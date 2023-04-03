@@ -1,0 +1,4 @@
+relative_path_to_simulation_1 name_of_compound_1 stoichiometricity_1 temperature_of_simulation_1
+relative_path_to_simulation_2 name_of_compound_2 stoichiometricity_2 temperature_of_simulation_2
+(...)
+relative_path_to_simulation_n name_of_compound_n stoichiometricity_n temperature_of_simulation_n

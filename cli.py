@@ -73,6 +73,18 @@ AC_parser.add_argument(
     default='.',
     help='Path to the input database of molecular dynamics simulations.',
 )
+AC_parser.add_argument(
+    '--max_corr',
+    type=int,
+    default='20',
+    help='Maximum number of correlated bodies considered for representation (max_corr=-1 to select all of them).',
+)
+AC_parser.add_argument(
+    '--threshold',
+    type=float,
+    default='2',
+    help='Threshold for removing random correlations among particles lower than the threshold, between [-1, 1] (threshold=2 to automatically compute it).',
+)
 
 AD_parser = task_subparser.add_parser('analyze_descriptors')  # Analysis of descriptors (AD)
 
@@ -129,9 +141,9 @@ if __name__ == '__main__':
         
         logging.info(f'Task: Analysing N-body correlations from MD simulations database at {args.MD_path}.')
         
-        # Calling the library and loading the class
+        # Calling the library and executing the analysis
         
-        inp = AC_library.database(args)
+        AC_library.database(args)
     
     elif args.task == 'analyze_descriptors':
         # Saving logging information

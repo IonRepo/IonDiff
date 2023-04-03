@@ -5,7 +5,6 @@ import seaborn           as sns
 
 from os              import path
 from sys             import argv, exit
-from scipy.fftpack   import fft, fftfreq
 from sklearn.cluster import KMeans, SpectralClustering
 from sklearn.metrics import silhouette_score
 
@@ -62,6 +61,9 @@ class xdatcar:
         
         # Loading the INCAR file
         
+        if not path.exists(f'{args.MD_path}/INCAR'):
+            exit('INCAR file is not available.')
+        
         with open(f'{args.MD_path}/INCAR', 'r') as INCAR_file:
             INCAR_lines = INCAR_file.readlines()
         
@@ -87,6 +89,9 @@ class xdatcar:
         """
         
         # Loading data from XDATCAR file
+        
+        if not path.exists(f'{args.MD_path}/XDATCAR'):
+            exit('XDATCAR file is not available.')
         
         with open(f'{args.MD_path}/XDATCAR', 'r') as POSCAR_file:
             inp = POSCAR_file.readlines()
