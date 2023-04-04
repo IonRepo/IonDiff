@@ -11,6 +11,15 @@ from os              import path, stat, system
 """Set of common functions for many libraries, with a general purpose.
 """
 
+# Defining the information lines of the file
+
+scale_line         = 1  # Line for the scale of the simulation box
+s_cell_line        = 2  # Start of the definition of the simulation box
+e_cell_line        = 4  # End of the definition of the simulation box
+name_line          = 5  # Composition of the compound
+concentration_line = 6  # Concentration of the compound
+x_line             = 7  # Start of the simulation data
+
 def obtain_diffusive_information(composition, concentration, DiffTypeName=None):
     """
     Gets the diffusive and non-diffusive elements.
@@ -58,31 +67,92 @@ def obtain_diffusive_family(element):
 
     return f'{diffusive_family}-based'
 
-def load_data(path_to_simulation):
-    """Returns all needed data in a suitable shape from a simulation.
-    Allows requiring DIFFUSION file to exist.
-    POSCAR and XDATCAR lines consider only first three rows.
+def read_INCAR(path_to_simulation):
+    """Reads VASP INCAR files. It is always expected to find these parameters.
+    """
+    
+    # Predefining the variable, so later we check if they were found
+    
+    delta_t = None
+    n_steps = None
+    
+    # Loading the INCAR file
+    
+    if not path.exists(f'{path_to_simulation}/INCAR'):
+        exit('INCAR file is not available.')
+    
+    with open(f'{path_to_simulation}/INCAR', 'r') as INCAR_file:
+        INCAR_lines = INCAR_file.readlines()
+    
+    # Looking for delta_t and n_steps
+    
+    for line in INCAR_lines:
+        split_line = line.split('=')
+        if len(split_line) > 1:  # Skipping empty lines
+            label = split_line[0].split()[0]
+            value = split_line[1].split()[0]
+            
+            if   label == 'POTIM':  delta_t = float(value)
+            elif label == 'NBLOCK': n_steps = float(value)
+    
+    # Checking if they were found
+    
+    if (delta_t is None) or (n_steps is None):
+        exit('POTIM or NBLOCK are not correctly defined in the INCAR file.')
+    return delta_t, n_steps
+
+def read_XDATCAR(path_to_simulation):
+    """Reads cell data and coordinates in direct units.
     """
 
     # Loading data from XDATCAR file
-            
+    
     if not path.exists(f'{path_to_simulation}/XDATCAR'):
         exit('XDATCAR file is not available.')
     
     with open(f'{path_to_simulation}/XDATCAR', 'r') as XDATCAR_file:
         XDATCAR_lines = XDATCAR_file.readlines()
     
-    scale = float(XDATCAR_lines[1])
-    cell = scale * np.array([line.split() for line in XDATCAR_lines[2:5]], dtype=float)
+    # Extracting the data
+    
+    try:
+        scale = float(XDATCAR_lines[scale_line])
+    except:
+        exit('Wrong definition of the scale in the XDATCAR.')
+    
+    try:
+        cell = np.array([line.split() for line in XDATCAR_lines[s_cell_line:e_cell_line+1]], dtype=float)
+        cell *= scale
+    except:
+        exit('Wrong definition of the cell in the XDATCAR.')
 
-    simulation_box = np.array([cell[0, 0], cell[1, 1], cell[2, 2]], dtype=float)
-    compounds = np.array(XDATCAR_lines[5].split())
-    concentration = np.array(XDATCAR_lines[6].split(), dtype=int)
-
+    compounds     = XDATCAR_lines[name_line].split()
+    concentration = np.array(XDATCAR_lines[concentration_line].split(), dtype=int)
+    
+    if len(compounds) != len(concentration):
+        exit('Wrong definition of the composition of the compound in the XDATCAR.')
+    
     n_ions = sum(concentration)
     
-    coordinates = np.array([line.split()[:3] for line in XDATCAR_lines[8:] if not line.split()[0][0].isalpha()],
-                           dtype=float).ravel().reshape((-1, n_ions, 3))
+    # Shaping the configurations data into the positions attribute
+    
+    coordinates = np.array([line.split() for line in XDATCAR_lines[x_line:] if not line.split()[0][0].isalpha()], dtype=float)
+    
+    # Checking if the number of configurations is correct
+
+    if not (len(coordinates) / n_ions).is_integer():
+        exit('The number of lines is not correct in the XDATCAR file.')
+    
+    coordinates  = coordinates.ravel().reshape((-1, n_ions, 3))
+    return cell, n_ions, compounds, concentration, coordinates
+    
+def load_data(path_to_simulation):
+    """Returns all needed data in a suitable shape from a simulation.
+    Allows requiring DIFFUSION file to exist.
+    POSCAR and XDATCAR lines consider only first three rows.
+    """
+    
+    cell, _, compounds, concentration, coordinates = read_XDATCAR(path_to_simulation)
     
     # Loading hoppings data, if available
     

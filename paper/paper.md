@@ -28,7 +28,7 @@ bibliography: paper.bib
 
 # Summary
 
-Molecular dynamics (MD) simulations mimic the temporal evolution of atomic positions for a given material. However, extracting meaningful insights from this data is often a challenge, as most common analysis rely on active supervision of the simulations and definition of arbitrary material-dependent parameters, thus frustrating high throughput screenings. In particular, to the best of our knowledge, determining the exact migrating paths of diffusive particles has not been previously addressed systematically, despite of its central role in the understanding and design of high performance solid-state electrolytes (SSE).
+Molecular dynamics (MD) simulations render the positions of atoms over time inside materials. However, extracting meaningful insights from this data is often a challenge, as most common analysis rely on active supervision of the simulations and definition of arbitrary material-dependent parameters, thus frustrating high throughput screenings. In particular, to the best of our knowledge, determining the exact migrating paths of diffusive particles has not been previously addressed systematically, despite of its central role in the understanding and design of high performance solid-state electrolytes (SSE).
 
 Here, we introduce a completely unsupervised approach for analysing ion-hopping events in MD simulations. Based on k-means clustering, our algorithm identifies with precision which and when particles diffuse in a simulation, as well as their exact migrating paths. This analysis allows for the quantification of correlations between many diffusing ions as well as of original atomistic descriptors like the duration/length of diffusion events and residence times, to cite some examples.
 

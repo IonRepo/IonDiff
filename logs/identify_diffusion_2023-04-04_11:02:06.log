@@ -1,0 +1,3 @@
+2023-04-04 11:02:06,675 - [INFO] - Task: Extracting diffusive paths from MD simulation at examples.
+2023-04-04 11:02:10,415 - [INFO] - Simulation successfully loaded.
+2023-04-04 11:03:01,285 - [WARNING] - No artists with labels found to put in legend.  Note that artists whose label start with an underscore are ignored when legend() is called with no argument.
