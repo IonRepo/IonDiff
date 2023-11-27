@@ -12,7 +12,7 @@ Please be aware that the code is under active development, bug reports are welco
 
 ## Installation
 
-To download the repository and install the dependencies:
+To download the repository and install the dependencies run in a terminal:
 
 ```bash
 git clone https://github.com/IonRepo/IonDiff.git
