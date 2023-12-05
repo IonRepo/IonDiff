@@ -50,13 +50,15 @@ The script allows graphing the identified diffusion paths for each simulated par
 
 Moreover, users may find information regarding their previous executions of the scripts in the *logs* folder, which should be used to track possible errors. Finally, a number of tests for checking out all **IonDiff** functions can be found in the *tests* folder.
 
+Previous implementation for computing the full ionic diffusion coefficient are very expensive and time demanding [@kozinsky, @tateyama], as they need to perform many times the same crossed terms. However, here we present a novel implementation which outperforms previous codes. Instead of computing many times the same crossed terms, we do it only once and store this data efficiently in a tensor. Thus, computations are translated into memory access, and the computations is done much quicker.
+
 Mainly, our code is based on the sklearn [@scikit] implementation of k-means clustering, although numpy [@numpy] and matplotlib [@matplotlib] are used for numerical analysis and plotting, respectively.
 
-The current version is only able to read information from VASP [@vasp] simulations, although future releases (already under active development) will extend its scope to simulations from LAMMPS [@lammps] and other molecular dynamics (either *ab initio* or classical) software packages.
-
-Future releases will also include libraries for analyzing these diffusions with the extraction of key descriptors and the inclusion of novel statistical analysis.
+The current version reads information from VASP [@vasp] simulations, although future releases (already under active development) will extend its scope to simulations from other molecular dynamics software packages (either *ab initio* or classical).
 
 # Methods
+
+## Machine learning outline
 
 K-means algorithm conforms spherical groups, given that, for every subgroup $G = \{G_1, G_2, \dots, G_k\}$ in a dataset, it minimizes the sum of squares:
 
@@ -83,6 +85,19 @@ where:
     \end{gathered}
 \end{equation}
 
+## Ionic conductivity
+
+The ionic conductivity ($\sigma$) computes from [@tateyama]:
+
+\begin{equation}
+    \sigma = \lim_{t \to \infty} \frac{e^2}{2 d V k_B T} \left[ \sum_i z_i^2 \langle \left[ x_i(t_0 + t) - x_i(t_0) \right]^2 \rangle_{t_0} + \sum_{i, j \neq i} z_i z_j \langle \left[ x_i(t_0 + t) - x_i(t_0) \right] \cdot \left[ x_j(t_0 + t) - x_j(t_0) \right] \rangle_{t_0} \right]
+\end{equation}
+
+Thus, for those simulations in which one only species is diffusing, the ionic diffusion coefficient reads:
+
+\begin{equation}
+    D = \lim_{t \to \infty} \frac{1}{6 t} \left[ \sum_i \langle \left[ x_i(t_0 + t) - x_i(t_0) \right]^2 \rangle_{t_0} + \sum_{i, j \neq i} \langle \left[ x_i(t_0 + t) - x_i(t_0) \right] \cdot \left[ x_j(t_0 + t) - x_j(t_0) \right] \rangle_{t_0} \right]
+\end{equation}
 
 # Acknowledgements
 
