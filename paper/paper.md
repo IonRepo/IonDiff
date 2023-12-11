@@ -103,8 +103,8 @@ where $e$, $V$, $k_B$, and $T$ are the elementary charge, system volume, Boltzma
 \begin{equation}
     \begin{gathered}
         D = \lim_{\Delta t \to \infty} \frac{1}{6 \Delta t} \left[ \sum_i \langle \left[ x_i(t_0 + \Delta t) - x_i(t_0) \right]^2 \rangle_{t_0} + \right. \\
-        \left. + \sum_{i, j \neq i} \langle \left[ x_i(t_0 + \Delta t) - x_i(t_0) \right] \cdot \left[ x_j(t_0 + \Delta t) - x_j(t_0) \right] \rangle_{t_0} \right] = \right. \\
-        \left. = \lim_{\Delta t \to \infty} \frac{1}{6 \Delta t} \left[ \Delta r_{self} (\Delta t) + \Delta r_{distinc} (\Delta t) \right]
+        \left. + \sum_{i, j \neq i} \langle \left[ x_i(t_0 + \Delta t) - x_i(t_0) \right] \cdot \left[ x_j(t_0 + \Delta t) - x_j(t_0) \right] \rangle_{t_0} \right] = \\
+        = \lim_{\Delta t \to \infty} \frac{1}{6 \Delta t} \left[ \Delta r_{self} (\Delta t) + \Delta r_{distinc} (\Delta t) \right]
     \end{gathered}
 \end{equation}
 
