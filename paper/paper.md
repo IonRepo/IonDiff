@@ -32,25 +32,27 @@ Molecular dynamics (MD) simulations render the positions of atoms over time insi
 
 Here, we introduce a completely unsupervised approach for analysing ion-hopping events in MD simulations. Based on k-means clustering, our algorithm identifies with precision which and when particles diffuse in a simulation, as well as their exact migrating paths. This analysis allows for the quantification of correlations between many diffusing ions as well as of original atomistic descriptors like the duration/length of diffusion events and residence times, to cite some examples.
 
+Moreover, this implementation introduces an optimized code for computing the full ion diffusion coefficient, this is, considering cross terms in the mean-squared-displacements, above the dilute limit approximation.
+
 # IonDiff
 
-**IonDiff** consists on a repository of fully functional Python scripts designed for extracting and analyzing the exact migrating paths of diffusive particles from MD simulations.
+Fast-ion conductors consist on a new family of SSE, in which some particles diffuse, generation an electronic drift which allows storing energy efficiently. However, although DFT simulations accurately describe the behaviour of these materials, there are not exhaustive tools for analyzing the atomic behaviour in SSE, thus highly underutilizing this simulations. **IonDiff** efficiently addresses this challenge, providinga a repository of fully functional Python scripts designed for extracting and analyzing the exact migrating paths of diffusive particles, which are tracked from MD simulations.
 
 The repository is divided into independent functionalities:
 
-- *identify_diffusion*: extracts the migrating paths from a given MD simulation, generating a file named **DIFFUSION** with all the necessary information in the folder containing the given simulation.
-- *analyze_correlations*: analyzes the correlations between the diffusion events of a series of simulations (the **DIFFUSION** file for each of these simulations will be generated if it does not exist yet).
-- *analyze_descriptors*: extracts and analyzes spatio-temporal descriptors for the diffusions of a simulation (under active development).
+- *identify_diffusion*: extraction of the migrating paths from a given MD simulation. It generates in the folder containing the given simulation a file named **DIFFUSION**, with all the necessary atomistic information for next analysis of the diffusion events than have been found.
+- *analyze_correlations*: analysis of correlations between diffusion events from a series of simulations (the **DIFFUSION** file for each of these simulations will be generated if it does not exist yet).
+- *analyze_descriptors*: extraction and analysis of spatio-temporal descriptors from diffusion events of a simulation. Within this library, we implemented an optimized approach for computing the full ionic diffusion coefficient (which includes cross correlations, proven to exist in previous works (our work, and others)).
 
-The minimal input needed (besides the file containing the actual atomistic trajectories) consists in a **INCAR** file with **POTIM** and **NBLOCK** flags (indicating the simulation time step and the frequency with which the configurations are recorded, respectively). After installation, all routines are easily controlled from the command line. More detailed information can be found in the documentation of the project (including specific **README**s within each folder).
+The (full) ionic diffusion coefficient consists on two parts [@kozinsky, @tateyama]: the first considering the mean-squared-displacement (MSD) of a particle with itself (MSD_{self}), and this with cross terms (MSD_{distinct}). However less accurate, the ionic diffusion coefficient is usually approximated to only consider the *self* part given that it was much faster in previous implementations. Recently, correlations among different atoms have been proved to be present [@arxiv], thus undermining the reliability of this approach. Therefore, on the contrary, we present a novel implementation of the full ionic diffusion coefficient which outperforms previous codes, exploiting the matricial representation of this calculation. The time required for computing *self* or *distinct* parts here is roughly the same. 
+
+The minimal input needed (besides the file containing the actual atomistic trajectories) consists in a **INCAR** file with **POTIM** and **NBLOCK** flags (indicating the simulation time step and the frequency with which the configurations are recorded, respectively). After installation, all routines are easily controlled from command line. More detailed information can be found in the documentation of the project (including specific **README**s within each folder).
 
 The script allows graphing the identified diffusion paths for each simulated particle and provides the confidence interval associated to the results retrieved by the algorithm. An example of the analysis performed on an *ab initio* MD (AIMD) simulation based on density functional theory (DFT) is shown in \autoref{fig:diffusion-detection}. The AIMD configurations file employed in this example is available online at [@database], along with many other AIMD simulations comprehensively analyzed in a previous work [@horizons].
 
 ![Example of the performance of our unsupervised algorithm at extracting the diffusive path for one random particle of an AIMD simulation of Li\textsubscript{7}La\textsubscript{3}Zr\textsubscript{2}O\textsubscript{12} at a temperature of 400K.\label{fig:diffusion-detection}](figure.svg){width=60%}
 
-Moreover, users may find information regarding their previous executions of the scripts in the *logs* folder, which should be used to track possible errors. Finally, a number of tests for checking out all **IonDiff** functions can be found in the *tests* folder.
-
-Previous implementation for computing the full ionic diffusion coefficient are very expensive and time demanding [@kozinsky, @tateyama], as they need to perform many times the same crossed terms. However, here we present a novel implementation which outperforms previous codes. Instead of computing many times the same crossed terms, we do it only once and store this data efficiently in a tensor. Thus, computations are translated into memory access, and the computations is done much quicker.
+Moreover, users may find information regarding their previous executions of the scripts in the *logs* folder, which should be used to track possible errors on data format and more. Finally, a number of tests for checking out all **IonDiff** functions can be found in the *tests* folder.
 
 Mainly, our code is based on the sklearn [@scikit] implementation of k-means clustering, although numpy [@numpy] and matplotlib [@matplotlib] are used for numerical analysis and plotting, respectively.
 
@@ -90,20 +92,29 @@ where:
 The ionic conductivity ($\sigma$) computes from [@tateyama]:
 
 \begin{equation}
-    \sigma = \lim_{\Delta t \to \infty} \frac{e^2}{2 d V k_B T} \left[ \sum_i z_i^2 \langle \left[ x_i(t_0 + \Delta t) - x_i(t_0) \right]^2 \rangle_{t_0} + \sum_{i, j \neq i} z_i z_j \langle \left[ x_i(t_0 + \Delta t) - x_i(t_0) \right] \cdot \left[ x_j(t_0 + \Delta t) - x_j(t_0) \right] \rangle_{t_0} \right]
+    \begin{gathered}
+        \sigma = \lim_{\Delta t \to \infty} \frac{e^2}{2 d V k_B T} \left[ \sum_i z_i^2 \langle \left[ x_i(t_0 + \Delta t) - x_i(t_0) \right]^2 \rangle_{t_0} + \\
+        + \sum_{i, j \neq i} z_i z_j \langle \left[ x_i(t_0 + \Delta t) - x_i(t_0) \right] \cdot \left[ x_j(t_0 + \Delta t) - x_j(t_0) \right] \rangle_{t_0} \right]
+    \end{gathered}
 \end{equation}
 
-Thus, for those simulations in which one only species diffusses, the ionic diffusion coefficient reads:
+where $e$, $V$, $k_B$, and $T$ are the elementary charge, system volume, Boltzmann constant, and temperature of the MD simulation, respectively. The $z_i$ and $r_i$ are the charge and position (in cartesian coordinates) of particle $i$ and $d$ is the dimension of $r_i$. $\Delta t$ is the time window and $t_0$ the temporal offset of $\Delta t$. Thus, for those simulations in which one only species diffusses, the ionic diffusion coefficient reads: 
 
 \begin{equation}
-    D = \lim_{\Delta t \to \infty} \frac{1}{6 \Delta t} \left[ \sum_i \langle \left[ x_i(t_0 + \Delta t) - x_i(t_0) \right]^2 \rangle_{t_0} + \sum_{i, j \neq i} \langle \left[ x_i(t_0 + \Delta t) - x_i(t_0) \right] \cdot \left[ x_j(t_0 + \Delta t) - x_j(t_0) \right] \rangle_{t_0} \right]
+    \begin{gathered}
+        D = \lim_{\Delta t \to \infty} \frac{1}{6 \Delta t} \left[ \sum_i \langle \left[ x_i(t_0 + \Delta t) - x_i(t_0) \right]^2 \rangle_{t_0} + \\
+        + \sum_{i, j \neq i} \langle \left[ x_i(t_0 + \Delta t) - x_i(t_0) \right] \cdot \left[ x_j(t_0 + \Delta t) - x_j(t_0) \right] \rangle_{t_0} \right] = \\
+        = \lim_{\Delta t \to \infty} \frac{1}{6 \Delta t} \left[ \Delta r_{self} (\Delta t) + \Delta r_{distinc} (\Delta t) \right]
+    \end{gathered}
 \end{equation}
+
+As a result, all these displacements can be computed just once and stored in a three-dimensional tensor, what allows simple vectorization and runs much faster in libraries such as Numpy compared to traditional loops. Then, for a simulation of $n_{atoms}$ number of atoms for the diffusive species and $\tau$ temporal duration, we only need to compute:
 
 \begin{equation}
-    D = \lim_{\Delta t \to \infty} \frac{1}{6 \Delta t} \left[ \Delta r_{self} (\Delta t) + \Delta r_{distinc} (\Delta t) \right]
+    M (\Delta t, p_i, d) = \frac{1}{t_{sim} - \Delta t} \sum_{t_0 = 0}^{t_{sim} - \Delta t - \tau} \left[ r (t_0 + \Delta t, p_i, d) - r (t_0, p_i, d) \right]
 \end{equation}
 
-As a result, all this displacements can be computed once and stored in a tensor and apply vectorization, which runs much faster in libraries such as Numpy than traditional loops. Then, the previous expresion can be expressed in a closed matricial form:
+being $M(\Delta t, p_i, d)$ a three dimensional tensor of shape $N_t \times N_t \times N_p$ storing all mean displacements of temporal length $\Delta t$ for particle $p_i$ in catersian dimension $d$. This leads to:
 
 \begin{equation}
     \Delta r_{self} (\Delta t) = \frac{1}{n_{atoms}} \sum_{d} \sum_{i = 1}^{n_{atoms}} M (\Delta t, p_i, d) \cdot M (\Delta t, p_i, d)
@@ -112,12 +123,6 @@ As a result, all this displacements can be computed once and stored in a tensor 
 \begin{equation}
     \Delta r_{distinc} (\Delta t) = \frac{1}{n_{atoms} (n_{atoms}-1)} \sum_{d} \sum_{i = 1}^{n_{atoms}} \sum_{j = i+1}^{n_{atoms}} M (\Delta t, p_i, d) \cdot M (\Delta t, p_j, d)
 \end{equation}
-
-\begin{equation}
-    M (\Delta t, p_i, d) = \frac{1}{t_{sim} - \Delta t} \sum_{t_0 = 0}^{t_{sim} - \Delta t - 1} \left[ r (t_0 + \Delta t, p_i) - r (t_0, p_i) \right]
-\end{equation}
-
-being $D(t_0, \Delta t, p)$ a three dimensional tensor ($N_t \times N_t \times N_p$) storing all mean displacements of temporal length $\Delta t$ for particle $p_i$ in catersian dimension $d$.
 
 # Acknowledgements
 
