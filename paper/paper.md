@@ -82,7 +82,7 @@ where:
 
 \begin{equation}
     \begin{gathered}
-        a(k) = \frac{1}{|G_{I}| - 1} \sum_{j = 1}^k \| \mathbf{x}_k - \mathbf{x}_j \|^2 \\
+        a(k) = \frac{1}{|G_{I}| - 1} \sum_{j = 1}^k \| \mathbf{x}_k - \mathbf{x}_j \|^2  \\
         b(k) = \min_{J \neq I} \frac{1}{|G_{J}|} \sum_{j = 1}^k \| \mathbf{x}_k - \mathbf{x}_j \|^2
     \end{gathered}
 \end{equation}
@@ -93,8 +93,8 @@ The ionic conductivity ($\sigma$) computes from [@tateyama]:
 
 \begin{equation}
     \begin{gathered}
-        \sigma = \lim_{\Delta t \to \infty} \frac{e^2}{2 d V k_B T} \left[ \sum_i z_i^2 \langle \left[ x_i(t_0 + \Delta t) - x_i(t_0) \right]^2 \rangle_{t_0} + \\
-        + \sum_{i, j \neq i} z_i z_j \langle \left[ x_i(t_0 + \Delta t) - x_i(t_0) \right] \cdot \left[ x_j(t_0 + \Delta t) - x_j(t_0) \right] \rangle_{t_0} \right]
+        \sigma = \lim_{\Delta t \to \infty} \frac{e^2}{2 d V k_B T} \left[ \sum_i z_i^2 \langle \left[ x_i(t_0 + \Delta t) - x_i(t_0) \right]^2 \rangle_{t_0} + \right. \\
+        \left. + \sum_{i, j \neq i} z_i z_j \langle \left[ x_i(t_0 + \Delta t) - x_i(t_0) \right] \cdot \left[ x_j(t_0 + \Delta t) - x_j(t_0) \right] \rangle_{t_0} \right]
     \end{gathered}
 \end{equation}
 
@@ -103,8 +103,8 @@ where $e$, $V$, $k_B$, and $T$ are the elementary charge, system volume, Boltzma
 \begin{equation}
     \begin{gathered}
         D = \lim_{\Delta t \to \infty} \frac{1}{6 \Delta t} \left[ \sum_i \langle \left[ x_i(t_0 + \Delta t) - x_i(t_0) \right]^2 \rangle_{t_0} + \\
-        + \sum_{i, j \neq i} \langle \left[ x_i(t_0 + \Delta t) - x_i(t_0) \right] \cdot \left[ x_j(t_0 + \Delta t) - x_j(t_0) \right] \rangle_{t_0} \right] = \\
-        = \lim_{\Delta t \to \infty} \frac{1}{6 \Delta t} \left[ \Delta r_{self} (\Delta t) + \Delta r_{distinc} (\Delta t) \right]
+        + \sum_{i, j \neq i} \langle \left[ x_i(t_0 + \Delta t) - x_i(t_0) \right] \cdot \left[ x_j(t_0 + \Delta t) - x_j(t_0) \right] \rangle_{t_0} \right] = \right. \\
+        \left. = \lim_{\Delta t \to \infty} \frac{1}{6 \Delta t} \left[ \Delta r_{self} (\Delta t) + \Delta r_{distinc} (\Delta t) \right]
     \end{gathered}
 \end{equation}
 
@@ -123,6 +123,8 @@ being $M(\Delta t, p_i, d)$ a three dimensional tensor of shape $N_t \times N_t 
 \begin{equation}
     \Delta r_{distinc} (\Delta t) = \frac{1}{n_{atoms} (n_{atoms}-1)} \sum_{d} \sum_{i = 1}^{n_{atoms}} \sum_{j = i+1}^{n_{atoms}} M (\Delta t, p_i, d) \cdot M (\Delta t, p_j, d)
 \end{equation}
+
+Note that we keep $D_{self}$ and $D_{distinct}$ separate as this allows easily analising the contribution of crossed terms to $D$ without adding any code complication.
 
 # Acknowledgements
 
