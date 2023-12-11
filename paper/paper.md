@@ -90,14 +90,34 @@ where:
 The ionic conductivity ($\sigma$) computes from [@tateyama]:
 
 \begin{equation}
-    \sigma = \lim_{t \to \infty} \frac{e^2}{2 d V k_B T} \left[ \sum_i z_i^2 \langle \left[ x_i(t_0 + t) - x_i(t_0) \right]^2 \rangle_{t_0} + \sum_{i, j \neq i} z_i z_j \langle \left[ x_i(t_0 + t) - x_i(t_0) \right] \cdot \left[ x_j(t_0 + t) - x_j(t_0) \right] \rangle_{t_0} \right]
+    \sigma = \lim_{\Delta t \to \infty} \frac{e^2}{2 d V k_B T} \left[ \sum_i z_i^2 \langle \left[ x_i(t_0 + \Delta t) - x_i(t_0) \right]^2 \rangle_{t_0} + \sum_{i, j \neq i} z_i z_j \langle \left[ x_i(t_0 + \Delta t) - x_i(t_0) \right] \cdot \left[ x_j(t_0 + \Delta t) - x_j(t_0) \right] \rangle_{t_0} \right]
 \end{equation}
 
-Thus, for those simulations in which one only species is diffusing, the ionic diffusion coefficient reads:
+Thus, for those simulations in which one only species diffusses, the ionic diffusion coefficient reads:
 
 \begin{equation}
-    D = \lim_{t \to \infty} \frac{1}{6 t} \left[ \sum_i \langle \left[ x_i(t_0 + t) - x_i(t_0) \right]^2 \rangle_{t_0} + \sum_{i, j \neq i} \langle \left[ x_i(t_0 + t) - x_i(t_0) \right] \cdot \left[ x_j(t_0 + t) - x_j(t_0) \right] \rangle_{t_0} \right]
+    D = \lim_{\Delta t \to \infty} \frac{1}{6 \Delta t} \left[ \sum_i \langle \left[ x_i(t_0 + \Delta t) - x_i(t_0) \right]^2 \rangle_{t_0} + \sum_{i, j \neq i} \langle \left[ x_i(t_0 + \Delta t) - x_i(t_0) \right] \cdot \left[ x_j(t_0 + \Delta t) - x_j(t_0) \right] \rangle_{t_0} \right]
 \end{equation}
+
+\begin{equation}
+    D = \lim_{\Delta t \to \infty} \frac{1}{6 \Delta t} \left[ \Delta r_{self} (\Delta t) + \Delta r_{distinc} (\Delta t) \right]
+\end{equation}
+
+As a result, all this displacements can be computed once and stored in a tensor and apply vectorization, which runs much faster in libraries such as Numpy than traditional loops. Then, the previous expresion can be expressed in a closed matricial form:
+
+\begin{equation}
+    \Delta r_{self} (\Delta t) = \frac{1}{n_{atoms}} \sum_{d} \sum_{i = 1}^{n_{atoms}} M (\Delta t, p_i, d) \cdot M (\Delta t, p_i, d)
+\end{equation}
+
+\begin{equation}
+    \Delta r_{distinc} (\Delta t) = \frac{1}{n_{atoms} (n_{atoms}-1)} \sum_{d} \sum_{i = 1}^{n_{atoms}} \sum_{j = i+1}^{n_{atoms}} M (\Delta t, p_i, d) \cdot M (\Delta t, p_j, d)
+\end{equation}
+
+\begin{equation}
+    M (\Delta t, p_i, d) = \frac{1}{t_{sim} - \Delta t} \sum_{t_0 = 0}^{t_{sim} - \Delta t - 1} \left[ r (t_0 + \Delta t, p_i) - r (t_0, p_i) \right]
+\end{equation}
+
+being $D(t_0, \Delta t, p)$ a three dimensional tensor ($N_t \times N_t \times N_p$) storing all mean displacements of temporal length $\Delta t$ for particle $p_i$ in catersian dimension $d$.
 
 # Acknowledgements
 
