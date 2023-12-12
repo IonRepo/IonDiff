@@ -92,7 +92,7 @@ The ionic conductivity ($\sigma$) computes from [@tateyama]:
     \end{gathered}
 \end{equation}
 
-where $e$, $V$, $k_B$, and $T$ are the elementary charge, system volume, Boltzmann constant, and temperature of the MD simulation, respectively, $z_i$ and $\mathbf{r}_i$ charge and position (in cartesian coordinates) of particle $i$ and $d$ is the dimension of $\mathbf{r}_i$, $\Delta t$ is the time window and $t_0$ the temporal offset of $\Delta t$. Thus, for those simulations in which one only species diffusses, the ionic diffusion coefficient reads: 
+where $e$, $V$, $k_B$, and $T$ are the elementary charge, system volume, Boltzmann constant, and temperature of the MD simulation, respectively, $z_i$ charge and $\mathbf{r}_i = \mathbf{r}_i^{(1)} \hat{x} + \mathbf{r}_i^{(2)} \hat{y} + \mathbf{r}_i^{(3)} \hat{z}$ (being $\hat{x}, \hat{y}, \hat{z}$ cartesian coordinates) cartesian position of particle $i$, and $d$ is the dimension of $\mathbf{r}_i$, $\Delta t$ is the time window and $t_0$ the temporal offset of $\Delta t$. Thus, for those simulations in which one only species diffusses, the ionic diffusion coefficient reads: 
 
 \begin{equation}
     \begin{gathered}
