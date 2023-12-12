@@ -87,38 +87,40 @@ The ionic conductivity ($\sigma$) computes from [@tateyama]:
 
 \begin{equation}
     \begin{gathered}
-        \sigma = \lim_{\Delta t \to \infty} \frac{e^2}{2 d V k_B T} \left[ \sum_i z_i^2 \langle \left[ \mathbf{r}_i(t_0 + \Delta t) - \mathbf{r}_i(t_0) \right]^2 \rangle_{t_0} + \right. \\
+        \sigma = \lim_{\Delta t \to \infty} \frac{e^2}{2 n_d V k_B T} \left[ \sum_i z_i^2 \langle \left[ \mathbf{r}_i(t_0 + \Delta t) - \mathbf{r}_i(t_0) \right]^2 \rangle_{t_0} + \right. \\
         \left. + \sum_{i, j \neq i} z_i z_j \langle \left[ \mathbf{r}_i(t_0 + \Delta t) - \mathbf{r}_i(t_0) \right] \cdot \left[ \mathbf{r}_j(t_0 + \Delta t) - \mathbf{r}_j(t_0) \right] \rangle_{t_0} \right]
     \end{gathered}
 \end{equation}
 
-where $e$, $V$, $k_B$, and $T$ are the elementary charge, system volume, Boltzmann constant, and temperature of the MD simulation, respectively, $z_i$ charge and $\mathbf{r}_i = \mathbf{r}_i^{(1)} \hat{x} + \mathbf{r}_i^{(2)} \hat{y} + \mathbf{r}_i^{(3)} \hat{z}$ (being $\hat{x}, \hat{y}, \hat{z}$ cartesian coordinates) cartesian position of particle $i$, and $d$ is the dimension of $\mathbf{r}_i$, $\Delta t$ is the time window and $t_0$ the temporal offset of $\Delta t$. Thus, for those simulations in which one only species diffusses, the ionic diffusion coefficient reads: 
+where $e$, $V$, $k_B$, and $T$ are the elementary charge, system volume, Boltzmann constant, and temperature of the MD simulation, respectively, $z_i$ charge and $\mathbf{r}_i = x_{1, i} \hat{i} + x_{2, i} \hat{j} + x_{3, i} \hat{k}$ cartesian position of particle $i$, and $n_d$ is the number of spatial dimensions of $\mathbf{r}_i$, $\Delta t$ is the time window and $t_0$ the temporal offset of $\Delta t$. Thus, for those simulations in which one only species diffusses, the ionic diffusion coefficient reads: 
 
 \begin{equation}
     \begin{gathered}
         D = \lim_{\Delta t \to \infty} \frac{1}{6 \Delta t} \left[ \sum_i \langle \left[ \mathbf{r}_i(t_0 + \Delta t) - \mathbf{r}_i(t_0) \right]^2 \rangle_{t_0} + \right. \\
         \left. + \sum_{i, j \neq i} \langle \left[ \mathbf{r}_i(t_0 + \Delta t) - \mathbf{r}_i(t_0) \right] \cdot \left[ \mathbf{r}_j(t_0 + \Delta t) - \mathbf{r}_j(t_0) \right] \rangle_{t_0} \right] = \\
-        = \lim_{\Delta t \to \infty} \frac{1}{6 \Delta t} \left[ MSD_{self} (\Delta t) + MSD_{distinc} (\Delta t) \right]
+        = \lim_{\Delta t \to \infty} \frac{1}{6 \Delta t} \left[ \text{MSD}_{self} (\Delta t) + \text{MSD}_{distinct} (\Delta t) \right]
     \end{gathered}
 \end{equation}
 
-As a result, all these displacements can be computed just once, and stored in a three-dimensional tensor, what allows simple vectorization and runs much faster in libraries such as Numpy compared to traditional loops. Then, for a simulation with $N_t$ time steps of $\tau$ temporal duration, and $N_p$ number of atoms for the diffusive species, we only need to compute:
+As a result, all these displacements can be computed just once, and stored in a three-dimensional tensor, what allows simple vectorization and runs much faster in libraries such as Numpy compared to traditional loops. Then, for a simulation with $n_t$ time steps, and $n_p$ number of atoms for the diffusive species, we only need to compute:
 
 \begin{equation}
-    M (\Delta t, p_i, d) = \frac{1}{t_{sim} - \Delta t} \sum_{t_0 = 0}^{t_{sim} - \Delta t - \tau} \left[ \mathbf{r}_i^{(d)} (t_0 + \Delta t) - \mathbf{r}_i^{(d)} (t_0) \right]
+    \Delta x (\Delta t, i, d, t_0) = x_{d, i} (t_0 + \Delta t) - x_{d, i} (t_0)
 \end{equation}
 
-being $M(\Delta t, p_i, d)$ a three dimensional tensor of shape $N_t \times N_t \times N_p$ storing all mean displacements of temporal length $\Delta t$ for particle $p_i$ in catersian dimension $d$. This leads to:
+being $\Delta x(\Delta t, i, d, t_0)$ a four-dimensional tensor of shape $n_t \times n_t \times n_p \times n_d$ storing all mean displacements of temporal length $\Delta t$ for particle $p_i$ in catersian dimension $d$. This leads to:
 
 \begin{equation}
-    MSD_{self} (\Delta t) = \frac{1}{N_p} \sum_{d} \sum_{i = 1}^{N_p} M (\Delta t, p_i, d) \cdot M (\Delta t, p_i, d)
+    \text{MSD}_{self} (\Delta t) = \frac{1}{n_p} \sum_{i = 1}^{n_p} \langle \sum_{d} \Delta x (\Delta t, i, d, t_0) \cdot \Delta x (\Delta t, i, d, t_0) \rangle_{t_0}
 \end{equation}
 
 \begin{equation}
-    MSD_{distinc} (\Delta t) = \frac{1}{N_p (N_p-1)} \sum_{d} \sum_{i = 1}^{N_p} \sum_{j = i+1}^{N_p} M (\Delta t, p_i, d) \cdot M (\Delta t, p_j, d)
+    \text{MSD}_{distinct} (\Delta t) = \frac{2}{n_p (n_p-1)} \sum_{i = 1}^{n_p} \sum_{j = i+1}^{n_p} \langle \sum_{d} \Delta x (\Delta t, i, d, t_0) \cdot \Delta x (\Delta t, j, d, t_0) \rangle_{t_0}
 \end{equation}
 
 Note that we keep $D_{self}$ and $D_{distinct}$ separate as this allows analising easily the contribution of crossed terms to $D$ without adding any code complication.
+
+This implementation scales quadratic with the lenght of the simulation and linearly with the number of diffusive particles in terms of memory resources.
 
 # Acknowledgements
 
