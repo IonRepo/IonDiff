@@ -2,8 +2,8 @@
 title: 'IonDiff: command-line tool to identify diffusion events from molecular dynamics simulations'
 tags:
   - Python
-  - molecular dynamics
-  - solid-state electrolytes
+  - Molecular dynamics
+  - Solid-state electrolytes
 authors:
   - name: Cibrán López
     orcid: 0000-0003-3949-5058
@@ -22,7 +22,7 @@ affiliations:
    index: 2
  - name: Institut de Ciència de Materials de Barcelona, ICMAB-CSIC, Campus UAB, 08193 Bellaterra, Spain.
    index: 3
-date: 16 March 2023
+date: 16 December 2023
 bibliography: paper.bib
 ---
 
@@ -87,17 +87,17 @@ The ionic conductivity ($\sigma$) computes from [@tateyama]:
 
 \begin{equation}
     \begin{gathered}
-        \sigma = \lim_{\Delta t \to \infty} \frac{e^2}{2 d V k_B T} \left[ \sum_i z_i^2 \langle \left[ \bm{r}_i(t_0 + \Delta t) - \bm{r}_i(t_0) \right]^2 \rangle_{t_0} + \right. \\
-        \left. + \sum_{i, j \neq i} z_i z_j \langle \left[ \bm{r}_i(t_0 + \Delta t) - \bm{r}_i(t_0) \right] \cdot \left[ \bm{r}_j(t_0 + \Delta t) - \bm{r}_j(t_0) \right] \rangle_{t_0} \right]
+        \sigma = \lim_{\Delta t \to \infty} \frac{e^2}{2 d V k_B T} \left[ \sum_i z_i^2 \langle \left[ \mathbf{r}_i(t_0 + \Delta t) - \mathbf{r}_i(t_0) \right]^2 \rangle_{t_0} + \right. \\
+        \left. + \sum_{i, j \neq i} z_i z_j \langle \left[ \mathbf{r}_i(t_0 + \Delta t) - \mathbf{r}_i(t_0) \right] \cdot \left[ \mathbf{r}_j(t_0 + \Delta t) - \mathbf{r}_j(t_0) \right] \rangle_{t_0} \right]
     \end{gathered}
 \end{equation}
 
-where $e$, $V$, $k_B$, and $T$ are the elementary charge, system volume, Boltzmann constant, and temperature of the MD simulation, respectively, $z_i$ and $\bm{r}_i$ charge and position (in cartesian coordinates) of particle $i$ and $d$ is the dimension of $\bm{r}_i$, $\Delta t$ is the time window and $t_0$ the temporal offset of $\Delta t$. Thus, for those simulations in which one only species diffusses, the ionic diffusion coefficient reads: 
+where $e$, $V$, $k_B$, and $T$ are the elementary charge, system volume, Boltzmann constant, and temperature of the MD simulation, respectively, $z_i$ and $\mathbf{r}_i$ charge and position (in cartesian coordinates) of particle $i$ and $d$ is the dimension of $\mathbf{r}_i$, $\Delta t$ is the time window and $t_0$ the temporal offset of $\Delta t$. Thus, for those simulations in which one only species diffusses, the ionic diffusion coefficient reads: 
 
 \begin{equation}
     \begin{gathered}
-        D = \lim_{\Delta t \to \infty} \frac{1}{6 \Delta t} \left[ \sum_i \langle \left[ \bm{r}_i(t_0 + \Delta t) - \bm{r}_i(t_0) \right]^2 \rangle_{t_0} + \right. \\
-        \left. + \sum_{i, j \neq i} \langle \left[ \bm{r}_i(t_0 + \Delta t) - \bm{r}_i(t_0) \right] \cdot \left[ \bm{r}_j(t_0 + \Delta t) - \bm{r}_j(t_0) \right] \rangle_{t_0} \right] = \\
+        D = \lim_{\Delta t \to \infty} \frac{1}{6 \Delta t} \left[ \sum_i \langle \left[ \mathbf{r}_i(t_0 + \Delta t) - \mathbf{r}_i(t_0) \right]^2 \rangle_{t_0} + \right. \\
+        \left. + \sum_{i, j \neq i} \langle \left[ \mathbf{r}_i(t_0 + \Delta t) - \mathbf{r}_i(t_0) \right] \cdot \left[ \mathbf{r}_j(t_0 + \Delta t) - \mathbf{r}_j(t_0) \right] \rangle_{t_0} \right] = \\
         = \lim_{\Delta t \to \infty} \frac{1}{6 \Delta t} \left[ MSD_{self} (\Delta t) + MSD_{distinc} (\Delta t) \right]
     \end{gathered}
 \end{equation}
@@ -105,7 +105,7 @@ where $e$, $V$, $k_B$, and $T$ are the elementary charge, system volume, Boltzma
 As a result, all these displacements can be computed just once, and stored in a three-dimensional tensor, what allows simple vectorization and runs much faster in libraries such as Numpy compared to traditional loops. Then, for a simulation with $N_t$ time steps of $\tau$ temporal duration, and $N_p$ number of atoms for the diffusive species, we only need to compute:
 
 \begin{equation}
-    M (\Delta t, p_i, d) = \frac{1}{t_{sim} - \Delta t} \sum_{t_0 = 0}^{t_{sim} - \Delta t - \tau} \left[ \bm{r}_i^{(d)} (t_0 + \Delta t) - \bm{r}_i^{(d)} (t_0) \right]
+    M (\Delta t, p_i, d) = \frac{1}{t_{sim} - \Delta t} \sum_{t_0 = 0}^{t_{sim} - \Delta t - \tau} \left[ \mathbf{r}_i^{(d)} (t_0 + \Delta t) - \mathbf{r}_i^{(d)} (t_0) \right]
 \end{equation}
 
 being $M(\Delta t, p_i, d)$ a three dimensional tensor of shape $N_t \times N_t \times N_p$ storing all mean displacements of temporal length $\Delta t$ for particle $p_i$ in catersian dimension $d$. This leads to:
