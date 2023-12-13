@@ -28,11 +28,13 @@ bibliography: paper.bib
 
 # Summary
 
-Molecular dynamics (MD) simulations of superionic materials render the trajectories of the atoms conforming them. However, extracting meaningful insights from this data is often a challenge since most common analysis rely on active supervision of the simulations and definition of arbitrary material-dependent parameters, thus frustrating high throughput screenings. In particular, to the best of our knowledge, determining the exact migrating paths of diffusive particles has not been previously addressed systematically, despite of its central role in the understanding and design of high performance solid-state electrolytes. Here, we introduce a completely unsupervised approach for analysing ion-hopping events in MD simulations. Based on k-means clustering, our algorithm identifies with precision which and when particles diffuse during a simulation, thus identifying their exact migrating paths. This analysis allows also for the quantification of correlations between many diffusing ions as well as of key atomistic descriptors like the duration/length of diffusion events and residence times, to cite some examples. Moreover, the present implementation introduces an optimized code for computing the full ion diffusion coefficient, that is, entirely considering ionic correlations and thus going beyond the dilute limit approximation.
+Molecular dynamics (MD) simulations of superionic materials render the trajectories of the atoms conforming them. However, extracting meaningful insights from this data is often a challenge since most common analysis rely on active supervision of the simulations and definition of arbitrary material-dependent parameters, thus frustrating high throughput screenings. In particular, to the best of our knowledge, determining exact ionic migrating paths and the level of coordination between mobile particles in diffusive events have not been previously addressed in a systematic and quantitative manner, despite of its central role in the understanding and design of high performance solid-state electrolytes. Here, we introduce a completely unsupervised approach for analysing ion-hopping events in MD simulations. Based on k-means clustering, our algorithm identifies with precision which and when particles diffuse during a simulation, thus identifying their exact migrating paths. This analysis allows also for the quantification of correlations between many diffusing ions as well as of key atomistic descriptors like the duration/length of diffusion events and residence times, to cite some examples. Moreover, the present implementation introduces an optimized code for computing the full ion diffusion coefficient, that is, entirely considering ionic correlations, thus going beyond the dilute limit approximation.
 
 # IonDiff
 
-Fast-ion conductors (FIC) are materials in which some of their constituent atoms diffuse with large drift velocities comparable to those found in liquids. FIC are the pillars of many energy conversion and storage technologies like solid-state electrochemical batteries and fuel cells. However, although first-principles calculations such as density functional theory (DFT) simulations accurately describe the behaviour of such materials, there are still not exhaustive tools for analyzing the atomic behaviour in FIC, thus these simulations remain highly underutilized. **IonDiff** efficiently addresses the challenge described above by implementing unsupervised machine learning approaches in a repository of Python scripts designed to extract the exact migrating paths of diffusive particles from MD simulations, along with other physically relevant quantities like the degree of correlation between diffusive ions, ionic residence times in metastable positions and the length and duration of ionic hops.
+Fast-ion conductors (FIC) are materials in which some of their constituent  atoms diffuse with large drift velocities comparable to those found in liquids. FIC are the pillars of many energy conversion and storage technologies like solid-state electrochemical batteries and fuel cells.   Molecular dynamics (MD) simulations is a computational method that employs Newton's laws to evaluate the trajectory of ions in complex atomic and molecular systems. MD simulations of FIC are highly valuable since can accurately describe the diffusion and vibration of the ions conforming them. Nevertheless, there are not versatile tools at hand for analyzing the outputs of FIC MD simulations in an unsupervised and materials-independent manner, thus frustrating the fundamental understanding and possible rational design of FIC.
+
+ **IonDiff** efficiently addresses the challenge described above by implementing unsupervised machine learning approaches in a repository of Python scripts designed to extract the exact migrating paths of diffusive particles from MD simulations, along with other physically relevant quantities like the degree of correlation between diffusive ions, ionic residence times in metastable positions and the length and duration of ionic hops.
 
 The repository is divided into three independent functionalities:
 
@@ -40,17 +42,17 @@ The repository is divided into three independent functionalities:
 - *analyze_correlations*: analysis of the correlations between ionic diffusion events extracted from a series of MD simulations (the **DIFFUSION** file for each of these simulations will be generated if it does not exist yet).
 - *analyze_descriptors*: extraction and analysis of spatio-temporal descriptors involving the ionic diffusion events identified in the MD simulations. In this library, an optimized approach for computing the full ionic diffusion coefficient (i.e., including ionic cross correlations, proven to be non-negligible in FIC [@kozinsky], [@tateyama], [@arxiv]) is implemented.
 
-The (full) ionic diffusion coefficient consists on two parts [@kozinsky], [@tateyama], considering the mean-squared-displacement (MSD) of a particle with itself (MSD$_{self}$) and with cross terms (MSD$_{distinct}$). Typically, the distinct part of the MSD is neglected in order to accelerate the estimation and convergence of diffusion coefficients. However, many-ions correlations have been recently demonstrated to be essential in FIC [@arxiv] hence should not be disregarded in practice. IonDiff provides a novel implementation of the full ionic diffusion coefficient which outperforms previous codes, exploiting the matricial representation of this calculation. The time required for computing *self* or *distinct* parts here is roughly the same. 
+The (full) ionic diffusion coefficient consists on two parts [@kozinsky], [@tateyama], one that involves the mean-square displacement of a particle with itself (MSD$_{self}$) and another the mean-square displacement of a particle with all others (MSD$_{distinct}$). Typically, the distinct part of the MSD is neglected in order to accelerate the estimation and convergence of diffusion coefficients. However, many-ions correlations have been recently demonstrated to be essential in FIC [@arxiv] hence should not be disregarded in practice. IonDiff provides a novel implementation of the full ionic diffusion coefficient which outperforms previous codes, exploiting the matricial representation of this calculation. The time required for computing the *self* or *distinct* parts of the diffusion coefficient roughly are the same here.
 
-The minimal input needed (besides the file containing the actual atomistic trajectories) consists in an **INCAR** file with **POTIM** and **NBLOCK** flags (indicating the simulation time step and the frequency with which the configurations are recorded, respectively). After installation, all routines are easily controlled from command line. More detailed information can be found in the documentation of the project (including specific **README**s within each folder).
+The minimal input needed (besides the file containing the actual atomistic trajectories) consists in an **INCAR** file with **POTIM** and **NBLOCK** flags (indicating the simulation time step and the frequency with which the configurations are written, respectively). After installation, all routines are easily controlled from the command line. More detailed information can be found in the documentation of the project (including specific **README**s within each folder).
 
 The script allows graphing the identified diffusion paths for each simulated particle and provides the confidence interval associated to the results retrieved by the algorithm. An example of the analysis performed on an *ab initio* MD (AIMD) simulation based on density functional theory (DFT) is shown in \autoref{fig:diffusion-detection}. The AIMD configurations file employed in this example is available online at [@database], along with many other AIMD simulations comprehensively analyzed in a previous work [@horizons].
 
 ![Example of the performance of our unsupervised algorithm at extracting the diffusive path for one random particle of an AIMD simulation of Li\textsubscript{7}La\textsubscript{3}Zr\textsubscript{2}O\textsubscript{12} at a temperature of 400K.\label{fig:diffusion-detection}](figure.svg){width=60%}
 
-Moreover, users may find information regarding their previous executions of the scripts in the *logs* folder, which should be used to track possible errors on data format and more. Finally, a number of tests for checking out all **IonDiff** functions can be found in the *tests* folder.
+Moreover, users may find information regarding their previous executions of the scripts in the *logs* folder, which should be used to track possible errors on the data format and more. Finally, a number of tests for checking out all **IonDiff** functions can be found in the *tests* folder.
 
-Mainly, our code is based on the sklearn [@scikit] implementation of k-means clustering, although numpy [@numpy] and matplotlib [@matplotlib] are used for numerical analysis and plotting, respectively. The current version reads information from VASP [@vasp] simulations, although future releases (already under active development) will extend its scope to simulations from other molecular dynamics software packages (either *ab initio* or classical).
+Mainly, our code is based on the sklearn [@scikit] implementation of k-means clustering, although numpy [@numpy] and matplotlib [@matplotlib] are used for numerical analysis and plotting, respectively. The current version reads information from VASP [@vasp] simulations, although future releases (already under active development) will extend its scope to simulation data obtained from other quantum and classical molecular dynamics packages.
 
 # Methods
 
@@ -64,7 +66,7 @@ K-means algorithm conforms spherical groups given that, for every subgroup $G = 
 
 where $\mathbf{x}_1, \mathbf{x}_2, \dots, \mathbf{x}_N$ are the $N$ data points and $\boldsymbol{\mu}_j$ the mean at $G_j$.
 
-Therefore, this approach is specially suitable for solid crystals, as the atoms tend to vibrate in spherical groups. If it was pretended to study a material which did not verify this statement, the present algorithm allows choosing other clustering schemes such as spectral clustering, which is know for creating non-spherical groups (but rather connected in terms of adjacency).
+Therefore, this approach is particularly well suited for crystals since the atoms tend to fluctuate isotropically around their equilibrium positions. For the study of materials in which atoms vibrate strongly anisotropically, the present algorithm also allows choosing other clustering schemes like spectral clustering, which is known to perform well for cases in which group adjacency is relevant.
 
 Moreover, the optimal number of clusters maximizes the average silhouette’s ratio (that measures the similarity of a point in its own cluster and its dissimilarity in comparison to the others), defined as:
 
@@ -83,7 +85,7 @@ where:
 
 ## Ionic conductivity
 
-The ionic conductivity ($\sigma$) computes from [@tateyama]:
+The ionic conductivity ($\sigma$) is computed like [@tateyama]:
 
 \begin{equation}
     \begin{gathered}
@@ -92,7 +94,7 @@ The ionic conductivity ($\sigma$) computes from [@tateyama]:
     \end{gathered}
 \end{equation}
 
-where $e$, $V$, $k_B$, and $T$ are the elementary charge, system volume, Boltzmann constant, and temperature of the MD simulation, respectively, $z_i$ charge and $\mathbf{r}_i = x_{1, i} \hat{i} + x_{2, i} \hat{j} + x_{3, i} \hat{k}$ cartesian position of particle $i$, and $n_d$ is the number of spatial dimensions of $\mathbf{r}_i$, $\Delta t$ is the time window and $t_0$ the temporal offset of $\Delta t$. Thus, for those simulations in which one only species diffusses, the ionic diffusion coefficient reads: 
+where $e$, $V$, $k_B$, and $T$ are the elementary charge, system volume, Boltzmann constant, and temperature of the MD simulation, respectively, $z_i$ the ionic charge and $\mathbf{r}_i = x_{1i} \hat{i} + x_{2i} \hat{j} + x_{3i} \hat{k}$ the cartesian position of particle $i$, $n_d$ the number of spatial dimensions, $\Delta t$ the time window, and $t_0$ the temporal offset of $\Delta t$. Thus, for those simulations in which only one atomic species diffusses, the ionic diffusion coefficient reads: 
 
 \begin{equation}
     \begin{gathered}
@@ -102,13 +104,13 @@ where $e$, $V$, $k_B$, and $T$ are the elementary charge, system volume, Boltzma
     \end{gathered}
 \end{equation}
 
-As a result, all these displacements can be computed just once, and stored in a three-dimensional tensor, what allows simple vectorization and runs much faster in libraries such as Numpy compared to traditional loops. Then, for a simulation with $n_t$ time steps, and $n_p$ number of atoms for the diffusive species, we only need to compute:
+All the ionic displacements appearing in Eq. (5) can be computed just once and stored in a four-dimensional tensor thus allowing for simple vectorization and very much fast processing with python libraries (e.g., Numpy) as compared to traditional calculation loops. Then, for a simulation with $n_t$ time steps, and $n_p$ number of atoms for the diffusive species, we only need to compute:
 
 \begin{equation}
-    \Delta x (\Delta t, i, d, t_0) = x_{d, i} (t_0 + \Delta t) - x_{d, i} (t_0)
+    \Delta x (\Delta t, i, d, t_0) = x_{di} (t_0 + \Delta t) - x_{di} (t_0)
 \end{equation}
 
-being $\Delta x(\Delta t, i, d, t_0)$ a four-dimensional tensor of shape $n_t \times n_t \times n_p \times n_d$ storing all mean displacements of temporal length $\Delta t$ for particle $p_i$ in catersian dimension $d$. This leads to:
+being $\Delta x(\Delta t, i, d, t_0)$ a four rank tensor of dimension $n_t \times n_t \times n_p \times n_d$ that stores all mean displacements of temporal length $\Delta t$ for particle $p_i$ in a space of dimension $d$. This leads to:
 
 \begin{equation}
     \text{MSD}_{self} (\Delta t) = \frac{1}{n_p} \sum_{i = 1}^{n_p} \langle \sum_{d} \Delta x (\Delta t, i, d, t_0) \cdot \Delta x (\Delta t, i, d, t_0) \rangle_{t_0}
@@ -118,9 +120,9 @@ being $\Delta x(\Delta t, i, d, t_0)$ a four-dimensional tensor of shape $n_t \t
     \text{MSD}_{distinct} (\Delta t) = \frac{2}{n_p (n_p-1)} \sum_{i = 1}^{n_p} \sum_{j = i+1}^{n_p} \langle \sum_{d} \Delta x (\Delta t, i, d, t_0) \cdot \Delta x (\Delta t, j, d, t_0) \rangle_{t_0}
 \end{equation}
 
-Note that we keep $D_{self}$ and $D_{distinct}$ separate as this allows analising easily the contribution of crossed terms to $D$ without adding any code complication.
+Note that we keep $D_{self}$ and $D_{distinct}$ separate since this allows for an straightforward evaluation of the $D$ contributions resulting from the ionic correlations without increasing the code complexity. 
 
-This implementation scales quadratic with the lenght of the simulation and linearly with the number of diffusive particles in terms of memory resources.
+This implementation scales quadratically with the lenght of the simulation and linearly with the number of diffusive particles in terms of memory resources.
 
 # Acknowledgements
 
