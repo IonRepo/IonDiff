@@ -40,9 +40,9 @@ The repository is divided into three independent functionalities:
 
 - *identify_diffusion*: extraction of the migrating paths from a given MD simulation. It generates a **DIFFUSION** file in the folder containing the inputs and outputs of the MD simulation. This file contains all the necessary atomistic information for the following analysis of ionic diffusion events.
 - *analyze_correlations*: analysis of the correlations between ionic diffusion events extracted from a series of MD simulations (the **DIFFUSION** file for each of these simulations will be generated if it does not exist yet).
-- *analyze_descriptors*: extraction and analysis of spatio-temporal descriptors involving the ionic diffusion events identified in the MD simulations. In this library, an optimized approach for computing the full ionic diffusion coefficient (i.e., including ionic cross correlations, proven to be non-negligible in FIC [@kozinsky], [@tateyama], [@arxiv]) is implemented.
+- *analyze_descriptors*: extraction and analysis of spatio-temporal descriptors involving the ionic diffusion events identified in the MD simulations. In this library, an optimized approach for computing the full ionic diffusion coefficient (i.e., including ionic cross correlations, proven to be non-negligible in FIC [@kozinsky; @tateyama; @arxiv]) is implemented.
 
-The (full) ionic diffusion coefficient consists on two parts [@kozinsky], [@tateyama], one that involves the mean-square displacement of a particle with itself (MSD$_{self}$) and another the mean-square displacement of a particle with all others (MSD$_{distinct}$). Typically, the distinct part of the MSD is neglected in order to accelerate the estimation and convergence of diffusion coefficients. However, many-ions correlations have been recently demonstrated to be essential in FIC [@arxiv] hence should not be disregarded in practice. IonDiff provides a novel implementation of the full ionic diffusion coefficient which outperforms previous codes, exploiting the matricial representation of this calculation. The time required for computing the *self* or *distinct* parts of the diffusion coefficient roughly are the same here.
+The (full) ionic diffusion coefficient consists on two parts [@kozinsky; @tateyama], one that involves the mean-square displacement of a particle with itself (MSD$_{self}$) and another the mean-square displacement of a particle with all others (MSD$_{distinct}$). Typically, the distinct part of the MSD is neglected in order to accelerate the estimation and convergence of diffusion coefficients. However, many-ions correlations have been recently demonstrated to be essential in FIC [@arxiv] hence should not be disregarded in practice. IonDiff provides a novel implementation of the full ionic diffusion coefficient which outperforms previous codes, exploiting the matricial representation of this calculation. The time required for computing the *self* or *distinct* parts of the diffusion coefficient roughly are the same here.
 
 The minimal input needed (besides the file containing the actual atomistic trajectories) consists in an **INCAR** file with **POTIM** and **NBLOCK** flags (indicating the simulation time step and the frequency with which the configurations are written, respectively). After installation, all routines are easily controlled from the command line. More detailed information can be found in the documentation of the project (including specific **README**s within each folder).
 
@@ -104,25 +104,25 @@ where $e$, $V$, $k_B$, and $T$ are the elementary charge, system volume, Boltzma
     \end{gathered}
 \end{equation}
 
-All the ionic displacements appearing in Eq. (5) can be computed just once and stored in a four-dimensional tensor thus allowing for simple vectorization and very much fast processing with python libraries (e.g., Numpy) as compared to traditional calculation loops. Then, for a simulation with $n_t$ time steps, and $n_p$ number of atoms for the diffusive species, we only need to compute:
+All the ionic displacements appearing in Eq. (5) can be computed just once and stored in a four-dimensional tensor thus allowing for simple vectorization and very much fast processing with python libraries (e.g., Numpy) as compared to traditional calculation loops. Then, for a simulation with $n_t$ time steps, $n_{\Delta t}$ temporal windows, and $n_p$ number of atoms for the diffusive species, we only need to compute:
 
 \begin{equation}
     \Delta x (\Delta t, i, d, t_0) = x_{di} (t_0 + \Delta t) - x_{di} (t_0)
 \end{equation}
 
-being $\Delta x(\Delta t, i, d, t_0)$ a four rank tensor of dimension $n_t \times n_t \times n_p \times n_d$ that stores all mean displacements of temporal length $\Delta t$ for particle $p_i$ in a space of dimension $d$. This leads to:
+being $\Delta x(\Delta t, i, d, t_0)$ a four rank tensor of dimension $n_{\Delta t} \times n_t \times n_p \times n_d$ that stores all mean displacements of temporal length $\Delta t$ for particle $i$ in space dimension $d$. This leads to:
 
 \begin{equation}
     \text{MSD}_{self} (\Delta t) = \frac{1}{n_p} \sum_{i = 1}^{n_p} \langle \sum_{d} \Delta x (\Delta t, i, d, t_0) \cdot \Delta x (\Delta t, i, d, t_0) \rangle_{t_0}
 \end{equation}
-
+open 
 \begin{equation}
     \text{MSD}_{distinct} (\Delta t) = \frac{2}{n_p (n_p-1)} \sum_{i = 1}^{n_p} \sum_{j = i+1}^{n_p} \langle \sum_{d} \Delta x (\Delta t, i, d, t_0) \cdot \Delta x (\Delta t, j, d, t_0) \rangle_{t_0}
 \end{equation}
 
 Note that we keep $D_{self}$ and $D_{distinct}$ separate since this allows for an straightforward evaluation of the $D$ contributions resulting from the ionic correlations without increasing the code complexity. 
 
-This implementation scales quadratically with the lenght of the simulation and linearly with the number of diffusive particles in terms of memory resources.
+This implementation scales linearly with the maximum shape of the temporal window, the lenght of the simulation and the number of mobile ions in terms of memory resources.
 
 # Acknowledgements
 

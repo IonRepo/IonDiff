@@ -1,7 +1,7 @@
 import numpy             as np
 import matplotlib.pyplot as plt
 import pandas            as pd
-import re                as re
+import re
 
 from sys             import exit
 from scipy.ndimage   import gaussian_filter1d
@@ -158,21 +158,11 @@ def load_data(path_to_simulation):
     
     hoppings = np.NaN
     
-    DIFFUSION_path_raw = f'{path_to_simulation}/DIFFUSION'  # Raw name
-    DIFFUSION_path_txt = f'{path_to_simulation}/DIFFUSION.txt'  # txt format
-    DIFFUSION_path_dat = f'{path_to_simulation}/DIFFUSION.dat'  # dat format
+    DIFFUSION_path = f'{path_to_simulation}/DIFFUSION'
     
-    if path.exists(DIFFUSION_path_raw):
-        if stat(DIFFUSION_path_raw).st_size:
-            hoppings = np.loadtxt(DIFFUSION_path_raw)
-    
-    elif path.exists(DIFFUSION_path_txt):
-        if stat(DIFFUSION_path_txt).st_size:
-            hoppings = np.loadtxt(DIFFUSION_path_txt)
-    
-    elif path.exists(DIFFUSION_path_dat):
-        if stat(DIFFUSION_path_dat).st_size:
-            hoppings = np.loadtxt(DIFFUSION_path_dat)
+    if path.exists(DIFFUSION_path):
+        if stat(DIFFUSION_path).st_size:
+            hoppings = np.loadtxt(DIFFUSION_path)
     else:
         print(f'DIFFUSION file is being computed at {path_to_simulation}.')
         system(f'python3 cli.py identify_diffusion --MD_path {path_to_simulation}')

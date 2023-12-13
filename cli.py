@@ -1,9 +1,8 @@
 #!/usr/bin/env python
+import numpy as np
 import argparse
 import logging
 import settings
-
-import numpy as np
 
 from libraries import identify_diffusion   as ID_library
 from libraries import analyze_correlations as AC_library
@@ -21,7 +20,6 @@ At the input folder, and XDATCAR file with all the configurations of the system 
 """
 
 # Preparing the interpretation of input (command line) variables
-
 parser = argparse.ArgumentParser()
 
 task_subparser = parser.add_subparsers(
@@ -95,14 +93,11 @@ AD_parser.add_argument(
 )
 
 # Computing the vibrational paths
-
 if __name__ == '__main__':
     # Reading the input variables
-    
     args = parser.parse_args()
     
     # Configuring loggin information
-    
     logging.basicConfig(
         filename=settings.LOGS_PATH / f'{args.task}_{datetime.now().strftime("%Y-%m-%d_%H:%M:%S")}.log',
         format='%(asctime)s - [%(levelname)s] - %(message)s',
@@ -110,47 +105,36 @@ if __name__ == '__main__':
     )
     
     # Performing the specified task
-    
     if args.task == 'identify_diffusion':
         # Logging update
-        
         logging.info(f'Task: Extracting diffusive paths from MD simulation at {args.MD_path}.')
         
         # Calling the library and loading the class
-        
         inp = ID_library.xdatcar(args)
         
         # Logging update
-        
         logging.info(f'Simulation successfully loaded.')
         
         # Computing the diffusive paths
-        
         diffusive_paths = inp.get_diffusion(args)
         
         # Saving the results
-        
         np.savetxt(f'{args.MD_path}/DIFFUSION', diffusive_paths)
         
         # Logging update
-        
         logging.info(f'Diffive information successfully extracted and saved.')
     
     elif args.task == 'analyze_correlations':
         # Saving logging information
-        
         logging.info(f'Task: Analysing N-body correlations from MD simulations database at {args.MD_path}.')
         
         # Calling the library and executing the analysis
-        
         AC_library.database(args)
     
     elif args.task == 'analyze_descriptors':
         # Saving logging information
-        
         logging.info(f'Task: Analysing atomistic descriptors from MD simulations database at {args.MD_path}.')
         
         # Calling the library and loading the class
-        
         print('This branch is under active development, its usage is still not implemented.')
         logging.info(f'This branch is under active development, its usage is still not implemented.')
