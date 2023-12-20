@@ -113,11 +113,10 @@ All the ionic displacements appearing in Eq. (5) can be computed just once and s
 being $\Delta x(\Delta t, i, d, t_0)$ a four rank tensor of dimension $n_{\Delta t} \times n_t \times n_p \times n_d$ that stores all mean displacements of temporal length $\Delta t$ for particle $i$ in space dimension $d$. This leads to:
 
 \begin{equation}
-    \text{MSD}_{self} (\Delta t) = \frac{1}{n_p} \sum_{i = 1}^{n_p} \langle \sum_{d} \Delta x (\Delta t, i, d, t_0) \cdot \Delta x (\Delta t, i, d, t_0) \rangle_{t_0}
-\end{equation}
-open 
-\begin{equation}
-    \text{MSD}_{distinct} (\Delta t) = \frac{2}{n_p (n_p-1)} \sum_{i = 1}^{n_p} \sum_{j = i+1}^{n_p} \langle \sum_{d} \Delta x (\Delta t, i, d, t_0) \cdot \Delta x (\Delta t, j, d, t_0) \rangle_{t_0}
+    \begin{gathered}
+        \text{MSD}_{self} (\Delta t) = \frac{1}{n_p} \sum_{i = 1}^{n_p} \langle \sum_{d} \Delta x (\Delta t, i, d, t_0) \cdot \Delta x (\Delta t, i, d, t_0) \rangle_{t_0} \\
+        \text{MSD}_{distinct} (\Delta t) = \frac{2}{n_p (n_p-1)} \sum_{i = 1}^{n_p} \sum_{j = i+1}^{n_p} \langle \sum_{d} \Delta x (\Delta t, i, d, t_0) \cdot \Delta x (\Delta t, j, d, t_0) \rangle_{t_0}
+    \end{gathered}
 \end{equation}
 
 Note that we keep $D_{self}$ and $D_{distinct}$ separate since this allows for an straightforward evaluation of the $D$ contributions resulting from the ionic correlations without increasing the code complexity. 
