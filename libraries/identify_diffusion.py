@@ -16,32 +16,52 @@ sns.set_theme()
 """
 
 # Defining the basic parameters for k-means and spectral clustering algorithms
-
 kmeans_kwargs   = dict(init='random', n_init=10, max_iter=300, tol=1e-04,                          random_state=0)
 spectral_kwargs = dict(affinity='nearest_neighbors', n_neighbors=1000, assign_labels='cluster_qr', random_state=0)
 
 # Defining the class
-
 class xdatcar:
-    """Python Class for loading information from VASP simulations and identifying their diffusions.
+    """Python Class for loading information from VASP simulations and identifying diffusions.
+
+    Attributes:
+        kmeans_kwargs   (dict):  Parameters for K-means clustering algorithm.
+        spectral_kwargs (dict):  Parameters for Spectral clustering algorithm.
+        time_step       (float): Time step between consecutive XDATCAR configurations.
+        n_ions          (int):   Number of ions in the simulation.
+
+    Methods:
+        __init__(self, args):
+            Initializes the XDATCAR class.
+        read_simulation(self, args):
+            Reads VASP XDATCAR files.
+        calculate_silhouette(self, coordinates, method, n_attempts, silhouette_thd):
+            Calculates silhouette scores for different numbers of clusters and selects the optimal number.
+        calculate_clusters(self, coordinates, n_clusters, method, distance_thd):
+            Calculates clusters and related information based on the chosen method and number of clusters.
+        get_diffusion(self, args):
+            Obtains diffusion information from the simulation data.
     """
 
     def __init__(self, args):
-        """Important variables added to the class and reading of the simulation data.
+        """Initialize the XDATCAR class.
+
+        Args:
+            args: Command line arguments containing MD_path and other parameters.
+
+        Raises:
+            exit: If required files are missing.
         """
         
         # Loading intervals step and number of simulation steps between records
-        
         delta_t, n_steps = CL.read_INCAR(args.MD_path)
         
         # Time step between consecutive XDATCAR configurations
-        
         self.time_step = n_steps * delta_t
         
         # Reading the simulation data
-        
         if path.exists(f'{args.MD_path}/XDATCAR'):
             self.read_simulation(args)
+
 
     def read_simulation(self, args):
         """Reads VASP XDATCAR files.
@@ -53,13 +73,11 @@ class xdatcar:
         self.n_iter    = position.shape[0]
         
         # Getting the variation in positions and applying periodic boundary condition
-        
         dpos = np.diff(position, axis=0)
-        dpos[dpos > 0.5]  -= 1.0
+        dpos[dpos >  0.5] -= 1.0
         dpos[dpos < -0.5] += 1.0
         
         # Getting the positions and variations in cell units
-        
         for i in range(self.n_iter-1):
             self.positionC[i] = np.dot(position[i], cell)
             dpos[i]           = np.dot(dpos[i],          cell)
@@ -67,33 +85,38 @@ class xdatcar:
         self.positionC[-1] = np.dot(position[-1], cell)
         
         # Defining the attribute of window=1 variation in position and velocity
-        
         self.velocity = dpos / self.time_step
         self.d1pos    = dpos
     
+    
     def calculate_silhouette(self, coordinates, method, n_attemps, silhouette_thd):
-        """The number of clusters is selected as the maxiumum average silhouette ration unless the threshold is not obtained, in which case one only cluster is selected.
+        """Calculates silhouette scores for different numbers of clusters and selects the optimal number.
+
+        Args:
+            coordinates    (numpy.ndarray): Input array of coordinates.
+            method         (str):           Clustering method ('K-means' or 'Spectral').
+            n_attempts     (int):           Number of attempts for clustering.
+            silhouette_thd (float):         Silhouette score threshold for selecting the number of clusters.
+
+        Returns:
+            int: Optimal number of clusters.
         """
         
         all_clusters = np.arange(2, n_attemps+1)
         silhouette_averages = []
 
         # Iterating over each number of clusters
-        
         for n_clusters in all_clusters:
             if   method == 'K-means':  clustering = KMeans(n_clusters=n_clusters,             **kmeans_kwargs)
             elif method == 'Spectral': clustering = SpectralClustering(n_clusters=n_clusters, **spectral_kwargs)
             
             # Getting the labels
-            
             labels = clustering.fit_predict(coordinates)
             
             # Calculate distortion for a range of number of cluster
-            
             silhouette_averages.append(silhouette_score(coordinates, labels))
         
         # Checking if one cluster is selected
-        
         n_clusters = all_clusters[np.argmax(silhouette_averages)]
         if (np.max(silhouette_averages) < silhouette_thd):
             n_clusters = 1
@@ -101,15 +124,24 @@ class xdatcar:
         print(f'Number of clusters: {n_clusters} with SA = {np.max(silhouette_averages)}')
         return n_clusters
     
+    
     def calculate_clusters(self, coordinates, n_clusters, method, distance_thd):
-        """The diffusive path is obtained from the number of clusters.
+        """Calculates clusters and related information based on the chosen method and number of clusters.
+
+        Args:
+            coordinates  (numpy.ndarray): Input array of coordinates.
+            n_clusters   (int):           Number of clusters.
+            method       (str):           Clustering method ('K-means' or 'Spectral').
+            distance_thd (float):         Distance threshold for identifying vibrations.
+
+        Returns:
+            tuple: Tuple containing centers, classification, vibration, and cluster_change.
         """
         
         if   method == 'K-means':  clustering = KMeans(n_clusters=n_clusters,             **kmeans_kwargs)
         elif method == 'Spectral': clustering = SpectralClustering(n_clusters=n_clusters, **spectral_kwargs)
 
         # Getting the labels and centers
-        
         classification = clustering.fit_predict(coordinates)
         cluster_change = np.where(classification[1:] != classification[:-1])[0]
         
@@ -124,8 +156,15 @@ class xdatcar:
         vibration = distances_to_center < distance_thd
         return centers, classification, vibration, cluster_change
     
+    
     def get_diffusion(self, args):
-        """The data of hoppings is saved as [particle index, first simulation step, last simulation step].
+        """Obtains diffusion information from the simulation data.
+
+        Args:
+            args: Command line arguments.
+
+        Returns:
+            list: List of diffusion events, each represented as [particle index, start step, end step].
         """
         
         hoppings = []
@@ -144,21 +183,18 @@ class xdatcar:
             coordinates = full_coordinates[:, particle]
             
             # Recomended number of clusters
-            
             n_clusters = self.calculate_silhouette(coordinates,
                                                    args.classifier,
                                                    args.n_attemps,
                                                    args.silhouette_thd)
             
             # Information from the clustering
-            
             centers, classification, vibration, cluster_change = self.calculate_clusters(coordinates,
                                                                                          n_clusters,
                                                                                          args.classifier,
                                                                                          args.distance_thd)
             
             # Whenever any group change is found, the initial and ending configurations are obtained regarding the distance threshold
-            
             if cluster_change.size:
                 for change in cluster_change:
                     idx_0 = np.where(vibration[1:change] != vibration[:change-1])[0]
@@ -171,7 +207,6 @@ class xdatcar:
                     
                     # Checking that the new diffusion process is not already saved
                     # This can happen due to the distance threshold, gathering two consecutive, spatially-close diffusions
-                    
                     new_hoppings = [particle, idx_0, idx_1]
                     if new_hoppings not in hoppings:
                         hoppings.append(new_hoppings)

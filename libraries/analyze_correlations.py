@@ -18,14 +18,30 @@ fontsize = 10
 dpi      = 100
 
 # Defining the class
-
 class database:
-    """Python Class for loading information from VASP simulations and analysing correlations among diffusive paths.
+    """Python Class for loading information from VASP simulations and analyzing correlations among diffusive paths.
+
+    Attributes:
+        fontsize (int): Font size for plot labels and ticks.
+        dpi      (int): Dots per inch for saving plots.
+    
+    Methods:
+        __init__(self, args):
+            Initializes the Database class.
+        exp_function(self, x, A, B, C):
+            Defines a decreasing and always positive exponential function.
+        parallel_calculation(self, element, args):
+            Auxiliar function to parallelize calculations.
     """
 
     def __init__(self, args):
-        """Important variables added to the class and reading of the simulation data.
-        If temp_matrix already exists, it is not computing it again, but loading its data.
+        """Initialize the Database class.
+
+        Args:
+            args: Command line arguments containing MD_path and other parameters.
+
+        Raises:
+            exit: If required files are missing.
         """
         
         correlations_matrix_path = f'{args.MD_path}/temp_matrix'
@@ -55,7 +71,6 @@ class database:
                 paths_to_DIFFUSION = file.readlines()
             
             # The computation of correlations for each element are parallelized
-            
             pool    = mp.Pool(mp.cpu_count())  # Number of CPUs in the PC
             metrics = [pool.apply(self.parallel_calculation, (element, args,)) for element in paths_to_DIFFUSION]
             pool.close()
@@ -87,27 +102,22 @@ class database:
             exit(f'File with previous data ({correlations_matrix_path}) and file with paths to DIFFUSIONs ({DIFFUSION_paths}) are missing.')
         
         # Extracting main data from the correlation matrix
-        
         n_simulations, n_events = np.shape(corr_matrix)
 
         x = np.arange(1, n_events+1)  # Number of correlated bodies (list)
         y = np.sum(corr_matrix, axis=0)  # Number of particles with which each particle correlates
 
         # Representing some elements and passing to probability
-
         x = x[1:args.max_corr]
         y = y[1:args.max_corr]
 
         # Normalizing y
-
         y = y / np.sum(y)
 
         # Fitting an exponential function to the the distribution of correlated bodies
-
         [A, B, C], _ = curve_fit(self.exp_function, x, y, p0=[0.01, 0.1, 0.1])
 
         # Plotting fitting and computed points
-        
         ran_c = np.arange(min(x), max(x), 0.01)
         exp_c = self.exp_function(ran_c, A, B, C)
         
@@ -124,43 +134,56 @@ class database:
         plt.savefig(f'{args.MD_path}/PDOS_correlations.eps', dpi=dpi, bbox_inches='tight')
         plt.show()
 
+
     def exp_function(self, x, A, B, C):
-        """Definition of an decreasing and always positive (given that A = abs(A)), expotential function.
+        """Defines a decreasing and always positive exponential function.
+
+        Args:
+            x (numpy.ndarray): Input array.
+            A (float):         Exponential parameter.
+            B (float):         Exponential parameter.
+            C (float):         Exponential parameter.
+
+        Returns:
+            numpy.ndarray: Exponential function values for the given input.
         """
         
         A = np.abs(A)
         return A + B * np.exp(-C * x)
-     
+
+
     def parallel_calculation(self, element, args):
-        """Definition of an auxiliar function to parallelize calculations.
-        The obtained distribution is compared with a random distribution.
+        """Auxiliar function to parallelize calculations.
+        Obtains the distribution and compares it with a random distribution.
+
+        Args:
+            element (str): Path to the simulation, material, mode, and temperature.
+            args:          Command line arguments.
+
+        Returns:
+            tuple: Tuple containing correlation_cumulative, temperature_cumulative, and family_cumulative.
         """
         
         path_to_simulation, material, mode, temperature = element.split()
         
         # Loading the data
-        
         coordinates, hoppings, cell, compounds, concentration = CL.load_data(path_to_simulation)
         (n_conf, n_particles, _) = np.shape(coordinates)
 
         # Expanding the hoppings
-
         key, expanded_hoppings = CL.get_expanded_hoppings(n_conf, n_particles, concentration,
                                                           compounds, hoppings, 'separate')
 
         # No filter
-
         Z_ngs, _ = CL.get_correlation_matrix(expanded_hoppings, gaussian_smoothing=False)
 
         # Gaussian smoothing
-
         Z, Z_corr = CL.get_correlation_matrix(expanded_hoppings, gaussian_smoothing=True)
         
         if args.threshold == 2:
             threshold_aux = []  # Cumulative of thresholds
             for _ in range(200):
                 # Defining a uniformly-random distributed position of hoppings
-
                 n_random_particles = np.shape(expanded_hoppings)[1]
 
                 diffusion_length = int(np.mean(np.sum(Z_ngs, axis=0)))
@@ -175,15 +198,12 @@ class database:
                     Z_random_ngs[pos1:pos2, i] = 1
 
                 # No filter
-
                 Z_random_ngs, _ = CL.get_correlation_matrix(Z_random_ngs, gaussian_smoothing=False)
 
                 # Gaussian smoothing
-
                 Z_random, Z_random_corr = CL.get_correlation_matrix(Z_random_ngs, gaussian_smoothing=True)
 
                 # Calculating the threshold
-
                 Z_random_corr[np.diag_indices(len(Z_random_corr))] = np.NaN
                 aux = Z_random_corr.flatten()
                 aux = aux[~np.isnan(aux)]
@@ -197,19 +217,15 @@ class database:
             threshold = args.threshold
 
         # Applying the threshold
-
         binary_Z_corr = np.zeros_like(Z_corr)
-        
         binary_Z_corr[Z_corr >  threshold] = 1
         binary_Z_corr[Z_corr <= threshold] = 0
 
         # The number of particles with which each particle correlates is obtained from the binary matrix of correlations
-        
         binary_sum = np.sum(binary_Z_corr, axis=0)
         n = int(max(binary_sum))  # Maximum number of correlated bodies
         
         # Defining the matrixes with information regarding the correlations, and temperatures and diffusive families of the respective simulations
-        
         corr_cum = np.zeros(n)
         temp_cum = np.ones(n) * np.NaN
         fami_cum = np.zeros(n, object)

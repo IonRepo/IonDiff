@@ -12,7 +12,6 @@ from os              import path, stat, system
 """
 
 # Defining the information lines of the file
-
 scale_line         = 1  # Line for the scale of the simulation box
 s_cell_line        = 2  # Start of the definition of the simulation box
 e_cell_line        = 4  # End of the definition of the simulation box
@@ -20,15 +19,30 @@ name_line          = 5  # Composition of the compound
 concentration_line = 6  # Concentration of the compound
 x_line             = 7  # Start of the simulation data
 
+
 def obtain_diffusive_information(composition, concentration, DiffTypeName=None):
-    """
-    Gets the diffusive and non-diffusive elements.
-    Various diffusive elements are allowed. In that case, they shall be specified in DiffTypeName.
+    """Gets the diffusive and non-diffusive elements.
+    
+    Args:
+        composition   (list):           List of element symbols in the compound.
+        concentration (list):           List of element concentrations.
+        DiffTypeName  (list, optional): List of diffusive element symbols. Defaults to None.
+    
+    Returns:
+        tuple: Tuple containing DiffTypeName (list), NonDiffTypeName (list), and diffusion_information (list).
+    
+    Example:
+        Obtain the diffusive information from a given composition and concentration.
+    
+        Usage:
+            obtain_diffusive_information(['Li', 'O'], [1, 2])
+    
+    Note:
+        If DiffTypeName is not provided, the function automatically selects diffusive elements based on an implicit order of preference.
     """
 
     if not DiffTypeName:
         # Getting the diffusive element following the implicit order of preference
-
         for diff_component in ['Li', 'Na', 'Ag', 'Cu', 'Cl', 'I', 'Br', 'F', 'O']:
             if diff_component in composition:
                 DiffTypeName = [diff_component]
@@ -39,7 +53,6 @@ def obtain_diffusive_information(composition, concentration, DiffTypeName=None):
         NonDiffTypeName.remove(diff_element)
 
     # Getting the positions of the diffusive elements regarding the XDATCAR file
-
     diffusion_information = []
     for DiffTypeName_value in DiffTypeName:
         for TypeName_index in range(len(composition)):
@@ -48,9 +61,24 @@ def obtain_diffusive_information(composition, concentration, DiffTypeName=None):
                                               concentration[TypeName_index]])
     return DiffTypeName, NonDiffTypeName, diffusion_information
 
+
 def obtain_diffusive_family(element):
     """Returns the family of an element using the obtain_diffusive_information function.
-    Automatically detects components from upper cases and numbers.
+    
+    Args:
+        element (str): Element symbol.
+    
+    Returns:
+        str: Diffusive family of the element.
+    
+    Example:
+        Obtain the diffusive family of a given element.
+    
+        Usage:
+            obtain_diffusive_family('Li')
+    
+    Note:
+        The function automatically detects components from upper cases and numbers.
     """
 
     composition = []
@@ -67,17 +95,31 @@ def obtain_diffusive_family(element):
 
     return f'{diffusive_family}-based'
 
+
 def read_INCAR(path_to_simulation):
     """Reads VASP INCAR files. It is always expected to find these parameters.
+    
+    Args:
+        path_to_simulation (str): Path to the simulation directory.
+    
+    Returns:
+        tuple: Tuple containing delta_t (float) and n_steps (float).
+    
+    Example:
+        Read INCAR file from a simulation directory.
+    
+        Usage:
+            read_INCAR('/path/to/simulation')
+    
+    Note:
+        The function expects the presence of specific parameters (POTIM, NBLOCK) in the INCAR file.
     """
     
     # Predefining the variable, so later we check if they were found
-    
     delta_t = None
     n_steps = None
     
     # Loading the INCAR file
-    
     if not path.exists(f'{path_to_simulation}/INCAR'):
         exit('INCAR file is not available.')
     
@@ -85,7 +127,6 @@ def read_INCAR(path_to_simulation):
         INCAR_lines = INCAR_file.readlines()
     
     # Looking for delta_t and n_steps
-    
     for line in INCAR_lines:
         split_line = line.split('=')
         if len(split_line) > 1:  # Skipping empty lines
@@ -96,17 +137,31 @@ def read_INCAR(path_to_simulation):
             elif label == 'NBLOCK': n_steps = float(value)
     
     # Checking if they were found
-    
     if (delta_t is None) or (n_steps is None):
         exit('POTIM or NBLOCK are not correctly defined in the INCAR file.')
     return delta_t, n_steps
 
+
 def read_XDATCAR(path_to_simulation):
     """Reads cell data and coordinates in direct units.
+    
+    Args:
+        path_to_simulation (str): Path to the simulation directory.
+    
+    Returns:
+        tuple: Tuple containing cell (numpy.ndarray), n_ions (int), compounds (list), concentration (numpy.ndarray), and coordinates (numpy.ndarray).
+    
+    Example:
+        Read XDATCAR file from a simulation directory.
+    
+        Usage:
+            read_XDATCAR('/path/to/simulation')
+    
+    Note:
+        The function expects a specific format in the XDATCAR file.
     """
 
     # Loading data from XDATCAR file
-    
     if not path.exists(f'{path_to_simulation}/XDATCAR'):
         exit('XDATCAR file is not available.')
     
@@ -114,7 +169,6 @@ def read_XDATCAR(path_to_simulation):
         XDATCAR_lines = XDATCAR_file.readlines()
     
     # Extracting the data
-    
     try:
         scale = float(XDATCAR_lines[scale_line])
     except:
@@ -135,27 +189,38 @@ def read_XDATCAR(path_to_simulation):
     n_ions = sum(concentration)
     
     # Shaping the configurations data into the positions attribute
-    
     coordinates = np.array([line.split() for line in XDATCAR_lines[x_line:] if not line.split()[0][0].isalpha()], dtype=float)
     
     # Checking if the number of configurations is correct
-
     if not (len(coordinates) / n_ions).is_integer():
         exit('The number of lines is not correct in the XDATCAR file.')
     
     coordinates  = coordinates.ravel().reshape((-1, n_ions, 3))
     return cell, n_ions, compounds, concentration, coordinates
-    
+
+
 def load_data(path_to_simulation):
     """Returns all needed data in a suitable shape from a simulation.
-    Allows requiring DIFFUSION file to exist.
-    POSCAR and XDATCAR lines consider only first three rows.
+    
+    Args:
+        path_to_simulation (str): Path to the simulation directory.
+    
+    Returns:
+        tuple: Tuple containing coordinates (numpy.ndarray), hoppings (numpy.ndarray), cell (numpy.ndarray), compounds (list), and concentration (numpy.ndarray).
+    
+    Example:
+        Load simulation data from a directory.
+    
+        Usage:
+            load_data('/path/to/simulation')
+    
+    Note:
+        The function requires the existence of specific files such as 'DIFFUSION' and 'XDATCAR'.
     """
     
     cell, _, compounds, concentration, coordinates = read_XDATCAR(path_to_simulation)
     
     # Loading hoppings data, if available
-    
     hoppings = np.NaN
     
     DIFFUSION_path = f'{path_to_simulation}/DIFFUSION'
@@ -169,23 +234,54 @@ def load_data(path_to_simulation):
 
     return coordinates, hoppings, cell, compounds, concentration
 
+
 def find_groups(array):
     """Gives the ranges where an array does not have NaN values.
+    
+    Args:
+        array (numpy.ndarray): Input array.
+    
+    Returns:
+        numpy.ndarray: Array containing start and end indices of non-NaN regions.
+    
+    Example:
+        Find non-NaN regions in an array.
+    
+        Usage:
+            find_groups(np.array([1, 2, np.NaN, 4, 5, np.NaN, 7]))
+    
+    Note:
+        The function is useful for identifying continuous regions without NaN values.
     """
 
     # Create an array that is 1 where a is `value`, and pad each end with an extra 0.
-
     isvalue = np.concatenate(([0], np.isfinite(array).view(np.int8), [0]))
     absdiff = np.abs(np.diff(isvalue))
 
     # Runs start and end where absdiff is 1.
-
     ranges = np.where(absdiff == 1)[0].reshape(-1, 2)
     return ranges
+
 
 def get_separated_groups(matrix, outer=np.NaN):
     """These regions with non-NaNs are found and split.
     The original value is put in the corresponding place.
+    
+    Args:
+        matrix (numpy.ndarray): Input matrix.
+        outer  (optional):      Value to use for outer regions. Defaults to np.NaN.
+    
+    Returns:
+        tuple: Tuple containing key (numpy.ndarray) and separated_matrix (numpy.ndarray).
+    
+    Example:
+        Separate regions with non-NaNs in a matrix.
+    
+        Usage:
+            get_separated_groups(np.array([[1, 2, 3], [4, 5, 6], [7, np.NaN, 9]]))
+    
+    Note:
+        The function is useful for splitting regions with non-NaN values in a matrix.
     """
 
     (n_conf, n_particles) = np.shape(matrix)
@@ -204,6 +300,7 @@ def get_separated_groups(matrix, outer=np.NaN):
                 key.append(particle)
     return np.array(key), separated_matrix[1:].T  # First row was initialized with zeros, and it was transposed
 
+
 def get_expanded_hoppings(n_conf, n_particles, concentration, particle_type, hoppings, method='original'):
     """Expands the compressed information of hoppings into a matrix of (time x particle).
     'Key' stands for the index of the corresponding particle.
@@ -211,10 +308,29 @@ def get_expanded_hoppings(n_conf, n_particles, concentration, particle_type, hop
     Separate: treats every diffusive event as from different particles. Non-diffusive particles are not considered.
     Cleaned:  non-diffusive particles are not considered.
     Original: just expanded as the coordinates matrix.
+    
+    Args:
+        n_conf        (int):           Number of configurations.
+        n_particles   (int):           Number of particles.
+        concentration (numpy.ndarray): Array of particle concentrations.
+        particle_type (list):          List of particle types.
+        hoppings      (numpy.ndarray): Array of hoppings.
+        method        (str, optional): Expansion method. Defaults to 'original'.
+    
+    Returns:
+        tuple: Tuple containing key (numpy.ndarray) and expanded_hoppings (numpy.ndarray).
+    
+    Example:
+        Expand compressed hopping information into a matrix.
+    
+        Usage:
+            get_expanded_hoppings(100, 3, np.array([2, 1]), ['A', 'B', 'C'], np.array([[1, 0, 1], [0, 1, 1]]))
+    
+    Note:
+        The function provides flexibility in expanding hopping information based on different methods.
     """
 
     # Converting the compressed data into a matrix of diffusive/non-diffusive processes
-
     aux = np.zeros((n_conf, n_particles))
     for line in hoppings:
         line = np.array(line, dtype=int)
@@ -222,7 +338,6 @@ def get_expanded_hoppings(n_conf, n_particles, concentration, particle_type, hop
     hoppings = aux
 
     # Diffusions of a same particle can be supposed to be independent
-
     if method == 'separate':
         hoppings[hoppings == 0] = np.NaN
         key, expanded_hoppings = get_separated_groups(hoppings)
@@ -242,18 +357,35 @@ def get_expanded_hoppings(n_conf, n_particles, concentration, particle_type, hop
         return None, hoppings
     return key.flatten(), expanded_hoppings
 
+
 def get_correlation_matrix(expanded_hoppings, correlation_method='pearson', gaussian_smoothing=True, sigma=None):
     """Returns the correlation matrix.
     Gaussian smoothing is allowed.
     If sigma is None, it is calculated as sigma = delta T / 2.355 (FWHM).
+    
+    Args:
+        expanded_hoppings  (numpy.ndarray):   Expanded hopping matrix.
+        correlation_method (str, optional):   Correlation method. Defaults to 'pearson'.
+        gaussian_smoothing (bool, optional):  Enable Gaussian smoothing. Defaults to True.
+        sigma              (float, optional): Standard deviation for Gaussian smoothing. Defaults to None.
+    
+    Returns:
+        tuple: Tuple containing matrix (pandas.DataFrame) and correlation_matrix (numpy.ndarray).
+    
+    Example:
+        Calculate the correlation matrix from expanded hopping data.
+    
+        Usage:
+            get_correlation_matrix(np.array([[1, 0, 1], [0, 1, 1]]), correlation_method='spearman')
+    
+    Note:
+        The function allows customization of correlation calculations and Gaussian smoothing.
     """
 
     # Converting into DataFrame
-
     matrix = pd.DataFrame(expanded_hoppings).copy()
 
     # Applying Gaussian smoothing
-
     if gaussian_smoothing:
         for i in range(np.shape(matrix)[1]):
             aux = np.array(matrix.iloc[:, i], dtype=float)
@@ -265,6 +397,5 @@ def get_correlation_matrix(expanded_hoppings, correlation_method='pearson', gaus
             matrix.iloc[:, i] = blurred * np.max(aux) / np.max(blurred)
 
     # Getting the correlations with the previously-specified method
-
     correlation_matrix = np.array(matrix.corr(method=correlation_method))
     return matrix, correlation_matrix
