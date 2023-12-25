@@ -87,9 +87,15 @@ AC_parser.add_argument(
 AD_parser = task_subparser.add_parser('analyze_descriptors')  # Analysis of descriptors (AD)
 
 AD_parser.add_argument(
-    '--MD_path',
-    default='.',
-        help='Path to the input database of molecular dynamics simulations.',
+    '--path_to_simulation',
+    default=None,
+        help='Path to a folder with XDATCAR and INCAR of the simulation of a given material.',
+)
+
+AD_parser.add_argument(
+    '--path_to_s_simulation',
+    default=None,
+        help='Path to a folder with a stoichiometric POSCAR structure file for the simulation of the given material.',
 )
 
 # Computing the vibrational paths
