@@ -27,12 +27,6 @@ class descriptors:
             exit: If required files are missing.
         """
         
-        # Loading the stoichiometric and non-stoichiometric data, if available
-        s_coordinates = None; s_conc = None; s_initial = None
-        if args.reference_path is not None:
-            s_coordinates,  _, _, _, s_conc  = CL.load_data(args.reference_path)
-            s_initial  = s_coordinates[0]
-
         # Loading the data
         coordinates, self.hoppings, self.cell, self.compounds, self.concentration = CL.load_data(args.MD_path)
         (self.n_conf, self.n_particles, _) = np.shape(coordinates)
@@ -45,8 +39,8 @@ class descriptors:
         self.coordinates = np.stack([nan_hoppings, nan_hoppings, nan_hoppings], axis=2) * coordinates
 
         # Expanding the hoppings avoiding non-diffusive particles
-        key, self.expanded_hoppings = CL.get_expanded_hoppings(self.n_conf, self.n_particles, self.concentration, self.compounds,
-                                                          self.hoppings, method='separate')
+        _, self.expanded_hoppings = CL.get_expanded_hoppings(self.n_conf, self.n_particles, self.concentration, self.compounds,
+                                                             self.hoppings, method='separate')
     
 
     def time_until_diffusion(expanded_matrix, index=0, outer=None):
@@ -65,8 +59,9 @@ class descriptors:
         Returns:
             numpy.ndarray: Array with time until diffusion for each particle.
         """
-        
+        print('e')
         print(expanded_matrix)
+        print('e')
         n_particles = np.shape(expanded_matrix)[1]
         initial_times = np.zeros(n_particles)
         for i in range(n_particles):

@@ -144,24 +144,27 @@ if __name__ == '__main__':
         
         # Calling the library and loading the class
         inp = AD_library.descriptors(args)
+        print('a')
+        print(inp.expanded_hoppings)
+        print('a')
         
         # Computing descriptors
-        time_interval        = inp.time_until_diffusion(inp.expanded_hoppings)
-        temporal_duration    = inp.duration_of_diffusion(inp.expanded_hoppings)
-        spatial_length       = inp.length_of_diffusion(inp.coordinates, inp.cell, outer='nan')
-        n_diffusive_events   = inp.n_diffusive_events(inp.n_conf, inp.n_particles, inp.concentration, inp.compounds, inp.hoppings)
-        residence_time       = inp.residence_time(args.MD_path, args.reference_path)[0] if args.reference_path is not None else None
+        time_interval      = inp.time_until_diffusion(inp.expanded_hoppings.copy())
+        temporal_duration  = inp.duration_of_diffusion(inp.expanded_hoppings)
+        spatial_length     = inp.length_of_diffusion(inp.coordinates, inp.cell, outer='nan')
+        n_diffusive_events = inp.n_diffusive_events(inp.n_conf, inp.n_particles, inp.concentration, inp.compounds, inp.hoppings)
+        residence_time     = inp.residence_time(args.MD_path, args.reference_path)[0] if args.reference_path is not None else None
         
         # Ssve descriptors as dictionary
         descriptors = {
-            MD_path: args.MD_path,
-            delta_t_min: np.min(time_interval),
-            delta_t_max: np.max(time_interval),
+            MD_path:      args.MD_path,
+            delta_t_min:  np.min(time_interval),
+            delta_t_max:  np.max(time_interval),
             delta_t_mean: np.mean(time_interval),
-            delta_r_min: np.min(temporal_duration),
-            delta_r_max: np.max(temporal_duration),
+            delta_r_min:  np.min(temporal_duration),
+            delta_r_max:  np.max(temporal_duration),
             delta_r_mean: np.mean(temporal_duration),
-            gamma: residence_time
+            gamma:        residence_time
         }
         
         # Logging update
