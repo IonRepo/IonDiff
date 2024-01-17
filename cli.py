@@ -6,6 +6,7 @@ import settings
 
 from libraries import identify_diffusion   as ID_library
 from libraries import analyze_correlations as AC_library
+from libraries import analyze_descriptors  as AD_library
 
 from datetime  import datetime
 from os        import system, getcwd, chdir, mkdir, remove, path
@@ -69,7 +70,7 @@ AC_parser = task_subparser.add_parser('analyze_correlations')  # Analysis of cor
 AC_parser.add_argument(
     '--MD_path',
     default='.',
-    help='Path to the input database of molecular dynamics simulations.',
+    help='Path to the input molecular dynamics simulation files.',
 )
 AC_parser.add_argument(
     '--max_corr',
@@ -87,15 +88,15 @@ AC_parser.add_argument(
 AD_parser = task_subparser.add_parser('analyze_descriptors')  # Analysis of descriptors (AD)
 
 AD_parser.add_argument(
-    '--path_to_simulation',
+    '--MD_path',
     default=None,
-        help='Path to a folder with XDATCAR and INCAR of the simulation of a given material.',
+    help='Path to the input molecular dynamics simulation files.',
 )
 
 AD_parser.add_argument(
-    '--path_to_s_simulation',
+    '--reference_path',
     default=None,
-        help='Path to a folder with a stoichiometric POSCAR structure file for the simulation of the given material.',
+    help='Path to a folder with a stoichiometric POSCAR structure file for the simulation of the given material.',
 )
 
 # Computing the vibrational paths
@@ -142,5 +143,33 @@ if __name__ == '__main__':
         logging.info(f'Task: Analysing atomistic descriptors from MD simulations database at {args.MD_path}.')
         
         # Calling the library and loading the class
-        print('This branch is under active development, its usage is still not implemented.')
-        logging.info(f'This branch is under active development, its usage is still not implemented.')
+        inp = AD_library.descriptors(args)
+        
+        # Computing descriptors
+        time_interval        = inp.time_until_diffusion(inp.expanded_hoppings)
+        temporal_duration    = inp.duration_of_diffusion(inp.expanded_hoppings)
+        spatial_length       = inp.length_of_diffusion(inp.coordinates, inp.cell, outer='nan')
+        n_diffusive_events   = inp.n_diffusive_events(inp.n_conf, inp.n_particles, inp.concentration, inp.compounds, inp.hoppings)
+        residence_time       = inp.residence_time(args.MD_path, args.reference_path)[0] if args.reference_path is not None else None
+        
+        # Ssve descriptors as dictionary
+        descriptors = {
+            MD_path: args.MD_path,
+            delta_t_min: np.min(time_interval),
+            delta_t_max: np.max(time_interval),
+            delta_t_mean: np.mean(time_interval),
+            delta_r_min: np.min(temporal_duration),
+            delta_r_max: np.max(temporal_duration),
+            delta_r_mean: np.mean(temporal_duration),
+            gamma: residence_time
+        }
+        
+        # Logging update
+        logging.info(f'Descriptors successfully extracted.')
+        
+        # Write the dictionary to the file in JSON format
+        with open(f'{args.MD_path}/atomistic_descriptors.json', 'w') as json_file:
+            json.dump(descriptors, json_file)
+        
+        # Logging update
+        logging.info(f'Descriptors successfully saved.')

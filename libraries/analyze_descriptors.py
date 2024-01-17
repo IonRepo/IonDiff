@@ -9,19 +9,19 @@ from sys import exit
 """
 
 # Defining the class
-class database:
+class descriptors:
     """Python Class for loading information from VASP simulations and analyzing correlations among descriptors of diffusive paths.
 
     Methods:
         __init__(self, args):
-            Initializes the Database class.
+            Initializes the Descriptors class.
     """
 
     def __init__(self, args):
         """Initialize the Database class.
 
         Args:
-            args: Command line arguments containing path_to_simulation and other parameters.
+            args: Command line arguments containing MD_path and other parameters.
 
         Raises:
             exit: If required files are missing.
@@ -29,50 +29,25 @@ class database:
         
         # Loading the stoichiometric and non-stoichiometric data, if available
         s_coordinates = None; s_conc = None; s_initial = None
-        if args.path_to_s_simulation is not None:
-            s_coordinates,  _, _, _, s_conc  = CL.load_data(args.path_to_s_simulation)
+        if args.reference_path is not None:
+            s_coordinates,  _, _, _, s_conc  = CL.load_data(args.reference_path)
             s_initial  = s_coordinates[0]
 
         # Loading the data
-        coordinates, hoppings, cell, compounds, concentration = CL.load_data(args.path_to_simulation)
-        (n_conf, n_particles, _) = np.shape(coordinates)
+        coordinates, self.hoppings, self.cell, self.compounds, self.concentration = CL.load_data(args.MD_path)
+        (self.n_conf, self.n_particles, _) = np.shape(coordinates)
 
         # Getting diffusion coordinates
-        _, nan_hoppings = DL.get_expanded_hoppings(n_conf, n_particles, concentration, compounds,
-                                                   hoppings, method='original')
+        _, nan_hoppings = CL.get_expanded_hoppings(self.n_conf, self.n_particles, self.concentration, self.compounds,
+                                                   self.hoppings, method='original')
         nan_hoppings[nan_hoppings == 0] = np.NaN
 
-        coordinates = np.stack([nan_hoppings, nan_hoppings, nan_hoppings], axis=2) * coordinates
+        self.coordinates = np.stack([nan_hoppings, nan_hoppings, nan_hoppings], axis=2) * coordinates
 
         # Expanding the hoppings avoiding non-diffusive particles
-        key, expanded_hoppings = CL.get_expanded_hoppings(n_conf, n_particles, concentration, compounds,
-                                                          hoppings, method='separate')
-        
-        time_interval        = time_until_diffusion(expanded_hoppings)
-        temporal_duration    = duration_of_diffusion(expanded_hoppings)
-        spatial_length       = length_of_diffusion(coordinates, cell, outer='nan')
-        n_diffusive_events   = n_diffusive_events(n_conf, n_particles, concentration, compounds, hoppings)
-        if args.path_to_s_simulation is None:
-            residence_time = None
-        else:
-            residence_time, _, _ = residence_time(args.path_to_simulation, args.path_to_s_simulation, mode)
-        
-        # Ssve descriptors as dictionary
-        descriptors = {
-            path_to_simulation: args.path_to_simulation,
-            delta_t_min: np.min(time_interval),
-            delta_t_max: np.max(time_interval),
-            delta_t_mean: np.mean(time_interval),
-            delta_r_min: np.min(temporal_duration),
-            delta_r_max: np.max(temporal_duration),
-            delta_r_mean: np.mean(temporal_duration),
-            gamma: residence_time
-        }
-        
-        # Write the dictionary to the file in JSON format
-        with open(f'{args.path_to_simulation}/atomistic_descriptors.json', 'w') as json_file:
-            json.dump(descriptors, json_file)
-
+        key, self.expanded_hoppings = CL.get_expanded_hoppings(self.n_conf, self.n_particles, self.concentration, self.compounds,
+                                                          self.hoppings, method='separate')
+    
 
     def time_until_diffusion(expanded_matrix, index=0, outer=None):
         """
@@ -90,7 +65,8 @@ class database:
         Returns:
             numpy.ndarray: Array with time until diffusion for each particle.
         """
-
+        
+        print(expanded_matrix)
         n_particles = np.shape(expanded_matrix)[1]
         initial_times = np.zeros(n_particles)
         for i in range(n_particles):
@@ -184,29 +160,29 @@ class database:
         return n_diffusive_events
 
 
-    def residence_time(path_to_simulation, path_to_stc_simulation, threshold=1):
+    def residence_time(MD_path, reference_path, threshold=1):
         """Returns the mean time (in pico-seconds) that a particle stay in meta-stable positions.
         The centers of vibration are extracted with IonDiff functions, which are compared with POSCAR positions.
         Diffusion events are considered as part of residence time when it happens (we do not discard those points).
         
         Args:
-            path_to_simulation     (str):   Path to current simulation.
-            path_to_stc_simulation (str):   Path stoichiometric simulation.
-            threshold              (float): Minimum distance threshold between centers of vibration and stoichiometric positions to be considered as meta-stable positions.
+            MD_path        (str):   Path to current simulation.
+            reference_path (str):   Path stoichiometric simulation.
+            threshold      (float): Minimum distance threshold between centers of vibration and stoichiometric positions to be considered as meta-stable positions.
             
         Returns:
             residence_time (float): Proportion of mesta-stable positions
         """
         
         # Read INCAR settings
-        delta_t, n_steps = read_INCAR(path_to_simulation)
+        delta_t, n_steps = read_INCAR(MD_path)
 
         # A soichiometric path is required
-        if path_to_stc_simulation is None:
+        if reference_path is None:
             sys.exit('Error: stoichiometric not available for comparing')
         
         # Load simulation data
-        coordinates, _, cell, _, _ = load_data(path_to_simulation)
+        coordinates, _, cell, _, _ = load_data(MD_path)
         cartesian_coordinates = get_cartesian_coordinates(coordinates, cell)
         
         # Compute inverse cell
@@ -216,7 +192,7 @@ class database:
         n_particles = np.shape(coordinates)[1]
 
         # Load POSCAR
-        #_, _, _, stc_positions = MPL.information_from_VASPfile(path_to_stc_simulation, 'POSCAR')
+        #_, _, _, stc_positions = MPL.information_from_VASPfile(reference_path, 'POSCAR')
         stc_positions = coordinates[10]
 
         # Number of simulations steps in some meta-stable position

@@ -34,6 +34,12 @@ To analyze temporal correlations among the diffusions of different simulations, 
 python3 cli.py analyze_correlations
 ```
 
+and to extract atomistic descriptors from the simulation and diffusion events run:
+
+```bash
+python3 cli.py analyze_descriptors
+```
+
 where it has to be provided a file named **DIFFUSION_paths**, as in *examples* folder, for which each line represents the relative path to a simulation folder which is to be considered, name of the compound, its stoichiometricity/polymorf and the temperature of simulation. Each folder must contain a **XDATCAR** simulation file (with its corresponding **INCAR** file). 
 
 An *ab initio* MD simulation based on density functional theory of non-stoichiometric Li<sub>7</sub>La<sub>3</sub>Zr<sub>2</sub>O<sub>12</sub> (LLZO) fast-ion conductor at a temperature of 400K is provided to run as an example:
