@@ -43,7 +43,7 @@ class descriptors:
                                                              self.hoppings, method='separate')
     
 
-    def time_until_diffusion(expanded_matrix, index=0, outer=None):
+    def time_until_diffusion(self, index=0, outer=None):
         """
         Calculates an array with the number of steps until the start of the first diffusion of a particle.
         Expanded matrix in 'separate' or 'cleaned' format is mandatory.
@@ -59,10 +59,7 @@ class descriptors:
         Returns:
             numpy.ndarray: Array with time until diffusion for each particle.
         """
-        print('e')
-        print(expanded_matrix)
-        print('e')
-        n_particles = np.shape(expanded_matrix)[1]
+        n_particles = np.shape(inp.expanded_matrix)[1]
         initial_times = np.zeros(n_particles)
         for i in range(n_particles):
             particle_track = expanded_matrix[:, i]
@@ -73,7 +70,7 @@ class descriptors:
         return initial_times
     
     
-    def duration_of_diffusion(expanded_hoppings):
+    def duration_of_diffusion(self):
         """
         Calculates an array with the number of steps of diffusion of a particle.
         Expanded hoppings in 'separate' format is mandatory.
@@ -87,11 +84,11 @@ class descriptors:
             numpy.ndarray: Array with the duration of diffusion for each particle.
         """
 
-        diffusion_duration = time_until_diffusion(expanded_hoppings, index=-1) - time_until_diffusion(expanded_hoppings, index=0)
+        diffusion_duration = time_until_diffusion(self.expanded_hoppings, index=-1) - time_until_diffusion(self.expanded_hoppings, index=0)
         return diffusion_duration
 
 
-    def length_of_diffusion(coordinates, cell, outer='nan'):
+    def length_of_diffusion(self, outer='nan'):
         """
         Calculates an array with the diffusion length of a particle.
         Coordinates must be supplied multiplied by the hoppings mask and with NaNs.
@@ -111,7 +108,7 @@ class descriptors:
 
         # Expanding the coordinates with separate mode
 
-        expanded_coordinates, _, starts, ends, n_conf, n_particles = CL.get_expanded_coordinates(coordinates, outer=outer)
+        expanded_coordinates, _, starts, ends, _, n_particles = CL.get_expanded_coordinates(self.coordinates, outer=outer)
         
         # Computing the distance between initial and final diffusion coordinates (considering PBC)
 
@@ -122,12 +119,12 @@ class descriptors:
 
             distance = np.abs(expanded_coordinates[start, particle] - expanded_coordinates[end, particle])
             distance[distance >= 0.5] -= 1
-            distance = np.dot(distance, cell)
+            distance = np.dot(distance, self.cell)
             diffusion_length[particle] = np.linalg.norm(distance, axis=0)
         return diffusion_length
 
 
-    def n_diffusive_events(n_conf, n_particles, concentration, compounds, hoppings):
+    def n_diffusive_events(self, n_conf, n_particles, concentration, compounds, hoppings):
         """
         Returns the number of detected diffusion events from hoppings array.
         Count Diffusive Events
@@ -155,7 +152,7 @@ class descriptors:
         return n_diffusive_events
 
 
-    def residence_time(MD_path, reference_path, threshold=1):
+    def residence_time(self, args, threshold=1):
         """Returns the mean time (in pico-seconds) that a particle stay in meta-stable positions.
         The centers of vibration are extracted with IonDiff functions, which are compared with POSCAR positions.
         Diffusion events are considered as part of residence time when it happens (we do not discard those points).
@@ -170,14 +167,14 @@ class descriptors:
         """
         
         # Read INCAR settings
-        delta_t, n_steps = read_INCAR(MD_path)
+        delta_t, n_steps = read_INCAR(args.MD_path)
 
         # A soichiometric path is required
-        if reference_path is None:
+        if args.reference_path is None:
             sys.exit('Error: stoichiometric not available for comparing')
         
         # Load simulation data
-        coordinates, _, cell, _, _ = load_data(MD_path)
+        coordinates, _, cell, _, _ = load_data(args.MD_path)
         cartesian_coordinates = get_cartesian_coordinates(coordinates, cell)
         
         # Compute inverse cell
@@ -187,8 +184,7 @@ class descriptors:
         n_particles = np.shape(coordinates)[1]
 
         # Load POSCAR
-        #_, _, _, stc_positions = MPL.information_from_VASPfile(reference_path, 'POSCAR')
-        stc_positions = coordinates[10]
+        _, _, _, stc_positions = MPL.information_from_VASPfile(args.reference_path, 'POSCAR')
 
         # Number of simulations steps in some meta-stable position
         metastable     = []

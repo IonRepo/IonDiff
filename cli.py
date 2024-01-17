@@ -144,16 +144,13 @@ if __name__ == '__main__':
         
         # Calling the library and loading the class
         inp = AD_library.descriptors(args)
-        print('a')
-        print(inp.expanded_hoppings)
-        print('a')
         
         # Computing descriptors
-        time_interval      = inp.time_until_diffusion(inp.expanded_hoppings.copy())
-        temporal_duration  = inp.duration_of_diffusion(inp.expanded_hoppings)
-        spatial_length     = inp.length_of_diffusion(inp.coordinates, inp.cell, outer='nan')
-        n_diffusive_events = inp.n_diffusive_events(inp.n_conf, inp.n_particles, inp.concentration, inp.compounds, inp.hoppings)
-        residence_time     = inp.residence_time(args.MD_path, args.reference_path)[0] if args.reference_path is not None else None
+        time_interval      = inp.time_until_diffusion()
+        temporal_duration  = inp.duration_of_diffusion()
+        spatial_length     = inp.length_of_diffusion(outer='nan')
+        n_diffusive_events = inp.n_diffusive_events()
+        residence_time     = inp.residence_time(args)[0] if args.reference_path is not None else None
         
         # Ssve descriptors as dictionary
         descriptors = {
