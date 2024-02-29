@@ -59,10 +59,10 @@ class descriptors:
         Returns:
             numpy.ndarray: Array with time until diffusion for each particle.
         """
-        n_particles = np.shape(inp.expanded_matrix)[1]
+        n_particles = np.shape(self.expanded_matrix)[1]
         initial_times = np.zeros(n_particles)
         for i in range(n_particles):
-            particle_track = expanded_matrix[:, i]
+            particle_track = self.expanded_matrix[:, i]
             if outer is None:
                 initial_times[i] = np.where(particle_track)[0][index]
             elif outer == 'nan':
@@ -124,7 +124,7 @@ class descriptors:
         return diffusion_length
 
 
-    def n_diffusive_events(self, n_conf, n_particles, concentration, compounds, hoppings):
+    def n_diffusive_events(self):
         """
         Returns the number of detected diffusion events from hoppings array.
         Count Diffusive Events
@@ -140,8 +140,8 @@ class descriptors:
             numpy.ndarray: Number of detected diffusion events for each particle.
         """
         
-        _, cleaned_hoppings = CL.get_expanded_hoppings(n_conf, n_particles, concentration, compounds,
-                                                       hoppings, method='cleaned')
+        _, cleaned_hoppings = CL.get_expanded_hoppings(self.n_conf, self.n_particles, self.concentration, self.compounds,
+                                                               self.hoppings, method='cleaned')
         cleaned_hoppings[cleaned_hoppings == 0] = np.NaN
 
         n_columns = np.shape(cleaned_hoppings)[1]
@@ -174,14 +174,10 @@ class descriptors:
             sys.exit('Error: stoichiometric not available for comparing')
         
         # Load simulation data
-        coordinates, _, cell, _, _ = load_data(args.MD_path)
-        cartesian_coordinates = get_cartesian_coordinates(coordinates, cell)
+        cartesian_coordinates = get_cartesian_coordinates(self.coordinates, self.cell)
         
         # Compute inverse cell
-        inv_cell = np.linalg.inv(cell)
-        
-        # Number of simulated particles
-        n_particles = np.shape(coordinates)[1]
+        inv_cell = np.linalg.inv(self.cell)
 
         # Load POSCAR
         _, _, _, stc_positions = MPL.information_from_VASPfile(args.reference_path, 'POSCAR')
@@ -191,8 +187,8 @@ class descriptors:
         non_metastable = []
         residence_time         = 0
         residence_time_counter = 0
-        for particle in range(n_particles):
-            #print(100 * (particle+1) / n_particles)
+        for particle in range(self.n_particles):
+            #print(100 * (particle+1) / self.n_particles)
             coordinates_i = cartesian_coordinates[:, particle]
             n_clusters    = calculate_silhouette('K-means', coordinates_i, False)
             
@@ -215,7 +211,7 @@ class descriptors:
 
                     # Convert to cartesian distances
                     for i in range(len(diff)):
-                        diff[i] = np.dot(diff[i], cell)
+                        diff[i] = np.dot(diff[i], self.cell)
 
                     # Get distance
                     diff = np.linalg.norm(diff, axis=1)
