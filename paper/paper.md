@@ -46,7 +46,7 @@ The (full) ionic diffusion coefficient consists on two parts [@Molinari2021; @Sa
 
 The minimal input needed (besides the file containing the actual atomistic trajectories) consists in an **INCAR** file with **POTIM** and **NBLOCK** flags (indicating the simulation time step and the frequency with which the configurations are written, respectively). After installation, all routines are easily controlled from the command line. More detailed information can be found in the documentation of the project (including specific **README**s within each folder).
 
-The script allows graphing the identified diffusion paths for each simulated particle and provides the confidence interval associated to the results retrieved by the algorithm. An example of the analysis performed on an *ab initio* MD (AIMD) simulation based on density functional theory (DFT) is shown in \autoref{fig:diffusion-detection}. The AIMD configurations file employed in this example is available online at [@database], along with many other AIMD simulations comprehensively analyzed in a previous work [@Lopez2023].
+The script allows graphing the identified diffusion paths for each simulated particle and provides the confidence interval associated with the results retrieved by the algorithm. An example of the analysis performed on an *ab initio* MD (AIMD) simulation based on density functional theory (DFT) is shown in \autoref{fig:diffusion-detection}. The AIMD configurations file employed in this example is available online at [@database], along with many other AIMD simulations comprehensively analyzed in a previous work [@Lopez2023].
 
 ![Example of the performance of our unsupervised algorithm at extracting the diffusive path for one random particle of an AIMD simulation of Li\textsubscript{7}La\textsubscript{3}Zr\textsubscript{2}O\textsubscript{12} at a temperature of 400K.\label{fig:diffusion-detection}](figure.svg){width=60%}
 
@@ -56,7 +56,7 @@ Mainly, our code is based on the sklearn [@Pedregosa2011] implementation of k-me
 
 # Methods
 
-## Machine learning outline
+## Ionic hop identification
 
 K-means algorithm conforms spherical groups that, for every subgroup $G = \{G_1, G_2, \dots, G_k\}$ in a dataset, minimize the sum of squares:
 
@@ -82,6 +82,12 @@ where:
         b(k) = \min_{J \neq I} \frac{1}{|G_{J}|} \sum_{j = 1}^k \| \mathbf{x}_k - \mathbf{x}_j \|^2
     \end{gathered}
 \end{equation}
+
+Our methodology involves identifying equilibrium and metastable positions within a supercell, considering periodic boundary conditions. We then monitor the temporal sequence of atomic displacements from these vibrational centers to determine ion diffusion paths without imposing any restrictions. We make two fundamental assumptions: that ions vibrate around equilibrium and metastable positions isotropically, and that diffusion events are less frequent than atomic vibrations. We utilize k-means clustering, an unsupervised machine learning algorithm, to identify vibrational centers from sequential ionic configurations. This approach assumes isotropy in the fluctuations of non-diffusive particles.
+
+While spectral clustering, based on interparticle connectivity, was also considered, it yielded less satisfactory results in ionic hop identification. Notably, our approach avoids defining arbitrary material-dependent threshold distances for scrutinizing ionic hops. The optimal number of clusters, K, representing the number of vibrational centers visited by a particle during simulation, is systematically selected based on the silhouette coefficient. If the maximum average silhouette coefficient falls below 0.7, implying the case of a non-diffusive particle (K = 1), we automatically impose K = 1.
+
+Once the vibrational centers, their spatial locations, and temporal evolution are determined, we define ionic diffusion paths as fragments connecting different vibrational centers over time. Due to the discrete nature of generated trajectories and technicalities of the k-means clustering approach, establishing the start and end points of ionic diffusion paths is challenging. Therefore, we adopt an arbitrary but physically reasonable threshold distance of 0.5Å from the midpoint of vibrational centers to define the extremities of diffusive trajectories.
 
 ## Ionic conductivity
 
@@ -121,17 +127,17 @@ being $\Delta x(\Delta t, i, d, t_0)$ a four rank tensor of dimension $n_{\Delta
 
 Note that we keep $D_{self}$ and $D_{distinct}$ separate since this allows for a straightforward evaluation of the $D$ contributions resulting from the ionic correlations without increasing the code complexity. 
 
-This implementation scales linearly with the maximum shape of the temporal window, the lenght of the simulation and the number of mobile ions in terms of memory resources.
+In terms of memory resources, this implementation scales linearly with the length of the temporal window, the total duration of the simulation and the number of mobile ions.
 
 ## Correlations between mobile ions
 
-To quantitatively evaluate the correlations and concentration levels among a variable number of mobile ions, we developed the following algorithm. Beginning with a given sequence of ionic configurations from a molecular dynamics simulation, we compute the correlation matrix for diffusive events. Initially, we assign a value of "1" to each diffusing particle and "0" to each vibrating particle at every time frame. This binary assignment is facilitated by the ionic hop identification algorithm introduced earlier.
+To quantitatively evaluate the correlations and level of concertation between a variable number of mobile ions, we developed the following algorithm. Beginning with a given sequence of ionic configurations from a molecular dynamics simulation, we compute the correlation matrix for diffusive events. Initially, we assign a value of "1" to each diffusing particle and "0" to each vibrating particle at every time frame. This binary assignment is facilitated by the ionic hop identification algorithm introduced earlier.
 
 Due to the discrete nature of the ionic trajectories and to enhance numerical convergence in subsequent correlation analysis, the multistep time functions are approximated using Gaussians with widths equal to their half-maxima ("full-width-at-half-maximum" or FWHM method commonly used in signal processing). Subsequently, we compute the $N \times N$ correlation matrix, where $N$ represents the number of potentially mobile ions, using all gathered simulation data. However, this correlation matrix may be challenging to converge due to its statistical nature, especially in scenarios with limited mobile ions and time steps, typical of AIMD simulations.
 
-Moreover, uncorrelated ion hops occurring simultaneously could be erroneously interpreted as correlated. To address these practical challenges, we compute a reference correlation matrix based on a randomly distributed sequence of ionic hops, with the Gaussian FWHM matching the mean diffusion time determined during the simulation. It is important to note that due to the finite width of the Gaussians, this reference matrix is not exactly identical to the identity.
+Moreover, uncorrelated ion hops occurring simultaneously could be erroneously interpreted as correlated. To address these practical challenges, we compute a reference correlation matrix based on a randomly distributed sequence of ionic hops, with the Gaussian FWHM matching the mean diffusion time determined during the simulation. It is important to note that due to the finite width of the Gaussians, this reference matrix is not exactly the identity matrix.
 
-Next, covariance coefficients in the original correlation matrix larger (smaller) than the corresponding random reference values were considered as true correlations (random noise) and rounded off to one (zero) for simplification. To ensure an accurate assessment of many-ion correlations, different hops of the same ion are treated as independent events. Ultimately, this process resulted in a correlation matrix comprising ones and zeros, facilitating easy determination of the number of particles remaining concerted during diffusion.
+Next, covariance coefficients in the original correlation matrix larger (smaller) than the corresponding random reference values were considered as true correlations (random noise) and rounded off to one (zero) for simplification. To ensure an accurate assessment of many-ion correlations, different hops of the same ion are treated as independent events. Ultimately, this process results in a correlation matrix comprising ones and zeros, facilitating easy determination of the number of particles remaining concerted during diffusion.
 
 # Acknowledgements
 
