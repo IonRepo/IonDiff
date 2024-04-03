@@ -1,5 +1,5 @@
 ---
-title: 'IonDiff: command-line tool to identify diffusion events from molecular dynamics simulations'
+title: 'IonDiff: command-line tool to identify ionic diffusion events and hopping correlations in molecular dynamics simulations'
 tags:
   - Python
   - Molecular dynamics
@@ -28,13 +28,13 @@ bibliography: paper.bib
 
 # Summary
 
-Molecular dynamics (MD) simulations of superionic materials render the trajectories of the atoms conforming them. However, extracting meaningful insights from this data is often a challenge since most common analysis rely on active supervision of the simulations and definition of arbitrary material-dependent parameters, thus frustrating high throughput screenings. In particular, to the best of our knowledge, determining exact ionic migrating paths and the level of coordination between mobile particles in diffusive events have not been previously addressed in a systematic and quantitative manner, despite its central role in the understanding and design of high performance solid-state electrolytes. Here, we introduce a completely unsupervised approach for analysing ion-hopping events in MD simulations. Based on k-means clustering, our algorithm identifies with precision which and when particles diffuse during a simulation, thus identifying their exact migrating paths. This analysis allows also for the quantification of correlations between many diffusing ions as well as of key atomistic descriptors like the duration/length of diffusion events and residence times, to cite some examples. Moreover, the present implementation introduces an optimized code for computing the full ion diffusion coefficient, that is, entirely considering ionic correlations, thus going beyond the dilute limit approximation.
+Molecular dynamics (MD) simulations of fast-ion conductors render the trajectories of the atoms conforming them. However, extracting meaningful insights from this data is often a challenge since most common analysis rely on active supervision of the simulations and definition of arbitrary material-dependent parameters, thus frustrating high throughput screenings. In particular, to the best of our knowledge, determining exact ionic migrating paths and the level of coordination between mobile particles in diffusive events have not been previously addressed in a systematic and quantitative manner, despite its central role in the understanding and design of high performance solid-state electrolytes. Here, we introduce a completely unsupervised approach for analysing ion-hopping events in MD simulations. Based on k-means clustering, our algorithm identifies with precision which and when particles diffuse during a simulation, thus identifying their exact migrating paths. This analysis allows also for the quantification of correlations between many diffusing ions as well as of key atomistic descriptors like the duration/length of diffusion events and residence times, to cite some examples. Moreover, the present implementation introduces an optimized code for computing the full ion diffusion coefficient, that is, entirely considering ionic correlations, thus going beyond the dilute limit approximation.
 
 # IonDiff
 
-Fast-ion conductors (FIC) are materials in which some of their constituent  atoms diffuse with large drift velocities comparable to those found in liquids. FIC are the pillars of many energy conversion and storage technologies like solid-state electrochemical batteries and fuel cells.   Molecular dynamics (MD) simulations is a computational method that employs Newton's laws to evaluate the trajectory of ions in complex atomic and molecular systems. MD simulations of FIC are highly valuable since can accurately describe the diffusion and vibration of the ions conforming them. Nevertheless, there are no versatile tools at hand for analyzing the outputs of FIC MD simulations in an unsupervised and materials-independent manner, thus frustrating the fundamental understanding and possible rational design of FIC.
+Fast-ion conductors (FIC) are materials in which some of their constituent  atoms diffuse with large drift velocities comparable to those found in liquids. FIC are the pillars of many energy conversion and storage technologies like solid-state electrochemical batteries and fuel cells. Molecular dynamics (MD) simulations is a computational method that employs Newton's laws to evaluate the trajectory of ions in complex atomic and molecular systems. MD simulations of FIC are highly valuable since can accurately describe the diffusion and vibration of the ions conforming them. Nevertheless, there is a painstaking lack of handy computational tools for analyzing the outputs of FIC MD simulations in an unsupervised and materials-independent manner, thus frustrating the fundamental understanding and possible rational design of FIC.
 
- **IonDiff** efficiently addresses the challenge described above by implementing unsupervised machine learning approaches in a repository of Python scripts designed to extract the exact migrating paths of diffusive particles from MD simulations, along with other physically relevant quantities like the degree of correlation between diffusive ions, ionic residence times in metastable positions and the length and duration of ionic hops.
+**IonDiff** efficiently addresses the challenge described above by implementing unsupervised machine learning approaches in a repository of Python scripts designed to extract the exact migrating paths of diffusive particles from MD simulations, along with other physically relevant quantities like the degree of correlation between diffusive ions, ionic residence times in metastable positions and the length and duration of ionic hops. Additionally, IonDiff efficiently and seamlessly evaluates full ion diffusion coefficients, which in contrast to tracer ion diffusion coefficients fully encompass ionic correlations. Periodic boundary conditions are fully accounted for by IonDiff. 
 
 The repository is divided into three independent functionalities:
 
@@ -52,16 +52,16 @@ The script allows graphing the identified diffusion paths for each simulated par
 
 Moreover, users may find information regarding their previous executions of the scripts in the *logs* folder, which should be used to track possible errors on the data format and more. Finally, a number of tests for checking out all **IonDiff** functions can be found in the *tests* folder.
 
-Mainly, our code is based on the sklearn [@Pedregosa2011] implementation of k-means clustering, although numpy [@Harris2020] and matplotlib [@Hunter2007] are used for numerical analysis and plotting, respectively. The current version reads information from VASP [@Kresse1996] simulations, although future releases (already under active development) will extend its scope to simulation data obtained from other quantum and classical molecular dynamics packages.
+Mainly, our code is based on the sklearn [@Pedregosa2011] implementation of k-means clustering, although numpy [@Harris2020] and matplotlib [@Hunter2007] are used for numerical analysis and plotting, respectively. The current IonDiff version reads information from VASP [@Kresse1996] simulations; future releases, already under active development, will extend its scope to other simulation data obtained from other quantum and classical molecular dynamics packages.
 
 # Methods
 
 ## Machine learning outline
 
-K-means algorithm conforms spherical groups given that, for every subgroup $G = \{G_1, G_2, \dots, G_k\}$ in a dataset, it minimizes the sum of squares:
+K-means algorithm conforms spherical groups that, for every subgroup $G = \{G_1, G_2, \dots, G_k\}$ in a dataset, minimize the sum of squares:
 
 \begin{equation}
-    \sum_{i = 1}^N \min_{\boldsymbol{\mu}_j \in G} \left( \| \mathbf{x}_i - \boldsymbol{\mu}_j \|^2 \right)
+    \sum_{i = 1}^N \min_{\boldsymbol{\mu}_j \in G_j} \left( \| \mathbf{x}_i - \boldsymbol{\mu}_j \|^2 \right)
 \end{equation}
 
 where $\mathbf{x}_1, \mathbf{x}_2, \dots, \mathbf{x}_N$ are the $N$ data points and $\boldsymbol{\mu}_j$ the mean at $G_j$.
@@ -122,6 +122,16 @@ being $\Delta x(\Delta t, i, d, t_0)$ a four rank tensor of dimension $n_{\Delta
 Note that we keep $D_{self}$ and $D_{distinct}$ separate since this allows for a straightforward evaluation of the $D$ contributions resulting from the ionic correlations without increasing the code complexity. 
 
 This implementation scales linearly with the maximum shape of the temporal window, the lenght of the simulation and the number of mobile ions in terms of memory resources.
+
+## Correlations between mobile ions
+
+To quantitatively evaluate the correlations and concentration levels among a variable number of mobile ions, n, we developed the following algorithm. Beginning with a given sequence of ionic configurations from a molecular dynamics simulation, we computed the correlation matrix for diffusive events. Initially, we assigned a value of "1" to each diffusing particle and "0" to each vibrating particle at every time frame. This binary assignment was facilitated by the ionic hop identification algorithm introduced earlier.
+
+Due to the discrete nature of the ionic trajectories and to enhance numerical convergence in subsequent correlation analysis, we approximated the multistep time functions using Gaussians with widths equal to their half-maxima ("full-width-at-half-maximum" or FWHM method commonly used in signal processing). Subsequently, we computed the N×N correlation matrix, where $N$ represents the number of potentially mobile ions, using all gathered simulation data. However, this correlation matrix may be challenging to converge due to its statistical nature, especially in scenarios with limited mobile ions and time steps, typical of AIMD simulations.
+
+Moreover, uncorrelated ion hops occurring simultaneously could be erroneously interpreted as correlated. To address these practical challenges, we computed a reference correlation matrix based on a randomly distributed sequence of ionic hops, with the Gaussian FWHM matching the mean diffusion time determined during the simulation. It's important to note that due to the finite width of the Gaussians, this reference matrix is not exactly identical to the identity.
+
+Next, covariance coefficients in the original correlation matrix larger (or smaller) than the corresponding random reference values were considered as true correlations (or random noise) and rounded off to one (or zero) for simplification. To ensure an accurate assessment of many-ion correlations, we treated different hops of the same ion as independent events. Ultimately, this process resulted in a correlation matrix comprising ones and zeros, facilitating easy determination of the number of particles remaining concerted during diffusion.
 
 # Acknowledgements
 

@@ -51,9 +51,9 @@ An *ab initio* MD simulation based on density functional theory of non-stoichiom
 
 IonDiff is being developed by:
 
- - Cibrán López Álvarez
+ - Cibrán López
  - Riccardo Rurali
- - Claudio Cazorla Silva
+ - Claudio Cazorla
 
 ## Contact, questions and contributing
 

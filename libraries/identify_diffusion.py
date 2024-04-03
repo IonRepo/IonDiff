@@ -80,7 +80,7 @@ class xdatcar:
         # Getting the positions and variations in cell units
         for i in range(self.n_iter-1):
             self.positionC[i] = np.dot(position[i], cell)
-            dpos[i]           = np.dot(dpos[i],          cell)
+            dpos[i]           = np.dot(dpos[i],     cell)
         
         self.positionC[-1] = np.dot(position[-1], cell)
         
@@ -182,7 +182,7 @@ class xdatcar:
         for particle in range(self.n_ions):
             coordinates = full_coordinates[:, particle]
             
-            # Recomended number of clusters
+            # Recommended number of clusters
             n_clusters = self.calculate_silhouette(coordinates,
                                                    args.classifier,
                                                    args.n_attemps,
@@ -194,7 +194,8 @@ class xdatcar:
                                                                                          args.classifier,
                                                                                          args.distance_thd)
             
-            # Whenever any group change is found, the initial and ending configurations are obtained regarding the distance threshold
+            # Whenever any group change is found,
+            # the initial and ending configurations are obtained regarding the distance threshold
             if cluster_change.size:
                 for change in cluster_change:
                     idx_0 = np.where(vibration[1:change] != vibration[:change-1])[0]
@@ -206,13 +207,16 @@ class xdatcar:
                     else:          idx_1 = -1
                     
                     # Checking that the new diffusion process is not already saved
-                    # This can happen due to the distance threshold, gathering two consecutive, spatially-close diffusions
+                    # This can happen due to the distance threshold,
+                    # gathering two consecutive, spatially-close diffusions
                     new_hoppings = [particle, idx_0, idx_1]
                     if new_hoppings not in hoppings:
                         hoppings.append(new_hoppings)
                         
                         if args.make_plot:
-                            ax.scatter(coordinates[idx_0:idx_1, 0], coordinates[idx_0:idx_1, 1], coordinates[idx_0:idx_1, 2],
+                            ax.scatter(coordinates[idx_0:idx_1, 0],
+                                       coordinates[idx_0:idx_1, 1],
+                                       coordinates[idx_0:idx_1, 2],
                                        color=np.random.rand(3),
                                        marker='o',
                                        label=f'Diffusion')
@@ -230,7 +234,7 @@ class xdatcar:
                                color='black',
                                marker='x')
                 
-                if cluster_change.size:  # Otherwise there are not diffusive events to label
+                if cluster_change.size:  # Otherwise there are no diffusive events to label
                     plt.legend(loc='best')
                 plt.show()
         return hoppings

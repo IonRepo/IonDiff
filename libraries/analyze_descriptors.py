@@ -5,12 +5,15 @@ import json
 
 from sys import exit
 
-"""Definition of the class to analyse correlations among descriptors of diffusive paths. A database with more than one simulation must be provided, as well as paths to every interesting DIFFUSION file, extracted from the simulation.
+"""Definition of the class to analyse correlations among descriptors of diffusive paths.
+   A database with more than one simulation must be provided, as well as paths to every
+   interesting DIFFUSION file, extracted from the simulation.
 """
 
 # Defining the class
 class descriptors:
-    """Python Class for loading information from VASP simulations and analyzing correlations among descriptors of diffusive paths.
+    """Python Class for loading information from VASP simulations
+       and analyzing correlations among descriptors of diffusive paths.
 
     Methods:
         __init__(self, args):
@@ -39,8 +42,8 @@ class descriptors:
         self.coordinates = np.stack([nan_hoppings, nan_hoppings, nan_hoppings], axis=2) * coordinates
 
         # Expanding the hoppings avoiding non-diffusive particles
-        _, self.expanded_hoppings = CL.get_expanded_hoppings(self.n_conf, self.n_particles, self.concentration, self.compounds,
-                                                             self.hoppings, method='separate')
+        _, self.expanded_hoppings = CL.get_expanded_hoppings(self.n_conf, self.n_particles, self.concentration,
+                                                             self.compounds, self.hoppings, method='separate')
     
 
     def time_until_diffusion(self, index=0, outer=None):
@@ -108,7 +111,8 @@ class descriptors:
 
         # Expanding the coordinates with separate mode
 
-        expanded_coordinates, _, starts, ends, _, n_particles = CL.get_expanded_coordinates(self.coordinates, outer=outer)
+        expanded_coordinates, _, starts, ends, _, n_particles = CL.get_expanded_coordinates(self.coordinates,
+                                                                                            outer=outer)
         
         # Computing the distance between initial and final diffusion coordinates (considering PBC)
 
@@ -140,8 +144,8 @@ class descriptors:
             numpy.ndarray: Number of detected diffusion events for each particle.
         """
         
-        _, cleaned_hoppings = CL.get_expanded_hoppings(self.n_conf, self.n_particles, self.concentration, self.compounds,
-                                                               self.hoppings, method='cleaned')
+        _, cleaned_hoppings = CL.get_expanded_hoppings(self.n_conf, self.n_particles, self.concentration,
+                                                       self.compounds, self.hoppings, method='cleaned')
         cleaned_hoppings[cleaned_hoppings == 0] = np.NaN
 
         n_columns = np.shape(cleaned_hoppings)[1]
@@ -160,7 +164,8 @@ class descriptors:
         Args:
             MD_path        (str):   Path to current simulation.
             reference_path (str):   Path stoichiometric simulation.
-            threshold      (float): Minimum distance threshold between centers of vibration and stoichiometric positions to be considered as meta-stable positions.
+            threshold      (float): Minimum distance threshold between centers of vibration and
+                                    stoichiometric positions to be considered as meta-stable positions.
             
         Returns:
             residence_time (float): Proportion of mesta-stable positions

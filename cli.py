@@ -17,7 +17,10 @@ The command line variables are read. Three options are considered:
     - Analysis of correlations among diffusive paths.
     - Analysis of atomistic descriptors extracted from the diffusive paths (under active development).
 
-At the input folder, and XDATCAR file with all the configurations of the system through simulation is required. Optionally, a POSCAR can be supplied with the initial configuration. As well, an INCAR specifyin POTIM (simulation step) and NBLOCK (number of simulation steps between consecutive configurations in the XDATCAR) are necessary.
+At the input folder, and XDATCAR file with all the configurations of the system through simulation is required.
+Optionally, a POSCAR can be supplied with the initial configuration.
+As well, an INCAR specifyin POTIM (simulation step) and NBLOCK (number of simulation steps between
+consecutive configurations in the XDATCAR) are necessary.
 """
 
 # Preparing the interpretation of input (command line) variables
@@ -28,7 +31,7 @@ task_subparser = parser.add_subparsers(
     dest='task'
 )
 
-ID_parser = task_subparser.add_parser('identify_diffusion')  # Identication of diffusive paths (ID)
+ID_parser = task_subparser.add_parser('identify_diffusion')  # Identification of diffusive paths (ID)
 
 ID_parser.add_argument(
     '--MD_path',
@@ -82,7 +85,8 @@ AC_parser.add_argument(
     '--threshold',
     type=float,
     default='2',
-    help='Threshold for removing random correlations among particles lower than the threshold, between [-1, 1] (threshold=2 to automatically compute it).',
+    help='Threshold for removing random correlations among particles lower than the'
+         'threshold, between [-1, 1] (threshold=2 to automatically compute it).',
 )
 
 AD_parser = task_subparser.add_parser('analyze_descriptors')  # Analysis of descriptors (AD)
@@ -129,7 +133,7 @@ if __name__ == '__main__':
         np.savetxt(f'{args.MD_path}/DIFFUSION', diffusive_paths)
         
         # Logging update
-        logging.info(f'Diffive information successfully extracted and saved.')
+        logging.info(f'Diffusive information successfully extracted and saved.')
     
     elif args.task == 'analyze_correlations':
         # Saving logging information
@@ -152,7 +156,7 @@ if __name__ == '__main__':
         n_diffusive_events = inp.n_diffusive_events()
         residence_time     = inp.residence_time(args)[0] if args.reference_path is not None else None
         
-        # Ssve descriptors as dictionary
+        # Save descriptors as dictionary
         descriptors = {
             MD_path:      args.MD_path,
             delta_t_min:  np.min(time_interval),

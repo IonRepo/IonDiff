@@ -2,7 +2,7 @@
 import numpy             as np
 import matplotlib.pyplot as plt
 import seaborn           as sns
-import libraries.common_library    as CL
+import libraries.common_library as CL
 import multiprocess      as mp
 
 from sys            import exit
@@ -11,7 +11,8 @@ from os             import path
 
 sns.set_theme()
 
-"""Definition of the class to analyse correlations among diffusive paths. A database with more than one simulation must be provided, as well as paths to every interesting DIFFUSION file, extracted from the simulation.
+"""Definition of the class to analyse correlations among diffusive paths. A database with more than one
+   simulation must be provided, as well as paths to every interesting DIFFUSION file, extracted from the simulation.
 """
 
 fontsize = 10
@@ -209,8 +210,8 @@ class database:
                 aux = aux[~np.isnan(aux)]
                 threshold_aux.append(np.mean(aux))
             
-            # A threshold is defined in correspondence to a random distribution, so less-correlated particles are not considered
-            
+            # A threshold is defined in correspondence to a random distribution,
+            # so less-correlated particles are not considered
             threshold = np.mean(threshold_aux)
         
         else:
@@ -225,7 +226,8 @@ class database:
         binary_sum = np.sum(binary_Z_corr, axis=0)
         n = int(max(binary_sum))  # Maximum number of correlated bodies
         
-        # Defining the matrixes with information regarding the correlations, and temperatures and diffusive families of the respective simulations
+        # Defining the matrixes with information regarding the correlations,
+        # and temperatures and diffusive families of the respective simulations
         corr_cum = np.zeros(n)
         temp_cum = np.ones(n) * np.NaN
         fami_cum = np.zeros(n, object)
