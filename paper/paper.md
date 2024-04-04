@@ -58,6 +58,8 @@ Mainly, our code is based on the sklearn [@Pedregosa2011] implementation of k-me
 
 ## Ionic hop identification
 
+Our method for identifying vibrational centers from sequential ionic configurations relies on k-means clustering, an unsupervised machine learning algorithm. This method assumes isotropy in the fluctuations of non-diffusive particles. Importantly, our approach circumvents the need for defining arbitrary, materials-dependent threshold distances to analyze ionic hops.
+
 K-means algorithm conforms spherical groups that, for every subgroup $G = \{G_1, G_2, \dots, G_k\}$ in a dataset, minimize the sum of squares:
 
 \begin{equation}
@@ -66,9 +68,9 @@ K-means algorithm conforms spherical groups that, for every subgroup $G = \{G_1,
 
 where $\mathbf{x}_1, \mathbf{x}_2, \dots, \mathbf{x}_N$ are the $N$ data points and $\boldsymbol{\mu}_j$ the mean at $G_j$.
 
-Therefore, this approach is particularly well suited for crystals since the atoms tend to fluctuate isotropically around their equilibrium positions. For the study of materials in which atoms vibrate strongly anisotropically, the present algorithm also allows choosing other clustering schemes like spectral clustering, which is known to perform well for cases in which group adjacency is relevant.
+This approach is particularly well-suited for crystals, as atoms typically fluctuate isotropically around their equilibrium positions. For materials where atoms exhibit strong anisotropic vibrations, IonDiff also permits the selection of alternative clustering schemes, such as spectral clustering, which is effective for cases where group adjacency is significant.
 
-The number of clusters determined by IonDiff for a MD simulation is the one that maximizes the average silhouette’s ratio (that measures the similarity of a point in its own cluster and its dissimilarity in comparison to the others), defined as:
+The number of clusters, or equivalently, ionic vibrational centers, determined by IonDiff for a molecular dynamics (MD) simulation is the one that maximizes the average silhouette ratio. This metric assesses the similarity of a point within its own cluster and its dissimilarity in comparison to other clusters. The average silhouette ratio is defined as:
 
 \begin{equation}
     S(k) = \frac{b(k) - a(k)}{\max{(a(k), b(k))}}
@@ -83,11 +85,7 @@ where:
     \end{gathered}
 \end{equation}
 
-Our methodology involves identifying equilibrium and metastable positions within a supercell, considering periodic boundary conditions. We then monitor the temporal sequence of atomic displacements from these vibrational centers to determine ion diffusion paths without imposing any restrictions. We make two fundamental assumptions: that ions vibrate around equilibrium and metastable positions isotropically, and that diffusion events are less frequent than atomic vibrations. We utilize k-means clustering, an unsupervised machine learning algorithm, to identify vibrational centers from sequential ionic configurations. This approach assumes isotropy in the fluctuations of non-diffusive particles.
-
-While spectral clustering, based on interparticle connectivity, was also considered, it yielded less satisfactory results in ionic hop identification. Notably, our approach avoids defining arbitrary material-dependent threshold distances for scrutinizing ionic hops. The optimal number of clusters, K, representing the number of vibrational centers visited by a particle during simulation, is systematically selected based on the silhouette coefficient. If the maximum average silhouette coefficient falls below 0.7, implying the case of a non-diffusive particle (K = 1), we automatically impose K = 1.
-
-Once the vibrational centers, their spatial locations, and temporal evolution are determined, we define ionic diffusion paths as fragments connecting different vibrational centers over time. Due to the discrete nature of generated trajectories and technicalities of the k-means clustering approach, establishing the start and end points of ionic diffusion paths is challenging. Therefore, we adopt an arbitrary but physically reasonable threshold distance of 0.5Å from the midpoint of vibrational centers to define the extremities of diffusive trajectories.
+Once the number of vibrational centers, along with their real-space location and temporal evolution, are determined, ionic diffusion paths are delineated as the segments connecting two distinct vibrational centers over time. Due to the discrete nature of the generated trajectories and intricacies of the k-means clustering approach, establishing the precise start and end points of ionic diffusion paths is challenging. Consequently, we adopt an arbitrary yet physically plausible threshold distance of 0.5 Å from the midpoint of the vibrational centers to define the extremities of diffusive trajectories.
 
 ## Ionic conductivity
 
@@ -133,7 +131,7 @@ In terms of memory resources, this implementation scales linearly with the lengt
 
 To quantitatively evaluate the correlations and level of concertation between a variable number of mobile ions, we developed the following algorithm. Beginning with a given sequence of ionic configurations from a molecular dynamics simulation, we compute the correlation matrix for diffusive events. Initially, we assign a value of "1" to each diffusing particle and "0" to each vibrating particle at every time frame. This binary assignment is facilitated by the ionic hop identification algorithm introduced earlier.
 
-Due to the discrete nature of the ionic trajectories and to enhance numerical convergence in subsequent correlation analysis, the multistep time functions are approximated using Gaussians with widths equal to their half-maxima ("full-width-at-half-maximum" or FWHM method commonly used in signal processing). Subsequently, we compute the $N \times N$ correlation matrix, where $N$ represents the number of potentially mobile ions, using all gathered simulation data. However, this correlation matrix may be challenging to converge due to its statistical nature, especially in scenarios with limited mobile ions and time steps, typical of AIMD simulations.
+Due to the discrete nature of the ionic trajectories and to enhance numerical convergence in subsequent correlation analysis, the multistep time functions are approximated using Gaussians with widths equal to their half-maxima (commonly known as the "full-width-at-half-maximum" or FWHM method used in signal processing). Subsequently, we compute the $N \times N$ correlation matrix, where $N$ represents the number of potentially mobile ions, using all gathered simulation data. However, this correlation matrix may be challenging to converge due to its statistical nature, especially in scenarios with limited mobile ions and time steps, typical of AIMD simulations.
 
 Moreover, uncorrelated ion hops occurring simultaneously could be erroneously interpreted as correlated. To address these practical challenges, we compute a reference correlation matrix based on a randomly distributed sequence of ionic hops, with the Gaussian FWHM matching the mean diffusion time determined during the simulation. It is important to note that due to the finite width of the Gaussians, this reference matrix is not exactly the identity matrix.
 
