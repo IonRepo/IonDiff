@@ -46,7 +46,7 @@ The minimal input needed (besides the file containing the actual atomistic traje
 
 The script allows graphing the identified diffusion paths for each simulated particle and provides the confidence interval associated with the results retrieved by the algorithm. An example of the analysis performed on an *ab initio* MD (AIMD) simulation based on density functional theory (DFT) is shown in \autoref{fig:diffusion-detection}. The AIMD configurations file employed in this example is available online at [@database], along with many other AIMD simulations comprehensively analyzed in two previous works [@Lopez2023; @Lopez2024].
 
-![Example of the performance of our unsupervised algorithm at extracting the diffusive path for one random particle of an AIMD simulation of SrCoO\textsubscript{3} at a temperature of 400K.\label{fig:diffusion-detection}](figure.pdf){width=100%}
+![Example of the performance of our unsupervised algorithm at extracting the diffusive path for one random particle of an AIMD simulation of SrCoO\textsubscript{3} at a temperature of 400K. Green and orange dots reproduce two different ionic vibrational centers while the blue dots represent the diffusion path among them. \label{fig:diffusion-detection}](figure.pdf){width=100%}
 
 Moreover, users may find information regarding their previous executions of the scripts in the *logs* folder, which should be used to track possible errors on the data format and more. Finally, a number of tests for checking out all **IonDiff** functions can be found in the *tests* folder.
 
@@ -56,7 +56,7 @@ Mainly, our code is based on the sklearn [@Pedregosa2011] implementation of k-me
 
 ## Ionic conductivity
 
-The (full) ionic diffusion coefficient consists on two parts [@Molinari2021; @Sasaki2023], one that involves the mean-square displacement of a particle with itself (MSD$_{self}$) and another that represents the mean-squared displacement of a particle with all others (MSD$_{distinct}$). MSD$_{distinct}$ accounts for the influence of many-atoms correlations in ionic diffusive events. Typically, the distinct part of the MSD is neglected in order to accelerate the estimation and convergence of diffusion coefficients. However, many-ions correlations have been recently demonstrated to be essential in FIC [@Lopez2024] hence should not be disregarded in practice. IonDiff provides a novel implementation of the full ionic diffusion coefficient which outperforms previous codes, exploiting the matricial representation of this calculation. The time required by IonDiff to compute the *self* and *distinct* parts of the diffusion coefficient roughly are the same.
+The (full) ionic diffusion coefficient consists on two parts [@Molinari2021; @Sasaki2023], one that involves the mean-square displacement of a particle with itself (MSD$_{self}$) and another that represents the mean-squared displacement of a particle with all others (MSD$_{distinct}$). MSD$_{distinct}$ accounts for the influence of many-atoms correlations in ionic diffusive events. Typically, the distinct part of the MSD is neglected in order to accelerate the estimation and convergence of diffusion coefficients. However, many-ions correlations have been recently demonstrated to be essential in FIC [@Lopez2024] hence should not be disregarded in practice. IonDiff provides a novel implementation of the full ionic diffusion coefficient which outperforms standard evaluation algorithms, exploiting the matricial representation of this calculation. The time required by IonDiff to compute the *self* and *distinct* parts of the diffusion coefficient roughly are the same.
 
 The ionic conductivity ($\sigma$) is computed like [@Sasaki2023]:
 
@@ -125,7 +125,7 @@ where:
     \end{gathered}
 \end{equation}
 
-Once the number of vibrational centers, along with their real-space location and temporal evolution, are determined, ionic diffusion paths are delineated as the segments connecting two distinct vibrational centers over time. Due to the discrete nature of the generated trajectories and intricacies of the k-means clustering approach, establishing the precise start and end points of ionic diffusion paths is challenging. Consequently, we adopt an arbitrary yet physically plausible threshold distance of 0.5 Å from the midpoint of the vibrational centers to define the extremities of diffusive trajectories.
+Once the number of vibrational centers, along with their real-space location and temporal evolution, are determined, ionic diffusion paths are delineated as the segments connecting two distinct vibrational centers over time \autoref{fig:diffusion-detection}. Due to the discrete nature of the generated trajectories and intricacies of the k-means clustering approach, establishing the precise start and end points of ionic diffusion paths is challenging. Consequently, we adopt an arbitrary yet physically plausible threshold distance of 0.5 Å from the midpoint of the vibrational centers to define the extremities of diffusive trajectories.
 
 ## Correlations between mobile ions
 
