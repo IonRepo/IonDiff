@@ -8,8 +8,7 @@ from libraries import identify_diffusion   as ID_library
 from libraries import analyze_correlations as AC_library
 from libraries import analyze_descriptors  as AD_library
 
-from datetime  import datetime
-from os        import system, getcwd, chdir, mkdir, remove, path
+from datetime import datetime
 
 """
 The command line variables are read. Three options are considered:
@@ -17,10 +16,10 @@ The command line variables are read. Three options are considered:
     - Analysis of correlations among diffusive paths.
     - Analysis of atomistic descriptors extracted from the diffusive paths (under active development).
 
-At the input folder, and XDATCAR file with all the configurations of the system through simulation is required.
+At the input folder, a XDATCAR file with all the configurations of the system through simulation is required.
 Optionally, a POSCAR can be supplied with the initial configuration.
-As well, an INCAR specifyin POTIM (simulation step) and NBLOCK (number of simulation steps between
-consecutive configurations in the XDATCAR) are necessary.
+As well, an INCAR specifying POTIM (simulation time step) and NBLOCK (number of simulation steps between
+consecutive configurations in the XDATCAR) is necessary.
 """
 
 # Preparing the interpretation of input (command line) variables
@@ -41,7 +40,7 @@ ID_parser.add_argument(
 ID_parser.add_argument(
     '--classifier',
     default='K-means',
-    help='Name of the classifier used to group non-diffusive particles.',
+    help='Name of the classifier used to group non-diffusive particles ("K-means" or "Spectral").',
 )
 ID_parser.add_argument(
     '--distance_thd',
@@ -62,7 +61,7 @@ ID_parser.add_argument(
     help='Whether to plot the clustering calculations or not.',
 )
 ID_parser.add_argument(
-    '--n_attemps',
+    '--n_attempts',
     type=int,
     default=10,
     help='Number of considered possible diffusive events during a simulation.',
