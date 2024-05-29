@@ -12,7 +12,13 @@ Please be aware that the code is under active development, bug reports are welco
 
 ## Installation
 
-To download the repository and install the dependencies run in a terminal:
+IonDiff can be installed from PyPI:
+
+```bash
+pip3 install IonDiff
+```
+
+or directly from source:
 
 ```bash
 git clone https://github.com/IonRepo/IonDiff.git

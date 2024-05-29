@@ -161,6 +161,8 @@ def read_XDATCAR(path_to_simulation):
         The function expects a specific format in the XDATCAR file.
     """
 
+
+
     # Loading data from XDATCAR file
     if not os.path.exists(f'{path_to_simulation}/XDATCAR'):
         sys.exit('XDATCAR file is not available.')
