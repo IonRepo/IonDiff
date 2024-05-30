@@ -5,3 +5,4 @@ venv
 cibran.egg-info
 dist
 .idea
+setup.cfg
