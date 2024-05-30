@@ -4,9 +4,9 @@ import argparse
 import logging
 import settings
 
-from libraries import identify_diffusion   as ID_library
-from libraries import analyze_correlations as AC_library
-from libraries import analyze_descriptors  as AD_library
+from IonDiff import identify_diffusion   as ID_library
+from IonDiff import analyze_correlations as AC_library
+from IonDiff import analyze_descriptors  as AD_library
 
 from datetime import datetime
 

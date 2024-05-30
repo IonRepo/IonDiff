@@ -3,7 +3,7 @@ import numpy as np
 import json
 import sys
 
-import libraries.common_library as CL
+import IonDiff.common_library as CL
 
 """Definition of the class to analyse correlations among descriptors of diffusive paths.
    A database with more than one simulation must be provided, as well as paths to every
