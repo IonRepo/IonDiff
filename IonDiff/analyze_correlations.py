@@ -6,7 +6,7 @@ import multiprocess      as mp
 import sys
 import os
 
-import libraries.common_library as CL
+import IonDiff.common_library as CL
 
 from scipy.optimize import curve_fit
 

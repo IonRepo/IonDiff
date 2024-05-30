@@ -8,7 +8,7 @@ import os
 from sklearn.cluster import KMeans, SpectralClustering
 from sklearn.metrics import silhouette_score
 
-from libraries import common_library as CL
+from IonDiff import common_library as CL
 
 sns.set_theme()
 

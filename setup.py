@@ -2,7 +2,7 @@ from distutils.core import setup
 setup(
   name = 'IonDiff',
   packages = ['IonDiff'],
-  version = '0.1.0',
+  version = '0.1',
   license='MIT',
   description = 'Unsupervised identification and analysis of ion-hopping events in solid state electrolytes.',
   author = 'Cibrán López Álvarez',
