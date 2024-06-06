@@ -1,3 +1,15 @@
+sphinx
+myst-nb
+recommonmark
+renku-sphinx-theme
+sphinx_click
+sphinx_design
+ase
+hiphive
+click
+IonDiff
+importlib-metadata
+
 numpy
 scipy
 scikit-learn
