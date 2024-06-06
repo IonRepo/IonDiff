@@ -1,6 +1,6 @@
 # IonDiff
 
-<img src=docs/Ion.svg width="20%">
+<img src=docs/logo.svg width="20%">
 
 Despite playing a central role in the design of high performance solid-state electrolytes, little is known about the processes governing ionic diffusion in these materials and the spatio-temporal correlations acting on migrating particles. Computer simulations can reproduce the trajectories of individual diffusing ions in real time with extraordinary accuracy, thus providing incredibly valuable atomistic data that in practice cannot be resolved by experiments.
 
