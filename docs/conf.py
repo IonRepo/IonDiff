@@ -28,10 +28,15 @@ author = "Cibrán López Álvarez"
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
 extensions = [
-    "sphinx.ext.autodoc",
-    "sphinx.ext.napoleon",
-    "sphinx_rtd_theme",
-    "myst_parser",
+    'sphinx.ext.autodoc', # for automatic documentation
+    'sphinx.ext.coverage',
+    'sphinx.ext.napoleon',
+    'sphinx.ext.mathjax',
+    'sphinx.ext.viewcode',
+    'sphinx.ext.autosectionlabel',
+    'sphinx_click',
+    'sphinx_design',
+    'myst_nb',  # for jupyter notebooks
 ]
 source_suffix = [".rst", ".md"]
 
