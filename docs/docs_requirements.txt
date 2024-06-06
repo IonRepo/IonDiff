@@ -3,6 +3,7 @@ myst-nb
 recommonmark
 renku-sphinx-theme
 sphinx_click
+sphinx_book_theme
 sphinx_design
 ase
 hiphive
