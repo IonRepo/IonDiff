@@ -9,7 +9,7 @@ with open('LICENSE') as f:
 setup(
   name = 'IonDiff',
   packages = ['IonDiff'],
-  version = '0.2',
+  version = '0.3',
   license=license,
   description = 'Unsupervised identification and analysis of ion-hopping events in solid state electrolytes.',
   long_description=readme,
@@ -17,7 +17,7 @@ setup(
   author_email = 'cibran.lopez@upc.edu',
   url = 'https://github.com/IonRepo/IonDiff',
   download_url = 'https://github.com/IonRepo/IonDiff/archive/refs/tags/0.1.tar.gz',
-  keywords = ['Ionic Diffusion', 'Unsupervised'],
+  keywords = ['Ionic Diffusion', 'Unsupervised Clustering', 'Machine Learning'],
   install_requires=[
           'numpy',
           'scipy',
