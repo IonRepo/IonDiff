@@ -1,11 +1,18 @@
 from distutils.core import setup
 
+with open('README.rst') as f:
+    readme = f.read()
+
+with open('LICENSE') as f:
+    license = f.read()
+
 setup(
   name = 'IonDiff',
   packages = ['IonDiff'],
   version = '0.1',
-  license='MIT',
+  license=license,
   description = 'Unsupervised identification and analysis of ion-hopping events in solid state electrolytes.',
+  long_description=readme,
   author = 'Cibrán López Álvarez',
   author_email = 'cibran.lopez@upc.edu',
   url = 'https://github.com/IonRepo/IonDiff',
