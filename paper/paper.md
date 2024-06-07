@@ -131,24 +131,7 @@ Once the number of vibrational centers, along with their real-space location and
 
 ## Correlations between mobile ions
 
-To quantitatively evaluate the correlations and level of concertation between a variable number of mobile ions, we developed the following algorithm (with pseudocode illustrated in ).
-
-```
-PROGRAM analyze-correlations
-    INPUT AIMD-simulation
-    
-    FOR simulated-particle in AIMD-simulation
-        extract array with 0 if vibrates and 1 if diffuses
-    
-    extract correlation between each pair of particles
-     
-    count the number of paricles with which each particle correlates
-    
-    RETURN distribution of correlations among n particles
-END
-```
-
-Beginning with a given sequence of ionic configurations from a molecular dynamics simulation, we compute the correlation matrix for diffusive events. Initially, we assign a value of "1" to each diffusing particle and "0" to each vibrating particle at every time frame. This binary assignment is facilitated by the ionic hop identification algorithm introduced earlier.
+To quantitatively evaluate the correlations and level of concertation between a variable number of mobile ions, we developed the following algorithm. Beginning with a given sequence of ionic configurations from a molecular dynamics simulation, we compute the correlation matrix for diffusive events. Initially, we assign a value of "1" to each diffusing particle and "0" to each vibrating particle at every time frame. This binary assignment is facilitated by the ionic hop identification algorithm introduced earlier.
 
 Due to the discrete nature of the ionic trajectories and to enhance numerical convergence in subsequent correlation analysis, the multistep time functions are approximated using Gaussians with widths equal to their half-maxima (commonly known as the "full-width-at-half-maximum" or FWHM method used in signal processing). Subsequently, we compute the $N \times N$ correlation matrix, where $N$ represents the number of potentially mobile ions, using all gathered simulation data. However, this correlation matrix may be challenging to converge due to its statistical nature, especially in scenarios with limited mobile ions and time steps, typical of AIMD simulations.
 
