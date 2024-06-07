@@ -55,17 +55,17 @@ class descriptors:
         Calculate Time Until Diffusion
 
         Args:
-            expanded_matrix (numpy.ndarray): Expanded matrix of diffusive/non-diffusive processes.
-            index           (int, optional): Index to obtain the first or last diffusive position (default is 0).
-            outer           (optional):      Value for handling NaN values (default is None).
+            expanded_hoppings (numpy.ndarray): Expanded matrix of diffusive/non-diffusive processes.
+            index             (int, optional): Index to obtain the first or last diffusive position (default is 0).
+            outer             (optional):      Value for handling NaN values (default is None).
 
         Returns:
             numpy.ndarray: Array with time until diffusion for each particle.
         """
-        n_particles = np.shape(self.expanded_matrix)[1]
+        n_particles = np.shape(self.expanded_hoppings)[1]
         initial_times = np.zeros(n_particles)
         for i in range(n_particles):
-            particle_track = self.expanded_matrix[:, i]
+            particle_track = self.expanded_hoppings[:, i]
             if outer is None:
                 initial_times[i] = np.where(particle_track)[0][index]
             elif outer == 'nan':
