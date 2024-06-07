@@ -89,6 +89,35 @@ class descriptors:
 
         diffusion_duration = self.time_until_diffusion(index=-1) - self.time_until_diffusion(index=0)
         return diffusion_duration
+    
+    
+    def get_expanded_coordinates(self, outer=None):
+        """
+        Expands coordinates (time x particle).
+        'Key' stands for the index of the corresponding particle.
+        Treats every diffusive event as from different particles. Non-diffusive particles are not considered.
+        Expand Coordinates
+
+        Args:
+            outer (optional): Outer value for expansion (default is None).
+
+        Returns:
+            tuple: A tuple containing expanded coordinates, keys, start times, end times, number of configurations, and number of particles.
+        """
+
+        # Expanding coordinates to have one diffusion event per row
+
+        key, temp_coord = get_separated_groups(self.coordinates[:, :, 0])
+        (n_conf, n_particles) = np.shape(temp_coord)
+        expanded_coordinates = np.zeros((n_conf, n_particles, 3))
+        for i in range(3):
+            expanded_coordinates[:, :, i] = get_separated_groups(self.coordinates[:, :, i])[1]
+
+        # Arrays with starts and ends of diffusions for each row
+
+        starts = self.time_until_diffusion(index=0,  outer=outer)
+        ends   = self.time_until_diffusion(index=-1, outer=outer)
+        return expanded_coordinates, key, starts, ends, n_conf, n_particles
 
 
     def length_of_diffusion(self, outer='nan'):
@@ -101,8 +130,6 @@ class descriptors:
         Calculate Length of Diffusion
 
         Args:
-            coordinates (numpy.ndarray): Input coordinates.
-            cell        (numpy.ndarray): Cell information.
             outer       (str, optional): Handling for NaN values (default is 'nan').
 
         Returns:
@@ -111,8 +138,7 @@ class descriptors:
 
         # Expanding the coordinates with separate mode
 
-        expanded_coordinates, _, starts, ends, _, n_particles = CL.get_expanded_coordinates(self.coordinates,
-                                                                                            outer=outer)
+        expanded_coordinates, _, starts, ends, _, n_particles = self.get_expanded_coordinates(outer=outer)
         
         # Computing the distance between initial and final diffusion coordinates (considering PBC)
 

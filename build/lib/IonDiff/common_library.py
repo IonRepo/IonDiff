@@ -451,33 +451,3 @@ def information_from_VASPfile(path_to_VASPfile, file='POSCAR'):
     else:
         positions = np.array([line.split()[:3] for line in VASPfile_lines[8:8 + total_particles]], dtype=float)
     return cell, composition, concentration, positions
-
-
-def get_expanded_coordinates(coordinates, outer=None):
-    """
-    Expands coordinates (time x particle).
-    'Key' stands for the index of the corresponding particle.
-    Treats every diffusive event as from different particles. Non-diffusive particles are not considered.
-    Expand Coordinates
-
-    Args:
-        coordinates (numpy.ndarray): Input coordinates.
-        outer       (optional):      Outer value for expansion (default is None).
-
-    Returns:
-        tuple: A tuple containing expanded coordinates, keys, start times, end times, number of configurations, and number of particles.
-    """
-
-    # Expanding coordinates to have one diffusion event per row
-
-    key, temp_coord = get_separated_groups(coordinates[:, :, 0])
-    (n_conf, n_particles) = np.shape(temp_coord)
-    expanded_coordinates = np.zeros((n_conf, n_particles, 3))
-    for i in range(3):
-        expanded_coordinates[:, :, i] = get_separated_groups(coordinates[:, :, i])[1]
-
-    # Arrays with starts and ends of diffusions for each row
-
-    starts = time_until_diffusion(temp_coord, index=0,  outer=outer)
-    ends   = time_until_diffusion(temp_coord, index=-1, outer=outer)
-    return expanded_coordinates, key, starts, ends, n_conf, n_particles
