@@ -87,7 +87,7 @@ class descriptors:
             numpy.ndarray: Array with the duration of diffusion for each particle.
         """
 
-        diffusion_duration = time_until_diffusion(self, index=-1) - time_until_diffusion(self, index=0)
+        diffusion_duration = self.time_until_diffusion(index=-1) - self.time_until_diffusion(index=0)
         return diffusion_duration
 
 
@@ -185,7 +185,7 @@ class descriptors:
         inv_cell = np.linalg.inv(self.cell)
 
         # Load POSCAR
-        _, _, _, stc_positions = MPL.information_from_VASPfile(args.reference_path, 'POSCAR')
+        _, _, _, stc_positions = CL.information_from_VASPfile(args.reference_path, 'POSCAR')
 
         # Number of simulations steps in some meta-stable position
         metastable     = []

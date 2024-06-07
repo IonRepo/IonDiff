@@ -399,3 +399,55 @@ def get_correlation_matrix(expanded_hoppings, correlation_method='pearson', gaus
     # Getting the correlations with the previously-specified method
     correlation_matrix = np.array(matrix.corr(method=correlation_method))
     return matrix, correlation_matrix
+
+
+def information_from_VASPfile(path_to_VASPfile, file='POSCAR'):
+    """Returns cell, composition, concentration, and positions of particles from a VASP file.
+
+    Args:
+        path_to_VASPfile (str): The path to the directory containing the VASP file.
+        file             (str, optional): The VASP file type, 'POSCAR' or 'XDATCAR'. Default to POSCAR file.
+
+    Returns:
+        cell          (ndarray): The lattice cell matrix.
+        composition   (list):    A list of chemical composition in the form of elements.
+        concentration (ndarray): A list of concentrations corresponding to the elements.
+        positions     (ndarray): An array of atomic positions.
+    """
+
+    with open(f'{path_to_VASPfile}/{file}', 'r') as VASP_file:
+        VASPfile_lines = VASP_file.readlines()
+
+    try:
+        scale = float(VASPfile_lines[1])
+    except:
+        exit(f'Wrong definition of the scale in the {file}.')
+    
+    try:
+        cell  = np.array([line.split() for line in VASPfile_lines[2:5]], dtype=float) * scale
+    except:
+        exit(f'Wrong definition of the cell in the {file}.')
+
+    composition   = VASPfile_lines[5].split()
+    concentration = np.array(VASPfile_lines[6].split(), dtype=int)
+    total_particles = np.sum(concentration)
+    
+    # Checking if the number of compounds and concentrations is correct
+    
+    if len(composition) != len(concentration):
+        exit(f'Wrong definition of the composition of the compound in the {file}.')
+    
+    # Shaping the configurations data into the positions attribute
+    
+    if file == 'XDATCAR':
+        positions = np.array([line.split() for line in VASPfile_lines[7:] if not line.split()[0][0].isalpha()], dtype=float)
+        
+        # Checking if the number of configurations is correct
+        
+        if not (len(positions) / total_particles).is_integer():
+            exit(f'The number of lines is not correct in the {file} file.')
+        
+        positions = positions.ravel().reshape((-1, total_particles, 3))
+    else:
+        positions = np.array([line.split()[:3] for line in VASPfile_lines[8:8 + total_particles]], dtype=float)
+    return cell, composition, concentration, positions
