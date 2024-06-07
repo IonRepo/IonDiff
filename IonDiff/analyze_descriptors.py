@@ -87,7 +87,7 @@ class descriptors:
             numpy.ndarray: Array with the duration of diffusion for each particle.
         """
 
-        diffusion_duration = time_until_diffusion(self.expanded_hoppings, index=-1) - time_until_diffusion(self.expanded_hoppings, index=0)
+        diffusion_duration = time_until_diffusion(self, index=-1) - time_until_diffusion(self, index=0)
         return diffusion_duration
 
 
