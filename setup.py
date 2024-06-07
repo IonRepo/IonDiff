@@ -9,7 +9,7 @@ with open('LICENSE') as f:
 setup(
   name = 'IonDiff',
   packages = ['IonDiff'],
-  version = '0.1',
+  version = '0.2',
   license=license,
   description = 'Unsupervised identification and analysis of ion-hopping events in solid state electrolytes.',
   long_description=readme,
