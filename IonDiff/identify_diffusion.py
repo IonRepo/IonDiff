@@ -12,10 +12,6 @@ sns.set_theme()
 """Definition of the class to extract the diffusion information. Only VASP simulations are considered as yet.
 """
 
-# Defining the basic parameters for k-means and spectral clustering algorithms
-kmeans_kwargs   = dict(init='random', n_init=10, max_iter=300, tol=1e-04,                          random_state=0)
-spectral_kwargs = dict(affinity='nearest_neighbors', n_neighbors=1000, assign_labels='cluster_qr', random_state=0)
-
 # Defining the class
 class xdatcar:
     """Python Class for loading information from VASP simulations and identifying diffusions.

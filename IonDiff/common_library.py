@@ -10,6 +10,10 @@ from sklearn.metrics import silhouette_score
 from scipy.ndimage   import gaussian_filter1d
 from scipy.stats     import pearsonr, spearmanr
 
+# Defining the basic parameters for k-means and spectral clustering algorithms
+kmeans_kwargs   = dict(init='random', n_init=10, max_iter=300, tol=1e-04,                          random_state=0)
+spectral_kwargs = dict(affinity='nearest_neighbors', n_neighbors=1000, assign_labels='cluster_qr', random_state=0)
+
 """Set of common functions for many libraries, with a general purpose.
 """
 
