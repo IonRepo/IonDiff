@@ -5,9 +5,6 @@ import seaborn           as sns
 import sys
 import os
 
-from sklearn.cluster import KMeans, SpectralClustering
-from sklearn.metrics import silhouette_score
-
 from IonDiff import common_library as CL
 
 sns.set_theme()

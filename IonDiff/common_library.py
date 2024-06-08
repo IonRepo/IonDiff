@@ -5,8 +5,10 @@ import re
 import os
 import sys
 
-from scipy.ndimage import gaussian_filter1d
-from scipy.stats   import pearsonr, spearmanr
+from sklearn.cluster import KMeans, SpectralClustering
+from sklearn.metrics import silhouette_score
+from scipy.ndimage   import gaussian_filter1d
+from scipy.stats     import pearsonr, spearmanr
 
 """Set of common functions for many libraries, with a general purpose.
 """

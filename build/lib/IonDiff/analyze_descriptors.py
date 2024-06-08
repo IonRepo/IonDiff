@@ -178,8 +178,39 @@ class descriptors:
 
         n_diffusive_events = np.zeros(n_columns)
         for i in range(n_columns):
-            n_diffusive_events[i] = len(find_groups(cleaned_hoppings[:, i]))
+            n_diffusive_events[i] = len(CL.find_groups(cleaned_hoppings[:, i]))
         return n_diffusive_events
+    
+    
+    def get_cartesian_coordinates(self):
+        """
+        Returns the cartesian coordinates of a simulation from these in direct form, and the number of configurations.
+
+        Returns:
+           array: The cartesian coordinates.
+        """
+
+        cart_coordinates = self.coordinates.copy()
+
+        # Shaping the configurations data into the positions attribute
+
+        n_conf = cart_coordinates.shape[0]
+
+        # Getting the variation in positions and applying periodic boundary condition
+
+        dpos = np.diff(cart_coordinates, axis=0)
+        dpos[dpos > 0.5]  -= 1
+        dpos[dpos < -0.5] += 1
+
+        # Getting the positions and variations in cell units
+
+        cart_coordinates[0] = np.dot(cart_coordinates[0], self.cell)
+        for i in range(n_conf-1):
+            dpos[i] = np.dot(dpos[i], self.cell)
+
+        cart_coordinates = np.concatenate([np.expand_dims(cart_coordinates[0], 0), dpos], axis=0)
+        cart_coordinates = np.cumsum(cart_coordinates, axis=0)
+        return cart_coordinates
 
 
     def residence_time(self, args, threshold=1):
@@ -198,14 +229,14 @@ class descriptors:
         """
         
         # Read INCAR settings
-        delta_t, n_steps = read_INCAR(args.MD_path)
+        delta_t, n_steps = CL.read_INCAR(args.MD_path)
 
         # A soichiometric path is required
         if args.reference_path is None:
             sys.exit('Error: stoichiometric not available for comparing')
         
         # Load simulation data
-        cartesian_coordinates = get_cartesian_coordinates(self.coordinates, self.cell)
+        cartesian_coordinates = get_cartesian_coordinates()
         
         # Compute inverse cell
         inv_cell = np.linalg.inv(self.cell)
@@ -221,10 +252,16 @@ class descriptors:
         for particle in range(self.n_particles):
             #print(100 * (particle+1) / self.n_particles)
             coordinates_i = cartesian_coordinates[:, particle]
-            n_clusters    = calculate_silhouette('K-means', coordinates_i, False)
+            n_clusters = CL.calculate_silhouette(coordinates_i,
+                                                 'K-means',
+                                                 10,
+                                                 0.7)
             
             if n_clusters > 1:
-                centers, classification, _, _ = calculate_clusters('K-means', coordinates_i, n_clusters)
+                centers, classification, _, _ = CL.calculate_clusters(coordinates_i,
+                                                                      n_clusters,
+                                                                      'K-means',
+                                                                      0.4)
 
                 for k in range(n_clusters):  # classification_idx = i by definition
                     center = centers[k]
@@ -236,7 +273,7 @@ class descriptors:
                     # Get the distance between every positions of the POSCAR and the center
                     diff = np.abs(stc_positions - direct_center)
 
-                    # Apply pbc
+                    # Apply periodic boundary conditions
                     while np.any(diff > 0.5):
                         diff[diff > 0.5] -= 1
 

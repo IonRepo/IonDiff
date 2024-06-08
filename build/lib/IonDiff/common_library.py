@@ -451,3 +451,73 @@ def information_from_VASPfile(path_to_VASPfile, file='POSCAR'):
     else:
         positions = np.array([line.split()[:3] for line in VASPfile_lines[8:8 + total_particles]], dtype=float)
     return cell, composition, concentration, positions
+
+
+def calculate_silhouette(coordinates, method, n_attempts, silhouette_thd):
+        """Calculates silhouette scores for different numbers of clusters and selects the optimal number.
+
+        Args:
+            coordinates    (numpy.ndarray): Input array of coordinates.
+            method         (str):           Clustering method ('K-means' or 'Spectral').
+            n_attempts     (int):           Number of attempts for clustering.
+            silhouette_thd (float):         Silhouette score threshold for selecting the number of clusters.
+
+        Returns:
+            int: Optimal number of clusters.
+        """
+        
+        all_clusters = np.arange(2, n_attempts+1)
+        silhouette_averages = []
+
+        # Iterating over each number of clusters
+        for n_clusters in all_clusters:
+            if   method == 'K-means':  clustering = KMeans(n_clusters=n_clusters,             **kmeans_kwargs)
+            elif method == 'Spectral': clustering = SpectralClustering(n_clusters=n_clusters, **spectral_kwargs)
+            else:                      sys.exit('Error: clustering method not recognized')
+            
+            # Getting the labels
+            labels = clustering.fit_predict(coordinates)
+            
+            # Calculate distortion for a range of number of cluster
+            silhouette_averages.append(silhouette_score(coordinates, labels))
+        
+        # Checking if one cluster is selected
+        n_clusters = all_clusters[np.argmax(silhouette_averages)]
+        if (np.max(silhouette_averages) < silhouette_thd):
+            n_clusters = 1
+            
+        print(f'Number of clusters: {n_clusters} with SA = {np.max(silhouette_averages)}')
+        return n_clusters
+
+
+def calculate_clusters(coordinates, n_clusters, method, distance_thd):
+        """Calculates clusters and related information based on the chosen method and number of clusters.
+
+        Args:
+            coordinates  (numpy.ndarray): Input array of coordinates.
+            n_clusters   (int):           Number of clusters.
+            method       (str):           Clustering method ('K-means' or 'Spectral').
+            distance_thd (float):         Distance threshold for identifying vibrations.
+
+        Returns:
+            tuple: Tuple containing centers, classification, vibration, and cluster_change.
+        """
+        
+        if   method == 'K-means':  clustering = KMeans(n_clusters=n_clusters,             **kmeans_kwargs)
+        elif method == 'Spectral': clustering = SpectralClustering(n_clusters=n_clusters, **spectral_kwargs)
+        else:                      sys.exit('Error: clustering method not recognized')
+
+        # Getting the labels and centers
+        classification = clustering.fit_predict(coordinates)
+        cluster_change = np.where(classification[1:] != classification[:-1])[0]
+        
+        centers = np.zeros((n_clusters, 3))
+        distances_to_center = np.zeros(len(coordinates))
+        
+        for i in range(n_clusters):
+            positions = np.where(classification == i)[0]
+            centers[i] = np.mean(coordinates[positions], axis=0)
+            distances_to_center[positions] = np.linalg.norm(coordinates[positions] - centers[i], axis=1)
+
+        vibration = distances_to_center < distance_thd
+        return centers, classification, vibration, cluster_change
