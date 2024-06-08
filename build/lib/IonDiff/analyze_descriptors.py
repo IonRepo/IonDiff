@@ -107,11 +107,11 @@ class descriptors:
 
         # Expanding coordinates to have one diffusion event per row
 
-        key, temp_coord = get_separated_groups(self.coordinates[:, :, 0])
+        key, temp_coord = CL.get_separated_groups(self.coordinates[:, :, 0])
         (n_conf, n_particles) = np.shape(temp_coord)
         expanded_coordinates = np.zeros((n_conf, n_particles, 3))
         for i in range(3):
-            expanded_coordinates[:, :, i] = get_separated_groups(self.coordinates[:, :, i])[1]
+            expanded_coordinates[:, :, i] = CL.get_separated_groups(self.coordinates[:, :, i])[1]
 
         # Arrays with starts and ends of diffusions for each row
 
