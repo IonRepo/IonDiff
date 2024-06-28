@@ -159,14 +159,14 @@ class database:
         Obtains the distribution and compares it with a random distribution.
 
         Args:
-            element (str): Path to the simulation, material, mode, and temperature.
+            element (str): Path to the simulation, material, and temperature.
             args:          Command line arguments.
 
         Returns:
             tuple: Tuple containing correlation_cumulative, temperature_cumulative, and family_cumulative.
         """
         
-        path_to_simulation, material, mode, temperature = element.split()
+        path_to_simulation, material, temperature = element.split()
         
         # Loading the data
         coordinates, hoppings, cell, compounds, concentration = CL.load_data(path_to_simulation)
