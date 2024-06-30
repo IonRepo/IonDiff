@@ -1,6 +1,6 @@
-import numpy             as np
-import matplotlib.pyplot as plt
-import pandas            as pd
+import numpy     as np
+import pandas    as pd
+import scipy.odr as odr
 import re
 import os
 import sys
@@ -8,7 +8,6 @@ import sys
 from sklearn.cluster import KMeans, SpectralClustering
 from sklearn.metrics import silhouette_score
 from scipy.ndimage   import gaussian_filter1d
-from scipy.stats     import pearsonr, spearmanr
 
 # Defining the basic parameters for k-means and spectral clustering algorithms
 kmeans_kwargs   = dict(init='random', n_init=10, max_iter=300, tol=1e-04,                          random_state=0)
@@ -527,3 +526,47 @@ def calculate_clusters(coordinates, n_clusters, method, distance_thd):
 
         vibration = distances_to_center < distance_thd
         return centers, classification, vibration, cluster_change
+
+
+def D_function(beta, x):
+    return beta[0] + 6 * x * beta[1]
+
+
+def weighted_regression(x, y, function, xerr=None, yerr=None, beta0=[1, 1e-5]):
+    """Performs a weighted regression using the Orthogonal Distance Regression (ODR) method.
+
+        Args:
+            x        (numpy.ndarray):  Independent variable data.
+            y        (numpy.ndarray):  Dependent variable data.
+            function (callable):       The model function to fit, with parameters and independent variable as inputs.
+            xerr     (numpy.ndarray):  Standard errors of the independent variable. Defaults to None.
+            yerr     (numpy.ndarray):  Standard errors of the dependent variable. Defaults to None.
+            beta0    (list, optional): Initial guess for the model parameters. Defaults to [1, 1e-5].
+
+        Returns:
+            odr.Output: The result of the ODR fitting process, containing parameter estimates and statistics.
+        """
+
+    # Create the ODR model using the provided function
+    model = odr.Model(function)
+
+    # Initialize weights for x and y errors
+    wd = None
+    we = None
+
+    # Calculate weights for x errors if provided
+    if xerr is not None:
+        wd = 1. / np.power(xerr, 2)
+
+    # Calculate weights for y errors if provided
+    if yerr is not None:
+        we = 1. / np.power(yerr, 2)
+
+    # Create the ODR data object with weights
+    data = odr.Data(x, y, wd=wd, we=we)
+
+    # Set up the ODR model with initial parameter guess
+    odr_model = odr.ODR(data, model, beta0=beta0)
+
+    # Run the ODR fitting process and return the results
+    return odr_model.run()
