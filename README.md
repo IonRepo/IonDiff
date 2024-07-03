@@ -23,7 +23,7 @@ or directly from source:
 ```bash
 git clone https://github.com/IonRepo/IonDiff.git
 cd IonDiff
-pip3 install -r requirements.txt
+pip3 install -r docs/requirements.txt
 ```
 
 ## Execution
