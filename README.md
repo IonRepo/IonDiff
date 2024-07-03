@@ -8,7 +8,7 @@ However, the identification of hopping events in computer simulations typically 
 
 Here, we introduce a novel approach for analysing ion hopping events in molecular dynamics (MD) simulations in a facile and totally unsupervised manner, what would allow the extraction of completely new descriptors related to these diffusions. Our approach relies on the k-means clustering algorithm and allows to identify with precision which and when particles diffuse in a simulation and the exact migrating paths that they follow as well.
 
-Please be aware that the code is under active development, bug reports are welcomed in the GitHub issues!
+Documentation showing functionality and usage of the code are provided one the [`docs`](https://pypi.org/project/IonDiff/) site. Please be aware that the code is under active development, bug reports are welcomed in the GitHub issues!
 
 ## Installation
 
