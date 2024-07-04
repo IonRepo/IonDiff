@@ -19,6 +19,13 @@ IonDiff can be installed from PyPI::
 
     pip3 install IonDiff
 
+or installed from source::
+
+    git clone https://github.com/IonRepo/IonDiff.git
+    cd IonDiff
+    pip3 install .
+
+
 or used directly from source without explicit installation::
 
     git clone https://github.com/IonRepo/IonDiff.git
