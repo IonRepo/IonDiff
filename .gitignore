@@ -1,6 +1,6 @@
 __pycache__
 .DS_Store
-logs
+logs/*
 venv
 cibran.egg-info
 dist
