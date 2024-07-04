@@ -10,7 +10,7 @@ However, the identification of hopping events in computer simulations typically 
 
 Here, we introduce a novel approach for analysing ion hopping events in molecular dynamics (MD) simulations in a facile and totally unsupervised manner, which allows the extraction of completely new descriptors related to these diffusions. Our approach relies on the k-means clustering algorithm and allows to identify with precision which and when particles diffuse in a simulation and the exact migrating paths that they follow as well.
 
-Please be aware that the code is under active development, bug reports are welcomed in the GitHub issues!
+Documentation showing functionality and usage of the code are provided one the [`docs`]([https://pypi.org/project/IonDiff/](https://iondiff.readthedocs.io/en/latest/)) site. Please be aware that the code is under active development, bug reports are welcomed in the GitHub issues!
 
 Installation
 ------------
@@ -19,11 +19,11 @@ IonDiff can be installed from PyPI::
 
     pip3 install IonDiff
 
-or directly from source::
+or used directly from source without explicit installation::
 
     git clone https://github.com/IonRepo/IonDiff.git
     cd IonDiff
-    pip3 install -r requirements.txt
+    pip3 install -r docs/requirements.txt
 
 Execution
 ---------
@@ -44,9 +44,9 @@ where it has to be provided a file named **DIFFUSION_paths**, as in the *example
 
 An *ab initio* MD simulation based on density functional theory of non-stoichiometric Li\ :sub:`7`\ La\ :sub:`3`\ Zr\ :sub:`2`\ O\ :sub:`12`\ (LLZO) fast-ion conductor at a temperature of 400K is provided to run as an example:
 
-- `examples/INCAR <examples/INCAR>`_: Basic parameters of the simulation (only **POTIM** and **NBLOCK** flags are considered).
-- `examples/XDATCAR <examples/XDATCAR>`_: Concatenation of all simulated configurations (recorded each **NBLOCK** simulation steps).
-- `examples/README.md <examples/README.md>`_: More specific information regarding these files.
+- `examples/INCAR <https://github.com/IonRepo/IonDiff/tree/main/examples/INCAR>`_: Basic parameters of the simulation (only **POTIM** and **NBLOCK** flags are considered).
+- `examples/XDATCAR <https://github.com/IonRepo/IonDiff/tree/main/examples/XDATCAR>`_: Concatenation of all simulated configurations (recorded each **NBLOCK** simulation steps).
+- `examples/README.md <https://github.com/IonRepo/IonDiff/tree/main/examples/README.md>`_: More specific information regarding these files.
 
 Authors
 -------
