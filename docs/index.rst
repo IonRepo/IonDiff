@@ -25,7 +25,6 @@ or installed from source::
     cd IonDiff
     pip3 install .
 
-
 or used directly from source without explicit installation::
 
     git clone https://github.com/IonRepo/IonDiff.git
