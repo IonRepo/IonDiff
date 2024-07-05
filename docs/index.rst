@@ -40,9 +40,9 @@ To extract the diffusion paths from a **XDATCAR** simulation file (with its corr
 
 To analyze temporal correlations among the diffusions of different simulations, from the IonDiff folder run::
 
-    python3 cli.py analyze_correlations
+    python3 cli.py analyze_correlations --MD_path examples
 
-and to extract atomistic descriptors from the simulation and diffusion events run::
+and to extract atomistic descriptors from the simulations and diffusion events run::
 
     python3 cli.py analyze_descriptors
 
