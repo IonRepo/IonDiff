@@ -40,11 +40,11 @@ To extract the diffusion paths from a **XDATCAR** simulation file (with its corr
 
 To analyze temporal correlations among the diffusions of different simulations, from the IonDiff folder run::
 
-    python3 cli.py analyze_correlations --MD_path examples/LLZO/400K
+    python3 cli.py analyze_correlations --MD_path examples
 
 and to extract atomistic descriptors from the simulations and diffusion events run::
 
-    python3 cli.py analyze_descriptors
+    python3 cli.py analyze_descriptors --MD_path examples/LLZO/400K
 
 where it has to be provided a file named **DIFFUSION_paths**, as in the *examples* folder, for which each line represents the relative path to a simulation folder which is to be considered, name of the compound, its stoichiometricity/polymorph and the temperature of the simulation. Each folder must contain a **XDATCAR** simulation file (with its corresponding **INCAR** file).
 
@@ -53,6 +53,16 @@ An *ab initio* MD simulation based on density functional theory of non-stoichiom
 - `INCAR <https://github.com/IonRepo/IonDiff/tree/main/examples/LLZO/400K/INCAR>`_: Basic parameters of the simulation (only **POTIM** and **NBLOCK** flags are considered).
 - `XDATCAR <https://github.com/IonRepo/IonDiff/tree/main/examples/LLZO/400K/XDATCAR>`_: Concatenation of all simulated configurations (recorded each **NBLOCK** simulation steps).
 - `README.md <https://github.com/IonRepo/IonDiff/tree/main/examples/README.md>`_: More specific information regarding these files.
+
+API Documentation
+-----------------
+
+.. toctree::
+   :maxdepth: 2
+   :caption: API Documentation
+
+   IonDiff/conf.rst
+   IonDiff/modules.rst
 
 Authors
 -------

@@ -1,3 +1,0 @@
-2024-07-11 18:05:55,004 - [INFO] - Task: Extracting diffusive paths from MD simulation at examples/LLZO/400K.
-2024-07-11 18:05:59,198 - [INFO] - Simulation successfully loaded.
-2024-07-11 18:22:11,507 - [INFO] - Diffusive information successfully extracted and saved.

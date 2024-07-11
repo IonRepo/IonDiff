@@ -3,6 +3,7 @@ import numpy as np
 import argparse
 import logging
 import settings
+import json
 
 from IonDiff import identify_diffusion   as ID_library
 from IonDiff import analyze_correlations as AC_library
@@ -92,7 +93,7 @@ AD_parser = task_subparser.add_parser('analyze_descriptors')  # Analysis of desc
 
 AD_parser.add_argument(
     '--MD_path',
-    default=None,
+    default='.',
     help='Path to the input molecular dynamics simulation files.',
 )
 
@@ -157,14 +158,14 @@ if __name__ == '__main__':
         
         # Save descriptors as dictionary
         descriptors = {
-            MD_path:      args.MD_path,
-            delta_t_min:  np.min(time_interval),
-            delta_t_max:  np.max(time_interval),
-            delta_t_mean: np.mean(time_interval),
-            delta_r_min:  np.min(temporal_duration),
-            delta_r_max:  np.max(temporal_duration),
-            delta_r_mean: np.mean(temporal_duration),
-            gamma:        residence_time
+            'MD_path':      args.MD_path,
+            'delta_t_min':  np.min(time_interval),
+            'delta_t_max':  np.max(time_interval),
+            'delta_t_mean': np.mean(time_interval),
+            'delta_r_min':  np.min(temporal_duration),
+            'delta_r_max':  np.max(temporal_duration),
+            'delta_r_mean': np.mean(temporal_duration),
+            'gamma':        residence_time
         }
         
         # Logging update

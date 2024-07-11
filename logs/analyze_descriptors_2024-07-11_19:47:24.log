@@ -1,0 +1,3 @@
+2024-07-11 19:47:24,160 - [INFO] - Task: Analysing atomistic descriptors from MD simulations database at examples/LLZO/800K.
+2024-07-11 19:47:29,192 - [INFO] - Descriptors successfully extracted.
+2024-07-11 19:47:29,193 - [INFO] - Descriptors successfully saved.

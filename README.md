@@ -45,13 +45,13 @@ python3 cli.py identify_diffusion --MD_path examples/LLZO/400K
 To analyze temporal correlations among the diffusions of different simulations, from the IonDiff folder run:
 
 ```bash
-python3 cli.py analyze_correlations --MD_path examples/LLZO/400K
+python3 cli.py analyze_correlations --MD_path examples
 ```
 
 and to extract atomistic descriptors from the simulations and diffusion events run:
 
 ```bash
-python3 cli.py analyze_descriptors
+python3 cli.py analyze_descriptors --MD_path examples/LLZO/400K
 ```
 
 where it has to be provided a file named **DIFFUSION_paths**, as in *examples* folder, for which each line represents the relative path to a simulation folder which is to be considered, name of the compound, its stoichiometricity/polymorf and the temperature of simulation. Each folder must contain a **XDATCAR** simulation file (with its corresponding **INCAR** file). 
