@@ -77,26 +77,17 @@ class database:
             metrics = [pool.apply(self.parallel_calculation, (element, args,)) for element in paths_to_DIFFUSION]
             pool.close()
             
-            n_events = 0
-            for lines in metrics:
-                line = lines[0]
-                if len(line) > n_events:
-                    n_events = len(line)
-
+            n_events = max(len(lines[0]) for lines in metrics)
             n_simulations = len(metrics)
 
             corr_matrix = np.zeros((n_simulations, n_events))
             temp_matrix = np.ones((n_simulations, n_events)) * np.NaN
             fami_matrix = np.zeros((n_simulations, n_events), object)
 
-            for i in range(n_simulations):
-                corr_temporal = np.array(metrics[i][0])
-                temp_temporal = np.array(metrics[i][1])
-                fami_temporal = np.array(metrics[i][2])
-                
+            for i, (corr_temporal, temp_temporal, fami_temporal) in enumerate(metrics):
                 corr_matrix[i] = np.hstack([corr_temporal, np.zeros(n_events - len(corr_temporal))])
-                temp_matrix[i] = np.hstack([temp_temporal, np.ones(n_events  - len(temp_temporal)) * np.NaN])
-                fami_matrix[i] = np.hstack([fami_temporal, ['0']*(n_events - len(fami_temporal))])
+                temp_matrix[i] = np.hstack([temp_temporal,  np.ones(n_events - len(temp_temporal)) * np.NaN])
+                fami_matrix[i] = np.hstack([fami_temporal, ['0'] * (n_events - len(fami_temporal))])
             
             np.savetxt(correlations_matrix_path, np.vstack([corr_matrix, temp_matrix, fami_matrix]), fmt='%s')
         
