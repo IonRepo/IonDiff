@@ -36,11 +36,11 @@ Execution
 
 To extract the diffusion paths from a **XDATCAR** simulation file (with its corresponding **INCAR** file) located in the *examples* folder, from the IonDiff folder run::
 
-    python3 cli.py identify_diffusion --MD_path examples
+    python3 cli.py identify_diffusion --MD_path examples/LLZO/400K
 
 To analyze temporal correlations among the diffusions of different simulations, from the IonDiff folder run::
 
-    python3 cli.py analyze_correlations --MD_path examples
+    python3 cli.py analyze_correlations --MD_path examples/LLZO/400K
 
 and to extract atomistic descriptors from the simulations and diffusion events run::
 
@@ -48,11 +48,11 @@ and to extract atomistic descriptors from the simulations and diffusion events r
 
 where it has to be provided a file named **DIFFUSION_paths**, as in the *examples* folder, for which each line represents the relative path to a simulation folder which is to be considered, name of the compound, its stoichiometricity/polymorph and the temperature of the simulation. Each folder must contain a **XDATCAR** simulation file (with its corresponding **INCAR** file).
 
-An *ab initio* MD simulation based on density functional theory of non-stoichiometric Li\ :sub:`7`\ La\ :sub:`3`\ Zr\ :sub:`2`\ O\ :sub:`12`\ (LLZO) fast-ion conductor at a temperature of 400K is provided to run as an example:
+An *ab initio* MD simulation based on density functional theory of non-stoichiometric Li\ :sub:`7`\ La\ :sub:`3`\ Zr\ :sub:`2`\ O\ :sub:`12`\ (LLZO) fast-ion conductor at temperatures of 400K and 800K are provided to run as examples:
 
-- `examples/INCAR <https://github.com/IonRepo/IonDiff/tree/main/examples/INCAR>`_: Basic parameters of the simulation (only **POTIM** and **NBLOCK** flags are considered).
-- `examples/XDATCAR <https://github.com/IonRepo/IonDiff/tree/main/examples/XDATCAR>`_: Concatenation of all simulated configurations (recorded each **NBLOCK** simulation steps).
-- `examples/README.md <https://github.com/IonRepo/IonDiff/tree/main/examples/README.md>`_: More specific information regarding these files.
+- `INCAR <https://github.com/IonRepo/IonDiff/tree/main/examples/LLZO/400K/INCAR>`_: Basic parameters of the simulation (only **POTIM** and **NBLOCK** flags are considered).
+- `XDATCAR <https://github.com/IonRepo/IonDiff/tree/main/examples/LLZO/400K/XDATCAR>`_: Concatenation of all simulated configurations (recorded each **NBLOCK** simulation steps).
+- `README.md <https://github.com/IonRepo/IonDiff/tree/main/examples/README.md>`_: More specific information regarding these files.
 
 Authors
 -------

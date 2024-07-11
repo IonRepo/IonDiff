@@ -39,13 +39,13 @@ pip3 install -r docs/requirements.txt
 To extract the diffusion paths from a **XDATCAR** simulation file (with its corresponding **INCAR** file) located at *examples* folder, from the IonDiff folder run:
 
 ```bash
-python3 cli.py identify_diffusion --MD_path examples
+python3 cli.py identify_diffusion --MD_path examples/LLZO/400K
 ```
 
 To analyze temporal correlations among the diffusions of different simulations, from the IonDiff folder run:
 
 ```bash
-python3 cli.py analyze_correlations --MD_path examples
+python3 cli.py analyze_correlations --MD_path examples/LLZO/400K
 ```
 
 and to extract atomistic descriptors from the simulations and diffusion events run:
@@ -56,10 +56,10 @@ python3 cli.py analyze_descriptors
 
 where it has to be provided a file named **DIFFUSION_paths**, as in *examples* folder, for which each line represents the relative path to a simulation folder which is to be considered, name of the compound, its stoichiometricity/polymorf and the temperature of simulation. Each folder must contain a **XDATCAR** simulation file (with its corresponding **INCAR** file). 
 
-An *ab initio* MD simulation based on density functional theory of non-stoichiometric Li<sub>7</sub>La<sub>3</sub>Zr<sub>2</sub>O<sub>12</sub> (LLZO) fast-ion conductor at a temperature of 400K is provided to run as an example:
- - [`examples/INCAR`](examples/INCAR): Basic parameters of the simulation (only **POTIM** and **NBLOCK** flags are considered).
- - [`examples/XDATCAR`](examples/XDATCAR): Concatenation of all simulated configurations (recorded each **NBLOCK** simulation steps).
- - [`examples/README.md`](examples/README.md): More specific information regarding these files.
+An *ab initio* MD simulation based on density functional theory of non-stoichiometric Li<sub>7</sub>La<sub>3</sub>Zr<sub>2</sub>O<sub>12</sub> (LLZO) fast-ion conductor at temperatures of 400K and 800K are provided to run as examples:
+ - [`INCAR`](examples/LLZO/400K/INCAR): Basic parameters of the simulation (only **POTIM** and **NBLOCK** flags are considered).
+ - [`XDATCAR`](examples/LLZO/400K/XDATCAR): Concatenation of all simulated configurations (recorded each **NBLOCK** simulation steps).
+ - [`README.md`](examples/README.md): More specific information regarding these files.
 
 ## Authors
 
