@@ -68,6 +68,5 @@ html_logo = "logo.svg"
 #    "logo_only": True,
 #}
 
-
 def setup(app):
     app.add_css_file("custom.css")

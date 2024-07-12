@@ -158,14 +158,7 @@
  </script></div>
         <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
     <div class="bd-toc-item navbar-nav active">
-        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Modules</span></p>
-<ul class="nav bd-sidenav">
-<li class="toctree-l1 has-children"><a class="reference internal" href="../../source/modules.html">IonDiff</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../../source/IonDiff.html">IonDiff package</a></li>
-</ul><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary>
-</details></li>
-</ul>
-<p aria-level="2" class="caption" role="heading"><span class="caption-text">Usage</span></p>
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Usage</span></p>
 <ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="../../source/IonDiff.html">IonDiff package</a></li>
 </ul>
@@ -314,7 +307,7 @@ document.write(`
         <span class="c1"># Getting diffusion coordinates</span>
         <span class="n">_</span><span class="p">,</span> <span class="n">nan_hoppings</span> <span class="o">=</span> <span class="n">CL</span><span class="o">.</span><span class="n">get_expanded_hoppings</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n_conf</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_particles</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">concentration</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">compounds</span><span class="p">,</span>
                                                    <span class="bp">self</span><span class="o">.</span><span class="n">hoppings</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s1">&#39;original&#39;</span><span class="p">)</span>
-        <span class="n">nan_hoppings</span><span class="p">[</span><span class="n">nan_hoppings</span> <span class="o">==</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">NaN</span>
+        <span class="n">nan_hoppings</span><span class="p">[</span><span class="n">nan_hoppings</span> <span class="o">==</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">coordinates</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">stack</span><span class="p">([</span><span class="n">nan_hoppings</span><span class="p">,</span> <span class="n">nan_hoppings</span><span class="p">,</span> <span class="n">nan_hoppings</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="n">coordinates</span>
 
@@ -464,7 +457,7 @@ document.write(`
         
         <span class="n">_</span><span class="p">,</span> <span class="n">cleaned_hoppings</span> <span class="o">=</span> <span class="n">CL</span><span class="o">.</span><span class="n">get_expanded_hoppings</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n_conf</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_particles</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">concentration</span><span class="p">,</span>
                                                        <span class="bp">self</span><span class="o">.</span><span class="n">compounds</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">hoppings</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s1">&#39;cleaned&#39;</span><span class="p">)</span>
-        <span class="n">cleaned_hoppings</span><span class="p">[</span><span class="n">cleaned_hoppings</span> <span class="o">==</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">NaN</span>
+        <span class="n">cleaned_hoppings</span><span class="p">[</span><span class="n">cleaned_hoppings</span> <span class="o">==</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span>
 
         <span class="n">n_columns</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">shape</span><span class="p">(</span><span class="n">cleaned_hoppings</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span>
 

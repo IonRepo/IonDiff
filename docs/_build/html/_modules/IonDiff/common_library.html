@@ -158,14 +158,7 @@
  </script></div>
         <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
     <div class="bd-toc-item navbar-nav active">
-        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Modules</span></p>
-<ul class="nav bd-sidenav">
-<li class="toctree-l1 has-children"><a class="reference internal" href="../../source/modules.html">IonDiff</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../../source/IonDiff.html">IonDiff package</a></li>
-</ul><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary>
-</details></li>
-</ul>
-<p aria-level="2" class="caption" role="heading"><span class="caption-text">Usage</span></p>
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Usage</span></p>
 <ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="../../source/IonDiff.html">IonDiff package</a></li>
 </ul>
@@ -513,7 +506,7 @@ document.write(`
     <span class="n">cell</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">compounds</span><span class="p">,</span> <span class="n">concentration</span><span class="p">,</span> <span class="n">coordinates</span> <span class="o">=</span> <span class="n">read_XDATCAR</span><span class="p">(</span><span class="n">path_to_simulation</span><span class="p">)</span>
     
     <span class="c1"># Loading hoppings data, if available</span>
-    <span class="n">hoppings</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">NaN</span>
+    <span class="n">hoppings</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span>
     
     <span class="n">DIFFUSION_path</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">path_to_simulation</span><span class="si">}</span><span class="s1">/DIFFUSION&#39;</span>
     
@@ -543,7 +536,7 @@ document.write(`
 <span class="sd">        Find non-NaN regions in an array.</span>
 <span class="sd">    </span>
 <span class="sd">        Usage:</span>
-<span class="sd">            find_groups(np.array([1, 2, np.NaN, 4, 5, np.NaN, 7]))</span>
+<span class="sd">            find_groups(np.array([1, 2, np.nan, 4, 5, np.nan, 7]))</span>
 <span class="sd">    </span>
 <span class="sd">    Note:</span>
 <span class="sd">        The function is useful for identifying continuous regions without NaN values.</span>
@@ -561,13 +554,13 @@ document.write(`
 
 <div class="viewcode-block" id="get_separated_groups">
 <a class="viewcode-back" href="../../source/IonDiff.html#IonDiff.common_library.get_separated_groups">[docs]</a>
-<span class="k">def</span> <span class="nf">get_separated_groups</span><span class="p">(</span><span class="n">matrix</span><span class="p">,</span> <span class="n">outer</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">NaN</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">get_separated_groups</span><span class="p">(</span><span class="n">matrix</span><span class="p">,</span> <span class="n">outer</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;These regions with non-NaNs are found and split.</span>
 <span class="sd">    The original value is put in the corresponding place.</span>
 <span class="sd">    </span>
 <span class="sd">    Args:</span>
 <span class="sd">        matrix (numpy.ndarray): Input matrix.</span>
-<span class="sd">        outer  (optional):      Value to use for outer regions. Defaults to np.NaN.</span>
+<span class="sd">        outer  (optional):      Value to use for outer regions. Defaults to np.nan.</span>
 <span class="sd">    </span>
 <span class="sd">    Returns:</span>
 <span class="sd">        tuple: Tuple containing key (numpy.ndarray) and separated_matrix (numpy.ndarray).</span>
@@ -576,7 +569,7 @@ document.write(`
 <span class="sd">        Separate regions with non-NaNs in a matrix.</span>
 <span class="sd">    </span>
 <span class="sd">        Usage:</span>
-<span class="sd">            get_separated_groups(np.array([[1, 2, 3], [4, 5, 6], [7, np.NaN, 9]]))</span>
+<span class="sd">            get_separated_groups(np.array([[1, 2, 3], [4, 5, 6], [7, np.nan, 9]]))</span>
 <span class="sd">    </span>
 <span class="sd">    Note:</span>
 <span class="sd">        The function is useful for splitting regions with non-NaN values in a matrix.</span>
@@ -640,7 +633,7 @@ document.write(`
 
     <span class="c1"># Diffusions of a same particle can be supposed to be independent</span>
     <span class="k">if</span> <span class="n">method</span> <span class="o">==</span> <span class="s1">&#39;separate&#39;</span><span class="p">:</span>
-        <span class="n">hoppings</span><span class="p">[</span><span class="n">hoppings</span> <span class="o">==</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">NaN</span>
+        <span class="n">hoppings</span><span class="p">[</span><span class="n">hoppings</span> <span class="o">==</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span>
         <span class="n">key</span><span class="p">,</span> <span class="n">expanded_hoppings</span> <span class="o">=</span> <span class="n">get_separated_groups</span><span class="p">(</span><span class="n">hoppings</span><span class="p">)</span>
         <span class="n">expanded_hoppings</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">expanded_hoppings</span><span class="p">)]</span> <span class="o">=</span> <span class="mi">0</span>
         
