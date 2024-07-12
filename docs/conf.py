@@ -64,9 +64,9 @@ html_theme = "sphinx_book_theme"
 #html_static_path = ["_static"]
 html_favicon = "logo.svg"
 html_logo = "logo.svg"
-html_theme_options = {
-    "logo_only": True,
-}
+#html_theme_options = {
+#    "logo_only": True,
+#}
 
 
 def setup(app):
