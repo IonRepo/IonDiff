@@ -64,10 +64,12 @@ There is already a myriad of open-source codes and scripts that can be used for 
 API Documentation
 -----------------
 
-.. automodule:: IonDiff
-    :members:
-    :undoc-members:
-    :show-inheritance:
+.. toctree::
+   :maxdepth: 2
+   :caption: Contents:
+
+   source/IonDiff
+   source/modules
 
 Authors
 -------
