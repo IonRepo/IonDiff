@@ -20,5 +20,5 @@ sphinx:
   configuration: docs/conf.py
 
 commands:
-  - sphinx-apidoc -o docs/source ../IonDiff
+  - sphinx-apidoc -o docs/source IonDiff
 
