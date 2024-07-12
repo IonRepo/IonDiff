@@ -65,8 +65,16 @@ API Documentation
 -----------------
 
 .. toctree::
-   :maxdepth: 2
-   :caption: Contents:
+   :hidden:
+   :caption: Modules
+   :maxdepth: 4
+
+   source/modules
+
+.. toctree::
+   :hidden:
+   :caption: Usage
+   :maxdepth: 4
 
    source/IonDiff
 
