@@ -160,19 +160,7 @@
     <div class="bd-toc-item navbar-nav active">
         <p aria-level="2" class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="../../source/cli.html">cli module</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../source/IonDiff.html">IonDiff package</a></li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="../../source/modules.html">IonDiff</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../../source/IonDiff.html">IonDiff package</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../source/cli.html">cli module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../source/settings.html">settings module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../source/setup.html">setup module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../source/tests.html">tests package</a></li>
-</ul><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary>
-</details></li>
-<li class="toctree-l1"><a class="reference internal" href="../../source/settings.html">settings module</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../source/setup.html">setup module</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../source/tests.html">tests package</a></li>
 </ul>
 
     </div>
@@ -281,7 +269,6 @@ document.write(`
 <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
 <span class="kn">import</span> <span class="nn">seaborn</span>           <span class="k">as</span> <span class="nn">sns</span>
 <span class="kn">import</span> <span class="nn">sys</span>
-<span class="kn">import</span> <span class="nn">os</span>
 
 <span class="kn">from</span> <span class="nn">IonDiff</span> <span class="kn">import</span> <span class="n">common_library</span> <span class="k">as</span> <span class="n">CL</span>
 
@@ -305,14 +292,6 @@ document.write(`
 <span class="sd">    Methods:</span>
 <span class="sd">        __init__(self, args):</span>
 <span class="sd">            Initializes the XDATCAR class.</span>
-<span class="sd">        read_simulation(self, args):</span>
-<span class="sd">            Reads VASP XDATCAR files.</span>
-<span class="sd">        calculate_silhouette(self, coordinates, method, n_attempts, silhouette_thd):</span>
-<span class="sd">            Calculates silhouette scores for different numbers of clusters and selects the optimal number.</span>
-<span class="sd">        calculate_clusters(self, coordinates, n_clusters, method, distance_thd):</span>
-<span class="sd">            Calculates clusters and related information based on the chosen method and number of clusters.</span>
-<span class="sd">        get_diffusion(self, args):</span>
-<span class="sd">            Obtains diffusion information from the simulation data.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="xdatcar.__init__">
@@ -328,10 +307,10 @@ document.write(`
 <span class="sd">        &quot;&quot;&quot;</span>
         
         <span class="c1"># Loading intervals step and number of simulation steps between records</span>
-        <span class="n">delta_t</span><span class="p">,</span> <span class="n">n_steps</span> <span class="o">=</span> <span class="n">CL</span><span class="o">.</span><span class="n">read_INCAR</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">MD_path</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">delta_t</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_steps</span> <span class="o">=</span> <span class="n">CL</span><span class="o">.</span><span class="n">read_INCAR</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">MD_path</span><span class="p">)</span>
         
         <span class="c1"># Time step between consecutive XDATCAR configurations</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">time_step</span> <span class="o">=</span> <span class="n">n_steps</span> <span class="o">*</span> <span class="n">delta_t</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">time_step</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_steps</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">delta_t</span>
         
         <span class="c1"># Reading the simulation data</span>
         <span class="k">try</span><span class="p">:</span>
@@ -346,8 +325,8 @@ document.write(`
     <span class="k">def</span> <span class="nf">read_simulation</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">args</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Reads VASP XDATCAR files.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        
-        <span class="n">cell</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_ions</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">position</span> <span class="o">=</span> <span class="n">CL</span><span class="o">.</span><span class="n">read_XDATCAR</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">MD_path</span><span class="p">)</span>
+
+        <span class="n">cell</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_ions</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">compounds</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">concentration</span><span class="p">,</span> <span class="n">position</span> <span class="o">=</span> <span class="n">CL</span><span class="o">.</span><span class="n">read_XDATCAR</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">MD_path</span><span class="p">)</span>
         
         <span class="bp">self</span><span class="o">.</span><span class="n">positionC</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">position</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">n_iter</span>    <span class="o">=</span> <span class="n">position</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
@@ -361,14 +340,18 @@ document.write(`
         <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n_iter</span><span class="o">-</span><span class="mi">1</span><span class="p">):</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">positionC</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">position</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">cell</span><span class="p">)</span>
             <span class="n">dpos</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>           <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">dpos</span><span class="p">[</span><span class="n">i</span><span class="p">],</span>     <span class="n">cell</span><span class="p">)</span>
-        
+
         <span class="bp">self</span><span class="o">.</span><span class="n">positionC</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">position</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">cell</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dpos</span>          <span class="o">=</span> <span class="n">dpos</span>
+
+        <span class="n">expanded_dimensions</span>        <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">expand_dims</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">positionC</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cartesian_coordinates</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">([</span><span class="n">expanded_dimensions</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">dpos</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cartesian_coordinates</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">cumsum</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cartesian_coordinates</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
         
         <span class="c1"># Defining the attribute of window=1 variation in position and velocity</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">velocity</span> <span class="o">=</span> <span class="n">dpos</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">time_step</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">d1pos</span>    <span class="o">=</span> <span class="n">dpos</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">velocity</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dpos</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">time_step</span></div>
 
-    
+
     
 <div class="viewcode-block" id="xdatcar.get_diffusion">
 <a class="viewcode-back" href="../../source/IonDiff.html#IonDiff.identify_diffusion.xdatcar.get_diffusion">[docs]</a>
@@ -383,10 +366,6 @@ document.write(`
 <span class="sd">        &quot;&quot;&quot;</span>
         
         <span class="n">hoppings</span> <span class="o">=</span> <span class="p">[]</span>
-        
-        <span class="n">full_coordinates</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">([</span><span class="n">np</span><span class="o">.</span><span class="n">expand_dims</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">positionC</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="mi">0</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">d1pos</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
-        <span class="n">full_coordinates</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">cumsum</span><span class="p">(</span><span class="n">full_coordinates</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
-        
         <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">make_plot</span><span class="p">:</span>
             <span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span>
             <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">axes</span><span class="p">(</span><span class="n">projection</span><span class="o">=</span><span class="s1">&#39;3d&#39;</span><span class="p">)</span>
@@ -395,7 +374,7 @@ document.write(`
             <span class="n">ax</span><span class="o">.</span><span class="n">set_zlabel</span><span class="p">(</span><span class="s1">&#39;z&#39;</span><span class="p">)</span>
         
         <span class="k">for</span> <span class="n">particle</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n_ions</span><span class="p">):</span>
-            <span class="n">coordinates</span> <span class="o">=</span> <span class="n">full_coordinates</span><span class="p">[:,</span> <span class="n">particle</span><span class="p">]</span>
+            <span class="n">coordinates</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cartesian_coordinates</span><span class="p">[:,</span> <span class="n">particle</span><span class="p">]</span>
             
             <span class="c1"># Recommended number of clusters</span>
             <span class="n">n_clusters</span> <span class="o">=</span> <span class="n">CL</span><span class="o">.</span><span class="n">calculate_silhouette</span><span class="p">(</span><span class="n">coordinates</span><span class="p">,</span>
@@ -453,6 +432,150 @@ document.write(`
                     <span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="s1">&#39;best&#39;</span><span class="p">)</span>
                 <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
         <span class="k">return</span> <span class="n">hoppings</span></div>
+
+
+<div class="viewcode-block" id="xdatcar.get_diffusion_coefficient">
+<a class="viewcode-back" href="../../source/IonDiff.html#IonDiff.identify_diffusion.xdatcar.get_diffusion_coefficient">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_diffusion_coefficient</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">args</span><span class="p">,</span> <span class="n">initial_ratio</span><span class="o">=</span><span class="mf">0.4</span><span class="p">,</span> <span class="n">ending_ratio</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">contributions</span><span class="o">=</span><span class="s1">&#39;full&#39;</span><span class="p">,</span> <span class="n">n_delta_t</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Calculates the diffusion coefficient from atomic trajectories using Mean Square Displacement (MSD) method.</span>
+
+<span class="sd">            Args:</span>
+<span class="sd">                args:                            Arguments containing parameters like `diffusion_particle` and `make_plot`.</span>
+<span class="sd">                initial_ratio (float, optional): Ratio of the initial point for fitting the MSD curve. Defaults to 0.4.</span>
+<span class="sd">                ending_ratio  (float, optional): Ratio of the ending point for fitting the MSD curve. Defaults to -1.</span>
+<span class="sd">                contributions (str, optional):   Specifies which contributions to consider (&#39;full&#39;, &#39;self&#39;, &#39;distinct&#39;). Defaults to &#39;full&#39;.</span>
+<span class="sd">                n_delta_t     (int, optional):   Number of time steps to consider. If None, uses the entire simulation. Defaults to None.</span>
+<span class="sd">                axis          (int, optional):   Axis along which to compute the ionic diffusion coefficient. Default to average</span>
+<span class="sd">            &quot;&quot;&quot;</span>
+
+        <span class="c1"># Identify the index of the diffusive particle</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">concentration</span><span class="p">)):</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">compounds</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">==</span> <span class="n">args</span><span class="o">.</span><span class="n">diffusion_particle</span><span class="p">:</span>
+                <span class="n">diffusive_idx</span> <span class="o">=</span> <span class="n">i</span>
+                <span class="k">break</span>
+
+        <span class="c1"># Cumulative sum of concentration with an initial zero</span>
+        <span class="n">concentration_cumsum</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">cumsum</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">concentration</span><span class="p">),</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+
+        <span class="c1"># Exact indexes of the diffusive particles</span>
+        <span class="n">diffusive_indexes</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">concentration_cumsum</span><span class="p">[</span><span class="n">diffusive_idx</span><span class="p">],</span>
+                                      <span class="n">concentration_cumsum</span><span class="p">[</span><span class="n">diffusive_idx</span> <span class="o">+</span> <span class="mi">1</span><span class="p">],</span>
+                                      <span class="n">dtype</span><span class="o">=</span><span class="nb">int</span><span class="p">)</span>
+
+        <span class="c1"># Number of diffusive particles</span>
+        <span class="n">n_diff_atoms</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">diffusive_indexes</span><span class="p">)</span>
+
+        <span class="c1"># Consider only diffusive atoms</span>
+        <span class="n">diff_cartesian_coordinates</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cartesian_coordinates</span><span class="p">[:,</span> <span class="n">diffusive_indexes</span><span class="p">]</span>
+
+        <span class="c1"># In case the number of ionic steps to be considered is not given, it is taken as the full AIMD simulation</span>
+        <span class="k">if</span> <span class="n">n_delta_t</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">n_delta_t</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_iter</span>
+
+        <span class="c1"># Generate tensor of atomic differences over time windows</span>
+        <span class="n">differences_tensor_mean</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">((</span><span class="n">n_delta_t</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_iter</span><span class="p">,</span> <span class="n">n_diff_atoms</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">NaN</span>
+
+        <span class="c1"># We vectorize in terms of n_atoms (only possibility here)</span>
+        <span class="k">for</span> <span class="n">delta_t</span> <span class="ow">in</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">n_delta_t</span><span class="p">):</span>
+            <span class="c1"># Number of windows which are used for screening distances</span>
+            <span class="n">n_windows</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_iter</span> <span class="o">-</span> <span class="n">delta_t</span>
+
+            <span class="c1"># Generate mean over windows</span>
+            <span class="k">for</span> <span class="n">t_0</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_windows</span><span class="p">):</span>
+                <span class="c1"># Distance between two configurations of a same particle</span>
+                <span class="c1"># td (atom_i, dim_i) = cc (t_0 + delta_t, atom_i, dim_k) - cc (t_0, atom_i, dim_k)</span>
+                <span class="n">temporal_dist</span> <span class="o">=</span> <span class="n">diff_cartesian_coordinates</span><span class="p">[</span><span class="n">t_0</span> <span class="o">+</span> <span class="n">delta_t</span><span class="p">]</span> <span class="o">-</span> <span class="n">diff_cartesian_coordinates</span><span class="p">[</span><span class="n">t_0</span><span class="p">]</span>
+
+                <span class="c1"># Add to temporal variable</span>
+                <span class="n">differences_tensor_mean</span><span class="p">[</span><span class="n">delta_t</span><span class="p">,</span> <span class="n">t_0</span><span class="p">]</span> <span class="o">=</span> <span class="n">temporal_dist</span>
+
+        <span class="c1"># Compute mean-square displacements</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">contributions</span> <span class="o">==</span> <span class="s1">&#39;full&#39;</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="n">contributions</span> <span class="o">==</span> <span class="s1">&#39;self&#39;</span><span class="p">):</span>  <span class="c1"># Compute self part</span>
+            <span class="c1"># Scalar product between self particles</span>
+            <span class="n">self_scalar_product</span> <span class="o">=</span> <span class="n">differences_tensor_mean</span> <span class="o">*</span> <span class="n">differences_tensor_mean</span>
+
+            <span class="c1"># Diffusion coefficient in one dimension (axis) or average</span>
+            <span class="k">if</span> <span class="n">axis</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">self_scalar_product</span> <span class="o">=</span> <span class="n">self_scalar_product</span><span class="p">[:,</span> <span class="p">:,</span> <span class="p">:,</span> <span class="n">axis</span><span class="p">]</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">self_scalar_product</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">self_scalar_product</span><span class="p">,</span> <span class="n">axis</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
+
+            <span class="c1"># Apply average for particles</span>
+            <span class="n">particles_avg</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nanmean</span><span class="p">(</span><span class="n">self_scalar_product</span><span class="p">,</span> <span class="n">axis</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>  <span class="c1"># Raises warning due to NaNs in some positions</span>
+
+            <span class="c1"># Apply average for windows</span>
+            <span class="n">MSD_self</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nanmean</span><span class="p">(</span><span class="n">particles_avg</span><span class="p">,</span> <span class="n">axis</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">contributions</span> <span class="o">==</span> <span class="s1">&#39;full&#39;</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="n">contributions</span> <span class="o">==</span> <span class="s1">&#39;distinct&#39;</span><span class="p">):</span>  <span class="c1"># Compute distinct part</span>
+            <span class="n">n_distinct</span> <span class="o">=</span> <span class="p">(</span><span class="n">n_diff_atoms</span> <span class="o">*</span> <span class="p">(</span><span class="n">n_diff_atoms</span> <span class="o">-</span> <span class="mi">1</span><span class="p">))</span> <span class="o">/</span> <span class="mi">2</span>
+
+            <span class="n">particles_sum</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">n_delta_t</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_iter</span><span class="p">))</span>
+            <span class="k">for</span> <span class="n">idx_i</span> <span class="ow">in</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">n_diff_atoms</span><span class="p">):</span>
+                <span class="c1"># All remaining indexes</span>
+                <span class="n">idx_j</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">idx_i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">n_diff_atoms</span><span class="p">)</span>
+
+                <span class="c1"># Extract data</span>
+                <span class="n">diff_i</span> <span class="o">=</span> <span class="n">differences_tensor_mean</span><span class="p">[:,</span> <span class="p">:,</span> <span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">,</span> <span class="n">idx_i</span><span class="p">]</span>  <span class="c1"># np.newaxis to allow dot product</span>
+                <span class="n">diff_j</span> <span class="o">=</span> <span class="n">differences_tensor_mean</span><span class="p">[:,</span> <span class="p">:,</span> <span class="n">idx_j</span><span class="p">]</span>
+
+                <span class="c1"># Scalar product between distinct particles</span>
+                <span class="n">distinct_scalar_product</span> <span class="o">=</span> <span class="n">diff_i</span> <span class="o">*</span> <span class="n">diff_j</span>
+
+                <span class="c1"># Diffusion coefficient in one dimension (axis) or average</span>
+                <span class="k">if</span> <span class="n">axis</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                    <span class="n">distinct_scalar_product</span> <span class="o">=</span> <span class="n">distinct_scalar_product</span><span class="p">[:,</span> <span class="p">:,</span> <span class="p">:,</span> <span class="n">axis</span><span class="p">]</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">distinct_scalar_product</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">distinct_scalar_product</span><span class="p">,</span> <span class="n">axis</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
+
+                <span class="c1"># Apply sum for particles</span>
+                <span class="n">particles_sum</span> <span class="o">+=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">distinct_scalar_product</span><span class="p">,</span> <span class="n">axis</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
+
+            <span class="c1"># Apply average for particles</span>
+            <span class="n">particles_avg</span> <span class="o">=</span> <span class="n">particles_sum</span> <span class="o">/</span> <span class="n">n_distinct</span>
+
+            <span class="c1"># Apply average for windows</span>
+            <span class="n">MSD_distinct</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nanmean</span><span class="p">(</span><span class="n">particles_avg</span><span class="p">,</span> <span class="n">axis</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
+
+        <span class="c1"># Add contribution if necessary</span>
+        <span class="k">if</span> <span class="n">contributions</span> <span class="o">==</span> <span class="s1">&#39;full&#39;</span><span class="p">:</span>
+            <span class="c1"># Add both contributions</span>
+            <span class="n">MSD</span> <span class="o">=</span> <span class="n">MSD_self</span> <span class="o">+</span> <span class="n">MSD_distinct</span>
+        <span class="k">elif</span> <span class="n">contributions</span> <span class="o">==</span> <span class="s1">&#39;self&#39;</span><span class="p">:</span>
+            <span class="c1"># Just self contribution</span>
+            <span class="n">MSD</span> <span class="o">=</span> <span class="n">MSD_self</span>
+        <span class="k">elif</span> <span class="n">contributions</span> <span class="o">==</span> <span class="s1">&#39;distinct&#39;</span><span class="p">:</span>
+            <span class="c1"># Just distinct contribution</span>
+            <span class="n">MSD</span> <span class="o">=</span> <span class="n">MSD_distinct</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="s1">&#39;Error: contribution not understood&#39;</span><span class="p">)</span>
+
+        <span class="c1"># Define the array of time simulation in pico-seconds</span>
+        <span class="n">delta_t_array</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">n_delta_t</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n_steps</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">delta_t</span> <span class="o">*</span> <span class="mf">1e-3</span><span class="p">)</span>
+
+        <span class="n">initial_point</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">initial_ratio</span> <span class="o">*</span> <span class="n">n_delta_t</span><span class="p">)</span>
+        <span class="n">ending_point</span>  <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">ending_ratio</span>  <span class="o">*</span> <span class="n">n_delta_t</span><span class="p">)</span>
+
+        <span class="n">_beta_</span> <span class="o">=</span> <span class="n">CL</span><span class="o">.</span><span class="n">weighted_regression</span><span class="p">(</span><span class="n">delta_t_array</span><span class="p">[</span><span class="n">initial_point</span><span class="p">:</span><span class="n">ending_point</span><span class="p">],</span>
+                                        <span class="n">MSD</span><span class="p">[</span><span class="n">initial_point</span><span class="p">:</span><span class="n">ending_point</span><span class="p">],</span>
+                                        <span class="n">CL</span><span class="o">.</span><span class="n">D_function</span><span class="p">)</span><span class="o">.</span><span class="n">beta</span>
+
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Ionic-diffusion coefficient: </span><span class="si">{</span><span class="n">_beta_</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="si">:</span><span class="s1">.4f</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+
+        <span class="c1"># Plot the mean-squared displacements if required</span>
+        <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">make_plot</span><span class="p">:</span>
+            <span class="c1"># All MSD over time windows</span>
+            <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">delta_t_array</span><span class="p">,</span>
+                     <span class="n">MSD</span><span class="p">,</span>
+                     <span class="n">label</span><span class="o">=</span><span class="n">contributions</span><span class="p">)</span>
+
+            <span class="c1"># MSD used for the extraction of the ionic-diffusion coefficient</span>
+            <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">delta_t_array</span><span class="p">[</span><span class="n">initial_point</span><span class="p">:</span><span class="n">ending_point</span><span class="p">],</span>
+                     <span class="n">MSD</span><span class="p">[</span><span class="n">initial_point</span><span class="p">:</span><span class="n">ending_point</span><span class="p">],</span>
+                     <span class="n">label</span><span class="o">=</span><span class="s1">&#39;fit&#39;</span><span class="p">)</span>
+
+            <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;$\Delta t$ (ps)&#39;</span><span class="p">)</span>
+            <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;$MSD$ ($\mathregular{Å^2}$)&#39;</span><span class="p">)</span>
+            <span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="s1">&#39;best&#39;</span><span class="p">)</span>
+            <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span></div>
 </div>
 
 </pre></div>

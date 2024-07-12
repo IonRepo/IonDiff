@@ -160,19 +160,7 @@
     <div class="bd-toc-item navbar-nav active">
         <p aria-level="2" class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="../../source/cli.html">cli module</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../source/IonDiff.html">IonDiff package</a></li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="../../source/modules.html">IonDiff</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../../source/IonDiff.html">IonDiff package</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../source/cli.html">cli module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../source/settings.html">settings module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../source/setup.html">setup module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../source/tests.html">tests package</a></li>
-</ul><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary>
-</details></li>
-<li class="toctree-l1"><a class="reference internal" href="../../source/settings.html">settings module</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../source/setup.html">setup module</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../source/tests.html">tests package</a></li>
 </ul>
 
     </div>
@@ -310,10 +298,6 @@ document.write(`
 <span class="sd">    Methods:</span>
 <span class="sd">        __init__(self, args):</span>
 <span class="sd">            Initializes the Database class.</span>
-<span class="sd">        exp_function(self, x, A, B, C):</span>
-<span class="sd">            Defines a decreasing and always positive exponential function.</span>
-<span class="sd">        parallel_calculation(self, element, args):</span>
-<span class="sd">            Auxiliar function to parallelize calculations.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="database.__init__">
@@ -359,26 +343,17 @@ document.write(`
             <span class="n">metrics</span> <span class="o">=</span> <span class="p">[</span><span class="n">pool</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">parallel_calculation</span><span class="p">,</span> <span class="p">(</span><span class="n">element</span><span class="p">,</span> <span class="n">args</span><span class="p">,))</span> <span class="k">for</span> <span class="n">element</span> <span class="ow">in</span> <span class="n">paths_to_DIFFUSION</span><span class="p">]</span>
             <span class="n">pool</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
             
-            <span class="n">n_events</span> <span class="o">=</span> <span class="mi">0</span>
-            <span class="k">for</span> <span class="n">lines</span> <span class="ow">in</span> <span class="n">metrics</span><span class="p">:</span>
-                <span class="n">line</span> <span class="o">=</span> <span class="n">lines</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">line</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">n_events</span><span class="p">:</span>
-                    <span class="n">n_events</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
-
+            <span class="n">n_events</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">lines</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="k">for</span> <span class="n">lines</span> <span class="ow">in</span> <span class="n">metrics</span><span class="p">)</span>
             <span class="n">n_simulations</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">metrics</span><span class="p">)</span>
 
             <span class="n">corr_matrix</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">n_simulations</span><span class="p">,</span> <span class="n">n_events</span><span class="p">))</span>
             <span class="n">temp_matrix</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">((</span><span class="n">n_simulations</span><span class="p">,</span> <span class="n">n_events</span><span class="p">))</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">NaN</span>
             <span class="n">fami_matrix</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">n_simulations</span><span class="p">,</span> <span class="n">n_events</span><span class="p">),</span> <span class="nb">object</span><span class="p">)</span>
 
-            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_simulations</span><span class="p">):</span>
-                <span class="n">corr_temporal</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">metrics</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">0</span><span class="p">])</span>
-                <span class="n">temp_temporal</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">metrics</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">1</span><span class="p">])</span>
-                <span class="n">fami_temporal</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">metrics</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">2</span><span class="p">])</span>
-                
+            <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="p">(</span><span class="n">corr_temporal</span><span class="p">,</span> <span class="n">temp_temporal</span><span class="p">,</span> <span class="n">fami_temporal</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">metrics</span><span class="p">):</span>
                 <span class="n">corr_matrix</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">hstack</span><span class="p">([</span><span class="n">corr_temporal</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">n_events</span> <span class="o">-</span> <span class="nb">len</span><span class="p">(</span><span class="n">corr_temporal</span><span class="p">))])</span>
-                <span class="n">temp_matrix</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">hstack</span><span class="p">([</span><span class="n">temp_temporal</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">n_events</span>  <span class="o">-</span> <span class="nb">len</span><span class="p">(</span><span class="n">temp_temporal</span><span class="p">))</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">NaN</span><span class="p">])</span>
-                <span class="n">fami_matrix</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">hstack</span><span class="p">([</span><span class="n">fami_temporal</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;0&#39;</span><span class="p">]</span><span class="o">*</span><span class="p">(</span><span class="n">n_events</span> <span class="o">-</span> <span class="nb">len</span><span class="p">(</span><span class="n">fami_temporal</span><span class="p">))])</span>
+                <span class="n">temp_matrix</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">hstack</span><span class="p">([</span><span class="n">temp_temporal</span><span class="p">,</span>  <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">n_events</span> <span class="o">-</span> <span class="nb">len</span><span class="p">(</span><span class="n">temp_temporal</span><span class="p">))</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">NaN</span><span class="p">])</span>
+                <span class="n">fami_matrix</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">hstack</span><span class="p">([</span><span class="n">fami_temporal</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;0&#39;</span><span class="p">]</span> <span class="o">*</span> <span class="p">(</span><span class="n">n_events</span> <span class="o">-</span> <span class="nb">len</span><span class="p">(</span><span class="n">fami_temporal</span><span class="p">))])</span>
             
             <span class="n">np</span><span class="o">.</span><span class="n">savetxt</span><span class="p">(</span><span class="n">correlations_matrix_path</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">([</span><span class="n">corr_matrix</span><span class="p">,</span> <span class="n">temp_matrix</span><span class="p">,</span> <span class="n">fami_matrix</span><span class="p">]),</span> <span class="n">fmt</span><span class="o">=</span><span class="s1">&#39;</span><span class="si">%s</span><span class="s1">&#39;</span><span class="p">)</span>
         

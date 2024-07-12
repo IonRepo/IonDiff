@@ -68,12 +68,7 @@ API Documentation
    :maxdepth: 2
    :caption: Contents:
 
-   source/cli
    source/IonDiff
-   source/modules
-   source/settings
-   source/setup
-   source/tests
 
 Authors
 -------

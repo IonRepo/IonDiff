@@ -160,19 +160,7 @@
     <div class="bd-toc-item navbar-nav active">
         <p aria-level="2" class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="../../source/cli.html">cli module</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../source/IonDiff.html">IonDiff package</a></li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="../../source/modules.html">IonDiff</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../../source/IonDiff.html">IonDiff package</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../source/cli.html">cli module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../source/settings.html">settings module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../source/setup.html">setup module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../source/tests.html">tests package</a></li>
-</ul><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary>
-</details></li>
-<li class="toctree-l1"><a class="reference internal" href="../../source/settings.html">settings module</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../source/setup.html">setup module</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../source/tests.html">tests package</a></li>
 </ul>
 
     </div>
@@ -276,9 +264,9 @@ document.write(`
                 <article class="bd-article">
                   
   <h1>Source code for IonDiff.common_library</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span> <span class="nn">numpy</span>             <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
-<span class="kn">import</span> <span class="nn">pandas</span>            <span class="k">as</span> <span class="nn">pd</span>
+<span></span><span class="kn">import</span> <span class="nn">numpy</span>     <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">pandas</span>    <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">scipy.odr</span> <span class="k">as</span> <span class="nn">odr</span>
 <span class="kn">import</span> <span class="nn">re</span>
 <span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">sys</span>
@@ -286,7 +274,6 @@ document.write(`
 <span class="kn">from</span> <span class="nn">sklearn.cluster</span> <span class="kn">import</span> <span class="n">KMeans</span><span class="p">,</span> <span class="n">SpectralClustering</span>
 <span class="kn">from</span> <span class="nn">sklearn.metrics</span> <span class="kn">import</span> <span class="n">silhouette_score</span>
 <span class="kn">from</span> <span class="nn">scipy.ndimage</span>   <span class="kn">import</span> <span class="n">gaussian_filter1d</span>
-<span class="kn">from</span> <span class="nn">scipy.stats</span>     <span class="kn">import</span> <span class="n">pearsonr</span><span class="p">,</span> <span class="n">spearmanr</span>
 
 <span class="c1"># Defining the basic parameters for k-means and spectral clustering algorithms</span>
 <span class="n">kmeans_kwargs</span>   <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">init</span><span class="o">=</span><span class="s1">&#39;random&#39;</span><span class="p">,</span> <span class="n">n_init</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">max_iter</span><span class="o">=</span><span class="mi">300</span><span class="p">,</span> <span class="n">tol</span><span class="o">=</span><span class="mf">1e-04</span><span class="p">,</span>                          <span class="n">random_state</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
@@ -840,6 +827,56 @@ document.write(`
 
         <span class="n">vibration</span> <span class="o">=</span> <span class="n">distances_to_center</span> <span class="o">&lt;</span> <span class="n">distance_thd</span>
         <span class="k">return</span> <span class="n">centers</span><span class="p">,</span> <span class="n">classification</span><span class="p">,</span> <span class="n">vibration</span><span class="p">,</span> <span class="n">cluster_change</span></div>
+
+
+
+<div class="viewcode-block" id="D_function">
+<a class="viewcode-back" href="../../source/IonDiff.html#IonDiff.common_library.D_function">[docs]</a>
+<span class="k">def</span> <span class="nf">D_function</span><span class="p">(</span><span class="n">beta</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">beta</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="mi">6</span> <span class="o">*</span> <span class="n">x</span> <span class="o">*</span> <span class="n">beta</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span></div>
+
+
+
+<div class="viewcode-block" id="weighted_regression">
+<a class="viewcode-back" href="../../source/IonDiff.html#IonDiff.common_library.weighted_regression">[docs]</a>
+<span class="k">def</span> <span class="nf">weighted_regression</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">function</span><span class="p">,</span> <span class="n">xerr</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">yerr</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">beta0</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mf">1e-5</span><span class="p">]):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Performs a weighted regression using the Orthogonal Distance Regression (ODR) method.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            x        (numpy.ndarray):  Independent variable data.</span>
+<span class="sd">            y        (numpy.ndarray):  Dependent variable data.</span>
+<span class="sd">            function (callable):       The model function to fit, with parameters and independent variable as inputs.</span>
+<span class="sd">            xerr     (numpy.ndarray):  Standard errors of the independent variable. Defaults to None.</span>
+<span class="sd">            yerr     (numpy.ndarray):  Standard errors of the dependent variable. Defaults to None.</span>
+<span class="sd">            beta0    (list, optional): Initial guess for the model parameters. Defaults to [1, 1e-5].</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            odr.Output: The result of the ODR fitting process, containing parameter estimates and statistics.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+    <span class="c1"># Create the ODR model using the provided function</span>
+    <span class="n">model</span> <span class="o">=</span> <span class="n">odr</span><span class="o">.</span><span class="n">Model</span><span class="p">(</span><span class="n">function</span><span class="p">)</span>
+
+    <span class="c1"># Initialize weights for x and y errors</span>
+    <span class="n">wd</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">we</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="c1"># Calculate weights for x errors if provided</span>
+    <span class="k">if</span> <span class="n">xerr</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">wd</span> <span class="o">=</span> <span class="mf">1.</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">power</span><span class="p">(</span><span class="n">xerr</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+
+    <span class="c1"># Calculate weights for y errors if provided</span>
+    <span class="k">if</span> <span class="n">yerr</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">we</span> <span class="o">=</span> <span class="mf">1.</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">power</span><span class="p">(</span><span class="n">yerr</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+
+    <span class="c1"># Create the ODR data object with weights</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">odr</span><span class="o">.</span><span class="n">Data</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">wd</span><span class="o">=</span><span class="n">wd</span><span class="p">,</span> <span class="n">we</span><span class="o">=</span><span class="n">we</span><span class="p">)</span>
+
+    <span class="c1"># Set up the ODR model with initial parameter guess</span>
+    <span class="n">odr_model</span> <span class="o">=</span> <span class="n">odr</span><span class="o">.</span><span class="n">ODR</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">beta0</span><span class="o">=</span><span class="n">beta0</span><span class="p">)</span>
+
+    <span class="c1"># Run the ODR fitting process and return the results</span>
+    <span class="k">return</span> <span class="n">odr_model</span><span class="o">.</span><span class="n">run</span><span class="p">()</span></div>
 
 </pre></div>
 
