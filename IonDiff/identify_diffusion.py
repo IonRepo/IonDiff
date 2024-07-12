@@ -24,14 +24,6 @@ class xdatcar:
     Methods:
         __init__(self, args):
             Initializes the XDATCAR class.
-        read_simulation(self, args):
-            Reads VASP XDATCAR files.
-        calculate_silhouette(self, coordinates, method, n_attempts, silhouette_thd):
-            Calculates silhouette scores for different numbers of clusters and selects the optimal number.
-        calculate_clusters(self, coordinates, n_clusters, method, distance_thd):
-            Calculates clusters and related information based on the chosen method and number of clusters.
-        get_diffusion(self, args):
-            Obtains diffusion information from the simulation data.
     """
 
     def __init__(self, args):
@@ -202,7 +194,7 @@ class xdatcar:
             n_delta_t = self.n_iter
 
         # Generate tensor of atomic differences over time windows
-        differences_tensor_mean = np.ones((n_delta_t, self.n_iter, n_diff_atoms, 3)) * np.NaN
+        differences_tensor_mean = np.ones((n_delta_t, self.n_iter, n_diff_atoms, 3)) * np.nan
 
         # We vectorize in terms of n_atoms (only possibility here)
         for delta_t in np.arange(1, n_delta_t):

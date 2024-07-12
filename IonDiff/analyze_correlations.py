@@ -30,10 +30,6 @@ class database:
     Methods:
         __init__(self, args):
             Initializes the Database class.
-        exp_function(self, x, A, B, C):
-            Defines a decreasing and always positive exponential function.
-        parallel_calculation(self, element, args):
-            Auxiliar function to parallelize calculations.
     """
 
     def __init__(self, args):
@@ -81,12 +77,12 @@ class database:
             n_simulations = len(metrics)
 
             corr_matrix = np.zeros((n_simulations, n_events))
-            temp_matrix = np.ones((n_simulations, n_events)) * np.NaN
+            temp_matrix = np.ones((n_simulations, n_events)) * np.nan
             fami_matrix = np.zeros((n_simulations, n_events), object)
 
             for i, (corr_temporal, temp_temporal, fami_temporal) in enumerate(metrics):
                 corr_matrix[i] = np.hstack([corr_temporal, np.zeros(n_events - len(corr_temporal))])
-                temp_matrix[i] = np.hstack([temp_temporal,  np.ones(n_events - len(temp_temporal)) * np.NaN])
+                temp_matrix[i] = np.hstack([temp_temporal,  np.ones(n_events - len(temp_temporal)) * np.nan])
                 fami_matrix[i] = np.hstack([fami_temporal, ['0'] * (n_events - len(fami_temporal))])
             
             np.savetxt(correlations_matrix_path, np.vstack([corr_matrix, temp_matrix, fami_matrix]), fmt='%s')
@@ -197,7 +193,7 @@ class database:
                 Z_random, Z_random_corr = CL.get_correlation_matrix(Z_random_ngs, gaussian_smoothing=True)
 
                 # Calculating the threshold
-                Z_random_corr[np.diag_indices(len(Z_random_corr))] = np.NaN
+                Z_random_corr[np.diag_indices(len(Z_random_corr))] = np.nan
                 aux = Z_random_corr.flatten()
                 aux = aux[~np.isnan(aux)]
                 threshold_aux.append(np.mean(aux))
@@ -221,11 +217,11 @@ class database:
         # Defining the matrixes with information regarding the correlations,
         # and temperatures and diffusive families of the respective simulations
         corr_cum = np.zeros(n)
-        temp_cum = np.ones(n) * np.NaN
+        temp_cum = np.ones(n) * np.nan
         fami_cum = np.zeros(n, object)
         for i in range(n):
             corr_cum[i] = np.sum(binary_sum == (i+1))  # Number of bodies exhibiting the respective correlation
-            if np.sum(binary_sum == (i+1)) > 0:  # Else, np.NaN
+            if np.sum(binary_sum == (i+1)) > 0:  # Else, np.nan
                 temp_cum[i] = float(temperature[:-1])
                 fami_cum[i] = CL.obtain_diffusive_family(material)
         return list(corr_cum), list(temp_cum), list(fami_cum)

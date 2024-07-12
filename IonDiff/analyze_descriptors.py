@@ -37,7 +37,7 @@ class descriptors:
         # Getting diffusion coordinates
         _, nan_hoppings = CL.get_expanded_hoppings(self.n_conf, self.n_particles, self.concentration, self.compounds,
                                                    self.hoppings, method='original')
-        nan_hoppings[nan_hoppings == 0] = np.NaN
+        nan_hoppings[nan_hoppings == 0] = np.nan
 
         self.coordinates = np.stack([nan_hoppings, nan_hoppings, nan_hoppings], axis=2) * coordinates
 
@@ -172,7 +172,7 @@ class descriptors:
         
         _, cleaned_hoppings = CL.get_expanded_hoppings(self.n_conf, self.n_particles, self.concentration,
                                                        self.compounds, self.hoppings, method='cleaned')
-        cleaned_hoppings[cleaned_hoppings == 0] = np.NaN
+        cleaned_hoppings[cleaned_hoppings == 0] = np.nan
 
         n_columns = np.shape(cleaned_hoppings)[1]
 

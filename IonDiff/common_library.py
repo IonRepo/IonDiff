@@ -226,7 +226,7 @@ def load_data(path_to_simulation):
     cell, _, compounds, concentration, coordinates = read_XDATCAR(path_to_simulation)
     
     # Loading hoppings data, if available
-    hoppings = np.NaN
+    hoppings = np.nan
     
     DIFFUSION_path = f'{path_to_simulation}/DIFFUSION'
     
@@ -253,7 +253,7 @@ def find_groups(array):
         Find non-NaN regions in an array.
     
         Usage:
-            find_groups(np.array([1, 2, np.NaN, 4, 5, np.NaN, 7]))
+            find_groups(np.array([1, 2, np.nan, 4, 5, np.nan, 7]))
     
     Note:
         The function is useful for identifying continuous regions without NaN values.
@@ -268,13 +268,13 @@ def find_groups(array):
     return ranges
 
 
-def get_separated_groups(matrix, outer=np.NaN):
+def get_separated_groups(matrix, outer=np.nan):
     """These regions with non-NaNs are found and split.
     The original value is put in the corresponding place.
     
     Args:
         matrix (numpy.ndarray): Input matrix.
-        outer  (optional):      Value to use for outer regions. Defaults to np.NaN.
+        outer  (optional):      Value to use for outer regions. Defaults to np.nan.
     
     Returns:
         tuple: Tuple containing key (numpy.ndarray) and separated_matrix (numpy.ndarray).
@@ -283,7 +283,7 @@ def get_separated_groups(matrix, outer=np.NaN):
         Separate regions with non-NaNs in a matrix.
     
         Usage:
-            get_separated_groups(np.array([[1, 2, 3], [4, 5, 6], [7, np.NaN, 9]]))
+            get_separated_groups(np.array([[1, 2, 3], [4, 5, 6], [7, np.nan, 9]]))
     
     Note:
         The function is useful for splitting regions with non-NaN values in a matrix.
@@ -344,7 +344,7 @@ def get_expanded_hoppings(n_conf, n_particles, concentration, particle_type, hop
 
     # Diffusions of a same particle can be supposed to be independent
     if method == 'separate':
-        hoppings[hoppings == 0] = np.NaN
+        hoppings[hoppings == 0] = np.nan
         key, expanded_hoppings = get_separated_groups(hoppings)
         expanded_hoppings[np.isnan(expanded_hoppings)] = 0
         
