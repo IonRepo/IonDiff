@@ -68,8 +68,8 @@ API Documentation
    :maxdepth: 2
    :caption: Contents:
 
-   source/IonDiff
-   source/modules
+   _build/html/source/IonDiff
+   _build/html/source/modules
 
 Authors
 -------
