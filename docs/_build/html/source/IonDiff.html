@@ -1,0 +1,1246 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+    <title>IonDiff package &#8212; IonDiff 1.4 documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=362ab14a" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=a3416100" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css?v=be8a1c11" />
+    <link rel="stylesheet" type="text/css" href="../_static/custom.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=87e54e7c" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script src="../_static/documentation_options.js?v=24e0ef3f"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script src="../_static/design-tabs.js?v=f930bc37"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'source/IonDiff';</script>
+    <link rel="icon" href="../_static/logo.svg"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search..."
+         aria-label="Search..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../index.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../_static/logo.svg" class="logo__image only-light" alt="IonDiff 1.4 documentation - Home"/>
+    <script>document.write(`<img src="../_static/logo.svg" class="logo__image only-dark" alt="IonDiff 1.4 documentation - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../_sources/source/IonDiff.rst" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.rst</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>IonDiff package</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#submodules">Submodules</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-IonDiff.analyze_correlations">IonDiff.analyze_correlations module</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#IonDiff.analyze_correlations.database"><code class="docutils literal notranslate"><span class="pre">database</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#IonDiff.analyze_correlations.database.fontsize"><code class="docutils literal notranslate"><span class="pre">database.fontsize</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#IonDiff.analyze_correlations.database.dpi"><code class="docutils literal notranslate"><span class="pre">database.dpi</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#IonDiff.analyze_correlations.database.__init__"><code class="docutils literal notranslate"><span class="pre">database.__init__()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#IonDiff.analyze_correlations.database.exp_function"><code class="docutils literal notranslate"><span class="pre">database.exp_function()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#IonDiff.analyze_correlations.database.parallel_calculation"><code class="docutils literal notranslate"><span class="pre">database.parallel_calculation()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id0"><code class="docutils literal notranslate"><span class="pre">database.exp_function()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id1"><code class="docutils literal notranslate"><span class="pre">database.parallel_calculation()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-IonDiff.analyze_descriptors">IonDiff.analyze_descriptors module</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#IonDiff.analyze_descriptors.descriptors"><code class="docutils literal notranslate"><span class="pre">descriptors</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#IonDiff.analyze_descriptors.descriptors.__init__"><code class="docutils literal notranslate"><span class="pre">descriptors.__init__()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#IonDiff.analyze_descriptors.descriptors.duration_of_diffusion"><code class="docutils literal notranslate"><span class="pre">descriptors.duration_of_diffusion()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#IonDiff.analyze_descriptors.descriptors.get_cartesian_coordinates"><code class="docutils literal notranslate"><span class="pre">descriptors.get_cartesian_coordinates()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#IonDiff.analyze_descriptors.descriptors.get_expanded_coordinates"><code class="docutils literal notranslate"><span class="pre">descriptors.get_expanded_coordinates()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#IonDiff.analyze_descriptors.descriptors.length_of_diffusion"><code class="docutils literal notranslate"><span class="pre">descriptors.length_of_diffusion()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#IonDiff.analyze_descriptors.descriptors.n_diffusive_events"><code class="docutils literal notranslate"><span class="pre">descriptors.n_diffusive_events()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#IonDiff.analyze_descriptors.descriptors.residence_time"><code class="docutils literal notranslate"><span class="pre">descriptors.residence_time()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#IonDiff.analyze_descriptors.descriptors.time_until_diffusion"><code class="docutils literal notranslate"><span class="pre">descriptors.time_until_diffusion()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-IonDiff.common_library">IonDiff.common_library module</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#IonDiff.common_library.calculate_clusters"><code class="docutils literal notranslate"><span class="pre">calculate_clusters()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#IonDiff.common_library.calculate_silhouette"><code class="docutils literal notranslate"><span class="pre">calculate_silhouette()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#IonDiff.common_library.find_groups"><code class="docutils literal notranslate"><span class="pre">find_groups()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#IonDiff.common_library.get_correlation_matrix"><code class="docutils literal notranslate"><span class="pre">get_correlation_matrix()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#IonDiff.common_library.get_expanded_hoppings"><code class="docutils literal notranslate"><span class="pre">get_expanded_hoppings()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#IonDiff.common_library.get_separated_groups"><code class="docutils literal notranslate"><span class="pre">get_separated_groups()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#IonDiff.common_library.information_from_VASPfile"><code class="docutils literal notranslate"><span class="pre">information_from_VASPfile()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#IonDiff.common_library.load_data"><code class="docutils literal notranslate"><span class="pre">load_data()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#IonDiff.common_library.obtain_diffusive_family"><code class="docutils literal notranslate"><span class="pre">obtain_diffusive_family()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#IonDiff.common_library.obtain_diffusive_information"><code class="docutils literal notranslate"><span class="pre">obtain_diffusive_information()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#IonDiff.common_library.read_INCAR"><code class="docutils literal notranslate"><span class="pre">read_INCAR()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#IonDiff.common_library.read_XDATCAR"><code class="docutils literal notranslate"><span class="pre">read_XDATCAR()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#IonDiff.common_library.spectral_kwargs"><code class="docutils literal notranslate"><span class="pre">spectral_kwargs</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-IonDiff.identify_diffusion">IonDiff.identify_diffusion module</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#IonDiff.identify_diffusion.xdatcar"><code class="docutils literal notranslate"><span class="pre">xdatcar</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#IonDiff.identify_diffusion.xdatcar.kmeans_kwargs"><code class="docutils literal notranslate"><span class="pre">xdatcar.kmeans_kwargs</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#IonDiff.identify_diffusion.xdatcar.spectral_kwargs"><code class="docutils literal notranslate"><span class="pre">xdatcar.spectral_kwargs</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#IonDiff.identify_diffusion.xdatcar.time_step"><code class="docutils literal notranslate"><span class="pre">xdatcar.time_step</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#IonDiff.identify_diffusion.xdatcar.n_ions"><code class="docutils literal notranslate"><span class="pre">xdatcar.n_ions</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#IonDiff.identify_diffusion.xdatcar.__init__"><code class="docutils literal notranslate"><span class="pre">xdatcar.__init__()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#IonDiff.identify_diffusion.xdatcar.read_simulation"><code class="docutils literal notranslate"><span class="pre">xdatcar.read_simulation()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#IonDiff.identify_diffusion.xdatcar.calculate_silhouette"><code class="docutils literal notranslate"><span class="pre">xdatcar.calculate_silhouette()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#IonDiff.identify_diffusion.xdatcar.calculate_clusters"><code class="docutils literal notranslate"><span class="pre">xdatcar.calculate_clusters()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#IonDiff.identify_diffusion.xdatcar.get_diffusion"><code class="docutils literal notranslate"><span class="pre">xdatcar.get_diffusion()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id2"><code class="docutils literal notranslate"><span class="pre">xdatcar.get_diffusion()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id3"><code class="docutils literal notranslate"><span class="pre">xdatcar.read_simulation()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-IonDiff">Module contents</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section id="iondiff-package">
+<h1>IonDiff package<a class="headerlink" href="#iondiff-package" title="Link to this heading">#</a></h1>
+<section id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Link to this heading">#</a></h2>
+</section>
+<section id="module-IonDiff.analyze_correlations">
+<span id="iondiff-analyze-correlations-module"></span><h2>IonDiff.analyze_correlations module<a class="headerlink" href="#module-IonDiff.analyze_correlations" title="Link to this heading">#</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="IonDiff.analyze_correlations.database">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">IonDiff.analyze_correlations.</span></span><span class="sig-name descname"><span class="pre">database</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/IonDiff/analyze_correlations.html#database"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#IonDiff.analyze_correlations.database" title="Link to this definition">#</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Python Class for loading information from VASP simulations and analyzing correlations among diffusive paths.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="IonDiff.analyze_correlations.database.fontsize">
+<span class="sig-name descname"><span class="pre">fontsize</span></span><a class="headerlink" href="#IonDiff.analyze_correlations.database.fontsize" title="Link to this definition">#</a></dt>
+<dd><p>Font size for plot labels and ticks.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="IonDiff.analyze_correlations.database.dpi">
+<span class="sig-name descname"><span class="pre">dpi</span></span><a class="headerlink" href="#IonDiff.analyze_correlations.database.dpi" title="Link to this definition">#</a></dt>
+<dd><p>Dots per inch for saving plots.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="IonDiff.analyze_correlations.database.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/IonDiff/analyze_correlations.html#database.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#IonDiff.analyze_correlations.database.__init__" title="Link to this definition">#</a></dt>
+<dd><p>Initializes the Database class.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="IonDiff.analyze_correlations.database.exp_function">
+<span class="sig-name descname"><span class="pre">exp_function</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">A</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">B</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">C</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/IonDiff/analyze_correlations.html#database.exp_function"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#IonDiff.analyze_correlations.database.exp_function" title="Link to this definition">#</a></dt>
+<dd><p>Defines a decreasing and always positive exponential function.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="IonDiff.analyze_correlations.database.parallel_calculation">
+<span class="sig-name descname"><span class="pre">parallel_calculation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">element</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/IonDiff/analyze_correlations.html#database.parallel_calculation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#IonDiff.analyze_correlations.database.parallel_calculation" title="Link to this definition">#</a></dt>
+<dd><p>Auxiliar function to parallelize calculations.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="id0">
+<span class="sig-name descname"><span class="pre">exp_function</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">A</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">B</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">C</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/IonDiff/analyze_correlations.html#database.exp_function"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id0" title="Link to this definition">#</a></dt>
+<dd><p>Defines a decreasing and always positive exponential function.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>x</strong> (<em>numpy.ndarray</em>) – Input array.</p></li>
+<li><p><strong>A</strong> (<em>float</em>) – Exponential parameter.</p></li>
+<li><p><strong>B</strong> (<em>float</em>) – Exponential parameter.</p></li>
+<li><p><strong>C</strong> (<em>float</em>) – Exponential parameter.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Exponential function values for the given input.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>numpy.ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="id1">
+<span class="sig-name descname"><span class="pre">parallel_calculation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">element</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/IonDiff/analyze_correlations.html#database.parallel_calculation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id1" title="Link to this definition">#</a></dt>
+<dd><p>Auxiliar function to parallelize calculations.
+Obtains the distribution and compares it with a random distribution.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>element</strong> (<em>str</em>) – Path to the simulation, material, and temperature.</p></li>
+<li><p><strong>args</strong> – Command line arguments.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Tuple containing correlation_cumulative, temperature_cumulative, and family_cumulative.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>tuple</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-IonDiff.analyze_descriptors">
+<span id="iondiff-analyze-descriptors-module"></span><h2>IonDiff.analyze_descriptors module<a class="headerlink" href="#module-IonDiff.analyze_descriptors" title="Link to this heading">#</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="IonDiff.analyze_descriptors.descriptors">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">IonDiff.analyze_descriptors.</span></span><span class="sig-name descname"><span class="pre">descriptors</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/IonDiff/analyze_descriptors.html#descriptors"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#IonDiff.analyze_descriptors.descriptors" title="Link to this definition">#</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="simple">
+<dt>Python Class for loading information from VASP simulations</dt><dd><p>and analyzing correlations among descriptors of diffusive paths.</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="IonDiff.analyze_descriptors.descriptors.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/IonDiff/analyze_descriptors.html#descriptors.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#IonDiff.analyze_descriptors.descriptors.__init__" title="Link to this definition">#</a></dt>
+<dd><p>Initializes the Descriptors class.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="IonDiff.analyze_descriptors.descriptors.duration_of_diffusion">
+<span class="sig-name descname"><span class="pre">duration_of_diffusion</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/IonDiff/analyze_descriptors.html#descriptors.duration_of_diffusion"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#IonDiff.analyze_descriptors.descriptors.duration_of_diffusion" title="Link to this definition">#</a></dt>
+<dd><p>Calculates an array with the number of steps of diffusion of a particle.
+Expanded hoppings in ‘separate’ format is mandatory.
+We seek the first one for each particle and append it to the list (indexes are in agreement with ‘key’).
+Calculate Duration of Diffusion</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>expanded_hoppings</strong> (<em>numpy.ndarray</em>) – Expanded hopping data.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Array with the duration of diffusion for each particle.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>numpy.ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="IonDiff.analyze_descriptors.descriptors.get_cartesian_coordinates">
+<span class="sig-name descname"><span class="pre">get_cartesian_coordinates</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/IonDiff/analyze_descriptors.html#descriptors.get_cartesian_coordinates"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#IonDiff.analyze_descriptors.descriptors.get_cartesian_coordinates" title="Link to this definition">#</a></dt>
+<dd><p>Returns the cartesian coordinates of a simulation from these in direct form, and the number of configurations.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The cartesian coordinates.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>array</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="IonDiff.analyze_descriptors.descriptors.get_expanded_coordinates">
+<span class="sig-name descname"><span class="pre">get_expanded_coordinates</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">outer</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/IonDiff/analyze_descriptors.html#descriptors.get_expanded_coordinates"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#IonDiff.analyze_descriptors.descriptors.get_expanded_coordinates" title="Link to this definition">#</a></dt>
+<dd><p>Expands coordinates (time x particle).
+‘Key’ stands for the index of the corresponding particle.
+Treats every diffusive event as from different particles. Non-diffusive particles are not considered.
+Expand Coordinates</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>outer</strong> (<em>optional</em>) – Outer value for expansion (default is None).</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A tuple containing expanded coordinates, keys, start times, end times, number of configurations, and number of particles.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>tuple</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="IonDiff.analyze_descriptors.descriptors.length_of_diffusion">
+<span class="sig-name descname"><span class="pre">length_of_diffusion</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">outer</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'nan'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/IonDiff/analyze_descriptors.html#descriptors.length_of_diffusion"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#IonDiff.analyze_descriptors.descriptors.length_of_diffusion" title="Link to this definition">#</a></dt>
+<dd><p>Calculates an array with the diffusion length of a particle.
+Coordinates must be supplied multiplied by the hoppings mask and with NaNs.
+We expand the coordinates (only one diffusion per column/particle).
+Returns the distance between initial and ending points.
+Periodic boundary conditions are considered.
+Calculate Length of Diffusion</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>outer</strong> (<em>str</em><em>, </em><em>optional</em>) – Handling for NaN values (default is ‘nan’).</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Array with the length of diffusion for each particle.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>numpy.ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="IonDiff.analyze_descriptors.descriptors.n_diffusive_events">
+<span class="sig-name descname"><span class="pre">n_diffusive_events</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/IonDiff/analyze_descriptors.html#descriptors.n_diffusive_events"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#IonDiff.analyze_descriptors.descriptors.n_diffusive_events" title="Link to this definition">#</a></dt>
+<dd><p>Returns the number of detected diffusion events from hoppings array.
+Count Diffusive Events</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>n_conf</strong> (<em>int</em>) – Number of configurations.</p></li>
+<li><p><strong>n_particles</strong> (<em>int</em>) – Number of particles.</p></li>
+<li><p><strong>concentration</strong> (<em>list</em>) – Particle concentration.</p></li>
+<li><p><strong>compounds</strong> (<em>list</em>) – Compounds.</p></li>
+<li><p><strong>hoppings</strong> (<em>numpy.ndarray</em>) – Hopping data.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Number of detected diffusion events for each particle.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>numpy.ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="IonDiff.analyze_descriptors.descriptors.residence_time">
+<span class="sig-name descname"><span class="pre">residence_time</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">threshold</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/IonDiff/analyze_descriptors.html#descriptors.residence_time"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#IonDiff.analyze_descriptors.descriptors.residence_time" title="Link to this definition">#</a></dt>
+<dd><p>Returns the mean time (in pico-seconds) that a particle stay in meta-stable positions.
+The centers of vibration are extracted with IonDiff functions, which are compared with POSCAR positions.
+Diffusion events are considered as part of residence time when it happens (we do not discard those points).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>MD_path</strong> (<em>str</em>) – Path to current simulation.</p></li>
+<li><p><strong>reference_path</strong> (<em>str</em>) – Path stoichiometric simulation.</p></li>
+<li><p><strong>threshold</strong> (<em>float</em>) – Minimum distance threshold between centers of vibration and
+stoichiometric positions to be considered as meta-stable positions.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Proportion of mesta-stable positions</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>residence_time (float)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="IonDiff.analyze_descriptors.descriptors.time_until_diffusion">
+<span class="sig-name descname"><span class="pre">time_until_diffusion</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">index</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">outer</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/IonDiff/analyze_descriptors.html#descriptors.time_until_diffusion"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#IonDiff.analyze_descriptors.descriptors.time_until_diffusion" title="Link to this definition">#</a></dt>
+<dd><p>Calculates an array with the number of steps until the start of the first diffusion of a particle.
+Expanded matrix in ‘separate’ or ‘cleaned’ format is mandatory.
+We seek the first one for each particle and append it to the list (indexes are in agreement with ‘key’).
+Index = {0, -1} variable allows obtaining the first or last diffusive position of a diffusion track.
+Calculate Time Until Diffusion</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>expanded_hoppings</strong> (<em>numpy.ndarray</em>) – Expanded matrix of diffusive/non-diffusive processes.</p></li>
+<li><p><strong>index</strong> (<em>int</em><em>, </em><em>optional</em>) – Index to obtain the first or last diffusive position (default is 0).</p></li>
+<li><p><strong>outer</strong> (<em>optional</em>) – Value for handling NaN values (default is None).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Array with time until diffusion for each particle.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>numpy.ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-IonDiff.common_library">
+<span id="iondiff-common-library-module"></span><h2>IonDiff.common_library module<a class="headerlink" href="#module-IonDiff.common_library" title="Link to this heading">#</a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="IonDiff.common_library.calculate_clusters">
+<span class="sig-prename descclassname"><span class="pre">IonDiff.common_library.</span></span><span class="sig-name descname"><span class="pre">calculate_clusters</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">coordinates</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_clusters</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">method</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">distance_thd</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/IonDiff/common_library.html#calculate_clusters"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#IonDiff.common_library.calculate_clusters" title="Link to this definition">#</a></dt>
+<dd><p>Calculates clusters and related information based on the chosen method and number of clusters.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>coordinates</strong> (<em>numpy.ndarray</em>) – Input array of coordinates.</p></li>
+<li><p><strong>n_clusters</strong> (<em>int</em>) – Number of clusters.</p></li>
+<li><p><strong>method</strong> (<em>str</em>) – Clustering method (‘K-means’ or ‘Spectral’).</p></li>
+<li><p><strong>distance_thd</strong> (<em>float</em>) – Distance threshold for identifying vibrations.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Tuple containing centers, classification, vibration, and cluster_change.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>tuple</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="IonDiff.common_library.calculate_silhouette">
+<span class="sig-prename descclassname"><span class="pre">IonDiff.common_library.</span></span><span class="sig-name descname"><span class="pre">calculate_silhouette</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">coordinates</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">method</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_attempts</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">silhouette_thd</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/IonDiff/common_library.html#calculate_silhouette"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#IonDiff.common_library.calculate_silhouette" title="Link to this definition">#</a></dt>
+<dd><p>Calculates silhouette scores for different numbers of clusters and selects the optimal number.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>coordinates</strong> (<em>numpy.ndarray</em>) – Input array of coordinates.</p></li>
+<li><p><strong>method</strong> (<em>str</em>) – Clustering method (‘K-means’ or ‘Spectral’).</p></li>
+<li><p><strong>n_attempts</strong> (<em>int</em>) – Number of attempts for clustering.</p></li>
+<li><p><strong>silhouette_thd</strong> (<em>float</em>) – Silhouette score threshold for selecting the number of clusters.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Optimal number of clusters.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="IonDiff.common_library.find_groups">
+<span class="sig-prename descclassname"><span class="pre">IonDiff.common_library.</span></span><span class="sig-name descname"><span class="pre">find_groups</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">array</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/IonDiff/common_library.html#find_groups"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#IonDiff.common_library.find_groups" title="Link to this definition">#</a></dt>
+<dd><p>Gives the ranges where an array does not have NaN values.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>array</strong> (<em>numpy.ndarray</em>) – Input array.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Array containing start and end indices of non-NaN regions.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>numpy.ndarray</p>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<p>Find non-NaN regions in an array.</p>
+<dl class="simple">
+<dt>Usage:</dt><dd><p>find_groups(np.array([1, 2, np.NaN, 4, 5, np.NaN, 7]))</p>
+</dd>
+</dl>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The function is useful for identifying continuous regions without NaN values.</p>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="IonDiff.common_library.get_correlation_matrix">
+<span class="sig-prename descclassname"><span class="pre">IonDiff.common_library.</span></span><span class="sig-name descname"><span class="pre">get_correlation_matrix</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">expanded_hoppings</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">correlation_method</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'pearson'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gaussian_smoothing</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sigma</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/IonDiff/common_library.html#get_correlation_matrix"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#IonDiff.common_library.get_correlation_matrix" title="Link to this definition">#</a></dt>
+<dd><p>Returns the correlation matrix.
+Gaussian smoothing is allowed.
+If sigma is None, it is calculated as sigma = delta T / 2.355 (FWHM).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>expanded_hoppings</strong> (<em>numpy.ndarray</em>) – Expanded hopping matrix.</p></li>
+<li><p><strong>correlation_method</strong> (<em>str</em><em>, </em><em>optional</em>) – Correlation method. Defaults to ‘pearson’.</p></li>
+<li><p><strong>gaussian_smoothing</strong> (<em>bool</em><em>, </em><em>optional</em>) – Enable Gaussian smoothing. Defaults to True.</p></li>
+<li><p><strong>sigma</strong> (<em>float</em><em>, </em><em>optional</em>) – Standard deviation for Gaussian smoothing. Defaults to None.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Tuple containing matrix (pandas.DataFrame) and correlation_matrix (numpy.ndarray).</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>tuple</p>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<p>Calculate the correlation matrix from expanded hopping data.</p>
+<dl class="simple">
+<dt>Usage:</dt><dd><p>get_correlation_matrix(np.array([[1, 0, 1], [0, 1, 1]]), correlation_method=’spearman’)</p>
+</dd>
+</dl>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The function allows customization of correlation calculations and Gaussian smoothing.</p>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="IonDiff.common_library.get_expanded_hoppings">
+<span class="sig-prename descclassname"><span class="pre">IonDiff.common_library.</span></span><span class="sig-name descname"><span class="pre">get_expanded_hoppings</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n_conf</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_particles</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">concentration</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">particle_type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hoppings</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">method</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'original'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/IonDiff/common_library.html#get_expanded_hoppings"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#IonDiff.common_library.get_expanded_hoppings" title="Link to this definition">#</a></dt>
+<dd><p>Expands the compressed information of hoppings into a matrix of (time x particle).
+‘Key’ stands for the index of the corresponding particle.</p>
+<p>Separate: treats every diffusive event as from different particles. Non-diffusive particles are not considered.
+Cleaned:  non-diffusive particles are not considered.
+Original: just expanded as the coordinates matrix.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>n_conf</strong> (<em>int</em>) – Number of configurations.</p></li>
+<li><p><strong>n_particles</strong> (<em>int</em>) – Number of particles.</p></li>
+<li><p><strong>concentration</strong> (<em>numpy.ndarray</em>) – Array of particle concentrations.</p></li>
+<li><p><strong>particle_type</strong> (<em>list</em>) – List of particle types.</p></li>
+<li><p><strong>hoppings</strong> (<em>numpy.ndarray</em>) – Array of hoppings.</p></li>
+<li><p><strong>method</strong> (<em>str</em><em>, </em><em>optional</em>) – Expansion method. Defaults to ‘original’.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Tuple containing key (numpy.ndarray) and expanded_hoppings (numpy.ndarray).</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>tuple</p>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<p>Expand compressed hopping information into a matrix.</p>
+<dl class="simple">
+<dt>Usage:</dt><dd><p>get_expanded_hoppings(100, 3, np.array([2, 1]), [‘A’, ‘B’, ‘C’], np.array([[1, 0, 1], [0, 1, 1]]))</p>
+</dd>
+</dl>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The function provides flexibility in expanding hopping information based on different methods.</p>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="IonDiff.common_library.get_separated_groups">
+<span class="sig-prename descclassname"><span class="pre">IonDiff.common_library.</span></span><span class="sig-name descname"><span class="pre">get_separated_groups</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">matrix</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">outer</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">nan</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/IonDiff/common_library.html#get_separated_groups"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#IonDiff.common_library.get_separated_groups" title="Link to this definition">#</a></dt>
+<dd><p>These regions with non-NaNs are found and split.
+The original value is put in the corresponding place.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>matrix</strong> (<em>numpy.ndarray</em>) – Input matrix.</p></li>
+<li><p><strong>outer</strong> (<em>optional</em>) – Value to use for outer regions. Defaults to np.NaN.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Tuple containing key (numpy.ndarray) and separated_matrix (numpy.ndarray).</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>tuple</p>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<p>Separate regions with non-NaNs in a matrix.</p>
+<dl class="simple">
+<dt>Usage:</dt><dd><p>get_separated_groups(np.array([[1, 2, 3], [4, 5, 6], [7, np.NaN, 9]]))</p>
+</dd>
+</dl>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The function is useful for splitting regions with non-NaN values in a matrix.</p>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="IonDiff.common_library.information_from_VASPfile">
+<span class="sig-prename descclassname"><span class="pre">IonDiff.common_library.</span></span><span class="sig-name descname"><span class="pre">information_from_VASPfile</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path_to_VASPfile</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">file</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'POSCAR'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/IonDiff/common_library.html#information_from_VASPfile"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#IonDiff.common_library.information_from_VASPfile" title="Link to this definition">#</a></dt>
+<dd><p>Returns cell, composition, concentration, and positions of particles from a VASP file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>path_to_VASPfile</strong> (<em>str</em>) – The path to the directory containing the VASP file.</p></li>
+<li><p><strong>file</strong> (<em>str</em><em>, </em><em>optional</em>) – The VASP file type, ‘POSCAR’ or ‘XDATCAR’. Default to POSCAR file.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The lattice cell matrix.
+composition   (list):    A list of chemical composition in the form of elements.
+concentration (ndarray): A list of concentrations corresponding to the elements.
+positions     (ndarray): An array of atomic positions.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>cell          (ndarray)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="IonDiff.common_library.load_data">
+<span class="sig-prename descclassname"><span class="pre">IonDiff.common_library.</span></span><span class="sig-name descname"><span class="pre">load_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path_to_simulation</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/IonDiff/common_library.html#load_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#IonDiff.common_library.load_data" title="Link to this definition">#</a></dt>
+<dd><p>Returns all needed data in a suitable shape from a simulation.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>path_to_simulation</strong> (<em>str</em>) – Path to the simulation directory.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Tuple containing coordinates (numpy.ndarray), hoppings (numpy.ndarray), cell (numpy.ndarray), compounds (list), and concentration (numpy.ndarray).</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>tuple</p>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<p>Load simulation data from a directory.</p>
+<dl class="simple">
+<dt>Usage:</dt><dd><p>load_data(‘/path/to/simulation’)</p>
+</dd>
+</dl>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The function requires the existence of specific files such as ‘DIFFUSION’ and ‘XDATCAR’.</p>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="IonDiff.common_library.obtain_diffusive_family">
+<span class="sig-prename descclassname"><span class="pre">IonDiff.common_library.</span></span><span class="sig-name descname"><span class="pre">obtain_diffusive_family</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">element</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/IonDiff/common_library.html#obtain_diffusive_family"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#IonDiff.common_library.obtain_diffusive_family" title="Link to this definition">#</a></dt>
+<dd><p>Returns the family of an element using the obtain_diffusive_information function.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>element</strong> (<em>str</em>) – Element symbol.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Diffusive family of the element.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<p>Obtain the diffusive family of a given element.</p>
+<dl class="simple">
+<dt>Usage:</dt><dd><p>obtain_diffusive_family(‘Li’)</p>
+</dd>
+</dl>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The function automatically detects components from upper cases and numbers.</p>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="IonDiff.common_library.obtain_diffusive_information">
+<span class="sig-prename descclassname"><span class="pre">IonDiff.common_library.</span></span><span class="sig-name descname"><span class="pre">obtain_diffusive_information</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">composition</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">concentration</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">DiffTypeName</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/IonDiff/common_library.html#obtain_diffusive_information"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#IonDiff.common_library.obtain_diffusive_information" title="Link to this definition">#</a></dt>
+<dd><p>Gets the diffusive and non-diffusive elements.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>composition</strong> (<em>list</em>) – List of element symbols in the compound.</p></li>
+<li><p><strong>concentration</strong> (<em>list</em>) – List of element concentrations.</p></li>
+<li><p><strong>DiffTypeName</strong> (<em>list</em><em>, </em><em>optional</em>) – List of diffusive element symbols. Defaults to None.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Tuple containing DiffTypeName (list), NonDiffTypeName (list), and diffusion_information (list).</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>tuple</p>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<p>Obtain the diffusive information from a given composition and concentration.</p>
+<dl class="simple">
+<dt>Usage:</dt><dd><p>obtain_diffusive_information([‘Li’, ‘O’], [1, 2])</p>
+</dd>
+</dl>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>If DiffTypeName is not provided, the function automatically selects diffusive elements based on an implicit order of preference.</p>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="IonDiff.common_library.read_INCAR">
+<span class="sig-prename descclassname"><span class="pre">IonDiff.common_library.</span></span><span class="sig-name descname"><span class="pre">read_INCAR</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path_to_simulation</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/IonDiff/common_library.html#read_INCAR"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#IonDiff.common_library.read_INCAR" title="Link to this definition">#</a></dt>
+<dd><p>Reads VASP INCAR files. It is always expected to find these parameters.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>path_to_simulation</strong> (<em>str</em>) – Path to the simulation directory.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Tuple containing delta_t (float) and n_steps (float).</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>tuple</p>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<p>Read INCAR file from a simulation directory.</p>
+<dl class="simple">
+<dt>Usage:</dt><dd><p>read_INCAR(‘/path/to/simulation’)</p>
+</dd>
+</dl>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The function expects the presence of specific parameters (POTIM, NBLOCK) in the INCAR file.</p>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="IonDiff.common_library.read_XDATCAR">
+<span class="sig-prename descclassname"><span class="pre">IonDiff.common_library.</span></span><span class="sig-name descname"><span class="pre">read_XDATCAR</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path_to_simulation</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/IonDiff/common_library.html#read_XDATCAR"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#IonDiff.common_library.read_XDATCAR" title="Link to this definition">#</a></dt>
+<dd><p>Reads cell data and coordinates in direct units.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>path_to_simulation</strong> (<em>str</em>) – Path to the simulation directory.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Tuple containing cell (numpy.ndarray), n_ions (int), compounds (list), concentration (numpy.ndarray), and coordinates (numpy.ndarray).</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>tuple</p>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<p>Read XDATCAR file from a simulation directory.</p>
+<dl class="simple">
+<dt>Usage:</dt><dd><p>read_XDATCAR(‘/path/to/simulation’)</p>
+</dd>
+</dl>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The function expects a specific format in the XDATCAR file.</p>
+</div>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="IonDiff.common_library.spectral_kwargs">
+<span class="sig-prename descclassname"><span class="pre">IonDiff.common_library.</span></span><span class="sig-name descname"><span class="pre">spectral_kwargs</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{'affinity':</span> <span class="pre">'nearest_neighbors',</span> <span class="pre">'assign_labels':</span> <span class="pre">'cluster_qr',</span> <span class="pre">'n_neighbors':</span> <span class="pre">1000,</span> <span class="pre">'random_state':</span> <span class="pre">0}</span></em><a class="headerlink" href="#IonDiff.common_library.spectral_kwargs" title="Link to this definition">#</a></dt>
+<dd><p>Set of common functions for many libraries, with a general purpose.</p>
+</dd></dl>
+
+</section>
+<section id="module-IonDiff.identify_diffusion">
+<span id="iondiff-identify-diffusion-module"></span><h2>IonDiff.identify_diffusion module<a class="headerlink" href="#module-IonDiff.identify_diffusion" title="Link to this heading">#</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="IonDiff.identify_diffusion.xdatcar">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">IonDiff.identify_diffusion.</span></span><span class="sig-name descname"><span class="pre">xdatcar</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/IonDiff/identify_diffusion.html#xdatcar"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#IonDiff.identify_diffusion.xdatcar" title="Link to this definition">#</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Python Class for loading information from VASP simulations and identifying diffusions.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="IonDiff.identify_diffusion.xdatcar.kmeans_kwargs">
+<span class="sig-name descname"><span class="pre">kmeans_kwargs</span></span><a class="headerlink" href="#IonDiff.identify_diffusion.xdatcar.kmeans_kwargs" title="Link to this definition">#</a></dt>
+<dd><p>Parameters for K-means clustering algorithm.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="IonDiff.identify_diffusion.xdatcar.spectral_kwargs">
+<span class="sig-name descname"><span class="pre">spectral_kwargs</span></span><a class="headerlink" href="#IonDiff.identify_diffusion.xdatcar.spectral_kwargs" title="Link to this definition">#</a></dt>
+<dd><p>Parameters for Spectral clustering algorithm.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="IonDiff.identify_diffusion.xdatcar.time_step">
+<span class="sig-name descname"><span class="pre">time_step</span></span><a class="headerlink" href="#IonDiff.identify_diffusion.xdatcar.time_step" title="Link to this definition">#</a></dt>
+<dd><p>Time step between consecutive XDATCAR configurations.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="IonDiff.identify_diffusion.xdatcar.n_ions">
+<span class="sig-name descname"><span class="pre">n_ions</span></span><a class="headerlink" href="#IonDiff.identify_diffusion.xdatcar.n_ions" title="Link to this definition">#</a></dt>
+<dd><p>Number of ions in the simulation.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="IonDiff.identify_diffusion.xdatcar.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/IonDiff/identify_diffusion.html#xdatcar.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#IonDiff.identify_diffusion.xdatcar.__init__" title="Link to this definition">#</a></dt>
+<dd><p>Initializes the XDATCAR class.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="IonDiff.identify_diffusion.xdatcar.read_simulation">
+<span class="sig-name descname"><span class="pre">read_simulation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/IonDiff/identify_diffusion.html#xdatcar.read_simulation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#IonDiff.identify_diffusion.xdatcar.read_simulation" title="Link to this definition">#</a></dt>
+<dd><p>Reads VASP XDATCAR files.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="IonDiff.identify_diffusion.xdatcar.calculate_silhouette">
+<span class="sig-name descname"><span class="pre">calculate_silhouette</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">coordinates</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">method</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_attempts</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">silhouette_thd</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#IonDiff.identify_diffusion.xdatcar.calculate_silhouette" title="Link to this definition">#</a></dt>
+<dd><p>Calculates silhouette scores for different numbers of clusters and selects the optimal number.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="IonDiff.identify_diffusion.xdatcar.calculate_clusters">
+<span class="sig-name descname"><span class="pre">calculate_clusters</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">coordinates</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_clusters</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">method</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">distance_thd</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#IonDiff.identify_diffusion.xdatcar.calculate_clusters" title="Link to this definition">#</a></dt>
+<dd><p>Calculates clusters and related information based on the chosen method and number of clusters.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="IonDiff.identify_diffusion.xdatcar.get_diffusion">
+<span class="sig-name descname"><span class="pre">get_diffusion</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/IonDiff/identify_diffusion.html#xdatcar.get_diffusion"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#IonDiff.identify_diffusion.xdatcar.get_diffusion" title="Link to this definition">#</a></dt>
+<dd><p>Obtains diffusion information from the simulation data.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="id2">
+<span class="sig-name descname"><span class="pre">get_diffusion</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/IonDiff/identify_diffusion.html#xdatcar.get_diffusion"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id2" title="Link to this definition">#</a></dt>
+<dd><p>Obtains diffusion information from the simulation data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>args</strong> – Command line arguments.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>List of diffusion events, each represented as [particle index, start step, end step].</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="id3">
+<span class="sig-name descname"><span class="pre">read_simulation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/IonDiff/identify_diffusion.html#xdatcar.read_simulation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id3" title="Link to this definition">#</a></dt>
+<dd><p>Reads VASP XDATCAR files.</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-IonDiff">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-IonDiff" title="Link to this heading">#</a></h2>
+</section>
+</section>
+
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#submodules">Submodules</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-IonDiff.analyze_correlations">IonDiff.analyze_correlations module</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#IonDiff.analyze_correlations.database"><code class="docutils literal notranslate"><span class="pre">database</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#IonDiff.analyze_correlations.database.fontsize"><code class="docutils literal notranslate"><span class="pre">database.fontsize</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#IonDiff.analyze_correlations.database.dpi"><code class="docutils literal notranslate"><span class="pre">database.dpi</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#IonDiff.analyze_correlations.database.__init__"><code class="docutils literal notranslate"><span class="pre">database.__init__()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#IonDiff.analyze_correlations.database.exp_function"><code class="docutils literal notranslate"><span class="pre">database.exp_function()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#IonDiff.analyze_correlations.database.parallel_calculation"><code class="docutils literal notranslate"><span class="pre">database.parallel_calculation()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id0"><code class="docutils literal notranslate"><span class="pre">database.exp_function()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id1"><code class="docutils literal notranslate"><span class="pre">database.parallel_calculation()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-IonDiff.analyze_descriptors">IonDiff.analyze_descriptors module</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#IonDiff.analyze_descriptors.descriptors"><code class="docutils literal notranslate"><span class="pre">descriptors</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#IonDiff.analyze_descriptors.descriptors.__init__"><code class="docutils literal notranslate"><span class="pre">descriptors.__init__()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#IonDiff.analyze_descriptors.descriptors.duration_of_diffusion"><code class="docutils literal notranslate"><span class="pre">descriptors.duration_of_diffusion()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#IonDiff.analyze_descriptors.descriptors.get_cartesian_coordinates"><code class="docutils literal notranslate"><span class="pre">descriptors.get_cartesian_coordinates()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#IonDiff.analyze_descriptors.descriptors.get_expanded_coordinates"><code class="docutils literal notranslate"><span class="pre">descriptors.get_expanded_coordinates()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#IonDiff.analyze_descriptors.descriptors.length_of_diffusion"><code class="docutils literal notranslate"><span class="pre">descriptors.length_of_diffusion()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#IonDiff.analyze_descriptors.descriptors.n_diffusive_events"><code class="docutils literal notranslate"><span class="pre">descriptors.n_diffusive_events()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#IonDiff.analyze_descriptors.descriptors.residence_time"><code class="docutils literal notranslate"><span class="pre">descriptors.residence_time()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#IonDiff.analyze_descriptors.descriptors.time_until_diffusion"><code class="docutils literal notranslate"><span class="pre">descriptors.time_until_diffusion()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-IonDiff.common_library">IonDiff.common_library module</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#IonDiff.common_library.calculate_clusters"><code class="docutils literal notranslate"><span class="pre">calculate_clusters()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#IonDiff.common_library.calculate_silhouette"><code class="docutils literal notranslate"><span class="pre">calculate_silhouette()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#IonDiff.common_library.find_groups"><code class="docutils literal notranslate"><span class="pre">find_groups()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#IonDiff.common_library.get_correlation_matrix"><code class="docutils literal notranslate"><span class="pre">get_correlation_matrix()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#IonDiff.common_library.get_expanded_hoppings"><code class="docutils literal notranslate"><span class="pre">get_expanded_hoppings()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#IonDiff.common_library.get_separated_groups"><code class="docutils literal notranslate"><span class="pre">get_separated_groups()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#IonDiff.common_library.information_from_VASPfile"><code class="docutils literal notranslate"><span class="pre">information_from_VASPfile()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#IonDiff.common_library.load_data"><code class="docutils literal notranslate"><span class="pre">load_data()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#IonDiff.common_library.obtain_diffusive_family"><code class="docutils literal notranslate"><span class="pre">obtain_diffusive_family()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#IonDiff.common_library.obtain_diffusive_information"><code class="docutils literal notranslate"><span class="pre">obtain_diffusive_information()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#IonDiff.common_library.read_INCAR"><code class="docutils literal notranslate"><span class="pre">read_INCAR()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#IonDiff.common_library.read_XDATCAR"><code class="docutils literal notranslate"><span class="pre">read_XDATCAR()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#IonDiff.common_library.spectral_kwargs"><code class="docutils literal notranslate"><span class="pre">spectral_kwargs</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-IonDiff.identify_diffusion">IonDiff.identify_diffusion module</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#IonDiff.identify_diffusion.xdatcar"><code class="docutils literal notranslate"><span class="pre">xdatcar</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#IonDiff.identify_diffusion.xdatcar.kmeans_kwargs"><code class="docutils literal notranslate"><span class="pre">xdatcar.kmeans_kwargs</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#IonDiff.identify_diffusion.xdatcar.spectral_kwargs"><code class="docutils literal notranslate"><span class="pre">xdatcar.spectral_kwargs</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#IonDiff.identify_diffusion.xdatcar.time_step"><code class="docutils literal notranslate"><span class="pre">xdatcar.time_step</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#IonDiff.identify_diffusion.xdatcar.n_ions"><code class="docutils literal notranslate"><span class="pre">xdatcar.n_ions</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#IonDiff.identify_diffusion.xdatcar.__init__"><code class="docutils literal notranslate"><span class="pre">xdatcar.__init__()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#IonDiff.identify_diffusion.xdatcar.read_simulation"><code class="docutils literal notranslate"><span class="pre">xdatcar.read_simulation()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#IonDiff.identify_diffusion.xdatcar.calculate_silhouette"><code class="docutils literal notranslate"><span class="pre">xdatcar.calculate_silhouette()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#IonDiff.identify_diffusion.xdatcar.calculate_clusters"><code class="docutils literal notranslate"><span class="pre">xdatcar.calculate_clusters()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#IonDiff.identify_diffusion.xdatcar.get_diffusion"><code class="docutils literal notranslate"><span class="pre">xdatcar.get_diffusion()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id2"><code class="docutils literal notranslate"><span class="pre">xdatcar.get_diffusion()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id3"><code class="docutils literal notranslate"><span class="pre">xdatcar.read_simulation()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-IonDiff">Module contents</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Cibrán López Álvarez
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2024, Cibrán López Álvarez.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

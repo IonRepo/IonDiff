@@ -1,0 +1,656 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>IonDiff.analyze_descriptors &#8212; IonDiff 1.4 documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="../../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=362ab14a" />
+    <link rel="stylesheet" type="text/css" href="../../_static/styles/sphinx-book-theme.css?v=a3416100" />
+    <link rel="stylesheet" type="text/css" href="../../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css?v=be8a1c11" />
+    <link rel="stylesheet" type="text/css" href="../../_static/custom.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sphinx-design.min.css?v=87e54e7c" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script src="../../_static/documentation_options.js?v=24e0ef3f"></script>
+    <script src="../../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script src="../../_static/design-tabs.js?v=f930bc37"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = '_modules/IonDiff/analyze_descriptors';</script>
+    <link rel="icon" href="../../_static/logo.svg"/>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search..."
+         aria-label="Search..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+        
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../index.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../../_static/logo.svg" class="logo__image only-light" alt="IonDiff 1.4 documentation - Home"/>
+    <script>document.write(`<img src="../../_static/logo.svg" class="logo__image only-dark" alt="IonDiff 1.4 documentation - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1></h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <h1>Source code for IonDiff.analyze_descriptors</h1><div class="highlight"><pre>
+<span></span><span class="ch">#!/usr/bin/env python</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">json</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+
+<span class="kn">import</span> <span class="nn">IonDiff.common_library</span> <span class="k">as</span> <span class="nn">CL</span>
+
+<span class="sd">&quot;&quot;&quot;Definition of the class to analyse correlations among descriptors of diffusive paths.</span>
+<span class="sd">   A database with more than one simulation must be provided, as well as paths to every</span>
+<span class="sd">   interesting DIFFUSION file, extracted from the simulation.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="c1"># Defining the class</span>
+<div class="viewcode-block" id="descriptors">
+<a class="viewcode-back" href="../../source/IonDiff.html#IonDiff.analyze_descriptors.descriptors">[docs]</a>
+<span class="k">class</span> <span class="nc">descriptors</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Python Class for loading information from VASP simulations</span>
+<span class="sd">       and analyzing correlations among descriptors of diffusive paths.</span>
+
+<span class="sd">    Methods:</span>
+<span class="sd">        __init__(self, args):</span>
+<span class="sd">            Initializes the Descriptors class.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="descriptors.__init__">
+<a class="viewcode-back" href="../../source/IonDiff.html#IonDiff.analyze_descriptors.descriptors.__init__">[docs]</a>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">args</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialize the Database class.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            args: Command line arguments containing MD_path and other parameters.</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            exit: If required files are missing.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        
+        <span class="c1"># Loading the data</span>
+        <span class="n">coordinates</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">hoppings</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">cell</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">compounds</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">concentration</span> <span class="o">=</span> <span class="n">CL</span><span class="o">.</span><span class="n">load_data</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">MD_path</span><span class="p">)</span>
+        <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n_conf</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_particles</span><span class="p">,</span> <span class="n">_</span><span class="p">)</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">shape</span><span class="p">(</span><span class="n">coordinates</span><span class="p">)</span>
+
+        <span class="c1"># Getting diffusion coordinates</span>
+        <span class="n">_</span><span class="p">,</span> <span class="n">nan_hoppings</span> <span class="o">=</span> <span class="n">CL</span><span class="o">.</span><span class="n">get_expanded_hoppings</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n_conf</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_particles</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">concentration</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">compounds</span><span class="p">,</span>
+                                                   <span class="bp">self</span><span class="o">.</span><span class="n">hoppings</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s1">&#39;original&#39;</span><span class="p">)</span>
+        <span class="n">nan_hoppings</span><span class="p">[</span><span class="n">nan_hoppings</span> <span class="o">==</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">NaN</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">coordinates</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">stack</span><span class="p">([</span><span class="n">nan_hoppings</span><span class="p">,</span> <span class="n">nan_hoppings</span><span class="p">,</span> <span class="n">nan_hoppings</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="n">coordinates</span>
+
+        <span class="c1"># Expanding the hoppings avoiding non-diffusive particles</span>
+        <span class="n">_</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">expanded_hoppings</span> <span class="o">=</span> <span class="n">CL</span><span class="o">.</span><span class="n">get_expanded_hoppings</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n_conf</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_particles</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">concentration</span><span class="p">,</span>
+                                                             <span class="bp">self</span><span class="o">.</span><span class="n">compounds</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">hoppings</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s1">&#39;separate&#39;</span><span class="p">)</span></div>
+
+    
+
+<div class="viewcode-block" id="descriptors.time_until_diffusion">
+<a class="viewcode-back" href="../../source/IonDiff.html#IonDiff.analyze_descriptors.descriptors.time_until_diffusion">[docs]</a>
+    <span class="k">def</span> <span class="nf">time_until_diffusion</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">outer</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Calculates an array with the number of steps until the start of the first diffusion of a particle.</span>
+<span class="sd">        Expanded matrix in &#39;separate&#39; or &#39;cleaned&#39; format is mandatory.</span>
+<span class="sd">        We seek the first one for each particle and append it to the list (indexes are in agreement with &#39;key&#39;).</span>
+<span class="sd">        Index = {0, -1} variable allows obtaining the first or last diffusive position of a diffusion track.</span>
+<span class="sd">        Calculate Time Until Diffusion</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            expanded_hoppings (numpy.ndarray): Expanded matrix of diffusive/non-diffusive processes.</span>
+<span class="sd">            index             (int, optional): Index to obtain the first or last diffusive position (default is 0).</span>
+<span class="sd">            outer             (optional):      Value for handling NaN values (default is None).</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            numpy.ndarray: Array with time until diffusion for each particle.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">n_particles</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">shape</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">expanded_hoppings</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span>
+        <span class="n">initial_times</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">n_particles</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_particles</span><span class="p">):</span>
+            <span class="n">particle_track</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">expanded_hoppings</span><span class="p">[:,</span> <span class="n">i</span><span class="p">]</span>
+            <span class="k">if</span> <span class="n">outer</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">initial_times</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">particle_track</span><span class="p">)[</span><span class="mi">0</span><span class="p">][</span><span class="n">index</span><span class="p">]</span>
+            <span class="k">elif</span> <span class="n">outer</span> <span class="o">==</span> <span class="s1">&#39;nan&#39;</span><span class="p">:</span>
+                <span class="n">initial_times</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="o">~</span><span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">particle_track</span><span class="p">))[</span><span class="mi">0</span><span class="p">][</span><span class="n">index</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">initial_times</span></div>
+
+    
+    
+<div class="viewcode-block" id="descriptors.duration_of_diffusion">
+<a class="viewcode-back" href="../../source/IonDiff.html#IonDiff.analyze_descriptors.descriptors.duration_of_diffusion">[docs]</a>
+    <span class="k">def</span> <span class="nf">duration_of_diffusion</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Calculates an array with the number of steps of diffusion of a particle.</span>
+<span class="sd">        Expanded hoppings in &#39;separate&#39; format is mandatory.</span>
+<span class="sd">        We seek the first one for each particle and append it to the list (indexes are in agreement with &#39;key&#39;).</span>
+<span class="sd">        Calculate Duration of Diffusion</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            expanded_hoppings (numpy.ndarray): Expanded hopping data.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            numpy.ndarray: Array with the duration of diffusion for each particle.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">diffusion_duration</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">time_until_diffusion</span><span class="p">(</span><span class="n">index</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">time_until_diffusion</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">diffusion_duration</span></div>
+
+    
+    
+<div class="viewcode-block" id="descriptors.get_expanded_coordinates">
+<a class="viewcode-back" href="../../source/IonDiff.html#IonDiff.analyze_descriptors.descriptors.get_expanded_coordinates">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_expanded_coordinates</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">outer</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Expands coordinates (time x particle).</span>
+<span class="sd">        &#39;Key&#39; stands for the index of the corresponding particle.</span>
+<span class="sd">        Treats every diffusive event as from different particles. Non-diffusive particles are not considered.</span>
+<span class="sd">        Expand Coordinates</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            outer (optional): Outer value for expansion (default is None).</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            tuple: A tuple containing expanded coordinates, keys, start times, end times, number of configurations, and number of particles.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c1"># Expanding coordinates to have one diffusion event per row</span>
+
+        <span class="n">key</span><span class="p">,</span> <span class="n">temp_coord</span> <span class="o">=</span> <span class="n">CL</span><span class="o">.</span><span class="n">get_separated_groups</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">coordinates</span><span class="p">[:,</span> <span class="p">:,</span> <span class="mi">0</span><span class="p">])</span>
+        <span class="p">(</span><span class="n">n_conf</span><span class="p">,</span> <span class="n">n_particles</span><span class="p">)</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">shape</span><span class="p">(</span><span class="n">temp_coord</span><span class="p">)</span>
+        <span class="n">expanded_coordinates</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">n_conf</span><span class="p">,</span> <span class="n">n_particles</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">3</span><span class="p">):</span>
+            <span class="n">expanded_coordinates</span><span class="p">[:,</span> <span class="p">:,</span> <span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">CL</span><span class="o">.</span><span class="n">get_separated_groups</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">coordinates</span><span class="p">[:,</span> <span class="p">:,</span> <span class="n">i</span><span class="p">])[</span><span class="mi">1</span><span class="p">]</span>
+
+        <span class="c1"># Arrays with starts and ends of diffusions for each row</span>
+
+        <span class="n">starts</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">time_until_diffusion</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>  <span class="n">outer</span><span class="o">=</span><span class="n">outer</span><span class="p">)</span>
+        <span class="n">ends</span>   <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">time_until_diffusion</span><span class="p">(</span><span class="n">index</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">outer</span><span class="o">=</span><span class="n">outer</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">expanded_coordinates</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">starts</span><span class="p">,</span> <span class="n">ends</span><span class="p">,</span> <span class="n">n_conf</span><span class="p">,</span> <span class="n">n_particles</span></div>
+
+
+
+<div class="viewcode-block" id="descriptors.length_of_diffusion">
+<a class="viewcode-back" href="../../source/IonDiff.html#IonDiff.analyze_descriptors.descriptors.length_of_diffusion">[docs]</a>
+    <span class="k">def</span> <span class="nf">length_of_diffusion</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">outer</span><span class="o">=</span><span class="s1">&#39;nan&#39;</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Calculates an array with the diffusion length of a particle.</span>
+<span class="sd">        Coordinates must be supplied multiplied by the hoppings mask and with NaNs.</span>
+<span class="sd">        We expand the coordinates (only one diffusion per column/particle).</span>
+<span class="sd">        Returns the distance between initial and ending points.</span>
+<span class="sd">        Periodic boundary conditions are considered.</span>
+<span class="sd">        Calculate Length of Diffusion</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            outer       (str, optional): Handling for NaN values (default is &#39;nan&#39;).</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            numpy.ndarray: Array with the length of diffusion for each particle.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c1"># Expanding the coordinates with separate mode</span>
+
+        <span class="n">expanded_coordinates</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">starts</span><span class="p">,</span> <span class="n">ends</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">n_particles</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_expanded_coordinates</span><span class="p">(</span><span class="n">outer</span><span class="o">=</span><span class="n">outer</span><span class="p">)</span>
+        
+        <span class="c1"># Computing the distance between initial and final diffusion coordinates (considering PBC)</span>
+
+        <span class="n">diffusion_length</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">n_particles</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">particle</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_particles</span><span class="p">):</span>
+            <span class="n">start</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">starts</span><span class="p">[</span><span class="n">particle</span><span class="p">])</span>
+            <span class="n">end</span>   <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">ends</span><span class="p">[</span><span class="n">particle</span><span class="p">])</span>
+
+            <span class="n">distance</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">expanded_coordinates</span><span class="p">[</span><span class="n">start</span><span class="p">,</span> <span class="n">particle</span><span class="p">]</span> <span class="o">-</span> <span class="n">expanded_coordinates</span><span class="p">[</span><span class="n">end</span><span class="p">,</span> <span class="n">particle</span><span class="p">])</span>
+            <span class="n">distance</span><span class="p">[</span><span class="n">distance</span> <span class="o">&gt;=</span> <span class="mf">0.5</span><span class="p">]</span> <span class="o">-=</span> <span class="mi">1</span>
+            <span class="n">distance</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">distance</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">cell</span><span class="p">)</span>
+            <span class="n">diffusion_length</span><span class="p">[</span><span class="n">particle</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">distance</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">diffusion_length</span></div>
+
+
+
+<div class="viewcode-block" id="descriptors.n_diffusive_events">
+<a class="viewcode-back" href="../../source/IonDiff.html#IonDiff.analyze_descriptors.descriptors.n_diffusive_events">[docs]</a>
+    <span class="k">def</span> <span class="nf">n_diffusive_events</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns the number of detected diffusion events from hoppings array.</span>
+<span class="sd">        Count Diffusive Events</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            n_conf        (int):           Number of configurations.</span>
+<span class="sd">            n_particles   (int):           Number of particles.</span>
+<span class="sd">            concentration (list):          Particle concentration.</span>
+<span class="sd">            compounds     (list):          Compounds.</span>
+<span class="sd">            hoppings      (numpy.ndarray): Hopping data.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            numpy.ndarray: Number of detected diffusion events for each particle.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        
+        <span class="n">_</span><span class="p">,</span> <span class="n">cleaned_hoppings</span> <span class="o">=</span> <span class="n">CL</span><span class="o">.</span><span class="n">get_expanded_hoppings</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n_conf</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_particles</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">concentration</span><span class="p">,</span>
+                                                       <span class="bp">self</span><span class="o">.</span><span class="n">compounds</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">hoppings</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s1">&#39;cleaned&#39;</span><span class="p">)</span>
+        <span class="n">cleaned_hoppings</span><span class="p">[</span><span class="n">cleaned_hoppings</span> <span class="o">==</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">NaN</span>
+
+        <span class="n">n_columns</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">shape</span><span class="p">(</span><span class="n">cleaned_hoppings</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span>
+
+        <span class="n">n_diffusive_events</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">n_columns</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_columns</span><span class="p">):</span>
+            <span class="n">n_diffusive_events</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">CL</span><span class="o">.</span><span class="n">find_groups</span><span class="p">(</span><span class="n">cleaned_hoppings</span><span class="p">[:,</span> <span class="n">i</span><span class="p">]))</span>
+        <span class="k">return</span> <span class="n">n_diffusive_events</span></div>
+
+    
+    
+<div class="viewcode-block" id="descriptors.get_cartesian_coordinates">
+<a class="viewcode-back" href="../../source/IonDiff.html#IonDiff.analyze_descriptors.descriptors.get_cartesian_coordinates">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_cartesian_coordinates</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns the cartesian coordinates of a simulation from these in direct form, and the number of configurations.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">           array: The cartesian coordinates.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">cart_coordinates</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">coordinates</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+
+        <span class="c1"># Shaping the configurations data into the positions attribute</span>
+
+        <span class="n">n_conf</span> <span class="o">=</span> <span class="n">cart_coordinates</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+        <span class="c1"># Getting the variation in positions and applying periodic boundary condition</span>
+
+        <span class="n">dpos</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">diff</span><span class="p">(</span><span class="n">cart_coordinates</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+        <span class="n">dpos</span><span class="p">[</span><span class="n">dpos</span> <span class="o">&gt;</span> <span class="mf">0.5</span><span class="p">]</span>  <span class="o">-=</span> <span class="mi">1</span>
+        <span class="n">dpos</span><span class="p">[</span><span class="n">dpos</span> <span class="o">&lt;</span> <span class="o">-</span><span class="mf">0.5</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
+
+        <span class="c1"># Getting the positions and variations in cell units</span>
+
+        <span class="n">cart_coordinates</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">cart_coordinates</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">cell</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_conf</span><span class="o">-</span><span class="mi">1</span><span class="p">):</span>
+            <span class="n">dpos</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">dpos</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">cell</span><span class="p">)</span>
+
+        <span class="n">cart_coordinates</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">([</span><span class="n">np</span><span class="o">.</span><span class="n">expand_dims</span><span class="p">(</span><span class="n">cart_coordinates</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="mi">0</span><span class="p">),</span> <span class="n">dpos</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+        <span class="n">cart_coordinates</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">cumsum</span><span class="p">(</span><span class="n">cart_coordinates</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">cart_coordinates</span></div>
+
+
+
+<div class="viewcode-block" id="descriptors.residence_time">
+<a class="viewcode-back" href="../../source/IonDiff.html#IonDiff.analyze_descriptors.descriptors.residence_time">[docs]</a>
+    <span class="k">def</span> <span class="nf">residence_time</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">args</span><span class="p">,</span> <span class="n">threshold</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns the mean time (in pico-seconds) that a particle stay in meta-stable positions.</span>
+<span class="sd">        The centers of vibration are extracted with IonDiff functions, which are compared with POSCAR positions.</span>
+<span class="sd">        Diffusion events are considered as part of residence time when it happens (we do not discard those points).</span>
+<span class="sd">        </span>
+<span class="sd">        Args:</span>
+<span class="sd">            MD_path        (str):   Path to current simulation.</span>
+<span class="sd">            reference_path (str):   Path stoichiometric simulation.</span>
+<span class="sd">            threshold      (float): Minimum distance threshold between centers of vibration and</span>
+<span class="sd">                                    stoichiometric positions to be considered as meta-stable positions.</span>
+<span class="sd">            </span>
+<span class="sd">        Returns:</span>
+<span class="sd">            residence_time (float): Proportion of mesta-stable positions</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        
+        <span class="c1"># Read INCAR settings</span>
+        <span class="n">delta_t</span><span class="p">,</span> <span class="n">n_steps</span> <span class="o">=</span> <span class="n">CL</span><span class="o">.</span><span class="n">read_INCAR</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">MD_path</span><span class="p">)</span>
+
+        <span class="c1"># A soichiometric path is required</span>
+        <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">reference_path</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="s1">&#39;Error: stoichiometric not available for comparing&#39;</span><span class="p">)</span>
+        
+        <span class="c1"># Load simulation data</span>
+        <span class="n">cartesian_coordinates</span> <span class="o">=</span> <span class="n">get_cartesian_coordinates</span><span class="p">()</span>
+        
+        <span class="c1"># Compute inverse cell</span>
+        <span class="n">inv_cell</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">inv</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cell</span><span class="p">)</span>
+
+        <span class="c1"># Load POSCAR</span>
+        <span class="n">_</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">stc_positions</span> <span class="o">=</span> <span class="n">CL</span><span class="o">.</span><span class="n">information_from_VASPfile</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">reference_path</span><span class="p">,</span> <span class="s1">&#39;POSCAR&#39;</span><span class="p">)</span>
+
+        <span class="c1"># Number of simulations steps in some meta-stable position</span>
+        <span class="n">metastable</span>     <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">non_metastable</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">residence_time</span>         <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">residence_time_counter</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">for</span> <span class="n">particle</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n_particles</span><span class="p">):</span>
+            <span class="c1">#print(100 * (particle+1) / self.n_particles)</span>
+            <span class="n">coordinates_i</span> <span class="o">=</span> <span class="n">cartesian_coordinates</span><span class="p">[:,</span> <span class="n">particle</span><span class="p">]</span>
+            <span class="n">n_clusters</span> <span class="o">=</span> <span class="n">CL</span><span class="o">.</span><span class="n">calculate_silhouette</span><span class="p">(</span><span class="n">coordinates_i</span><span class="p">,</span>
+                                                 <span class="s1">&#39;K-means&#39;</span><span class="p">,</span>
+                                                 <span class="mi">10</span><span class="p">,</span>
+                                                 <span class="mf">0.7</span><span class="p">)</span>
+            
+            <span class="k">if</span> <span class="n">n_clusters</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="n">centers</span><span class="p">,</span> <span class="n">classification</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">CL</span><span class="o">.</span><span class="n">calculate_clusters</span><span class="p">(</span><span class="n">coordinates_i</span><span class="p">,</span>
+                                                                      <span class="n">n_clusters</span><span class="p">,</span>
+                                                                      <span class="s1">&#39;K-means&#39;</span><span class="p">,</span>
+                                                                      <span class="mf">0.4</span><span class="p">)</span>
+
+                <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_clusters</span><span class="p">):</span>  <span class="c1"># classification_idx = i by definition</span>
+                    <span class="n">center</span> <span class="o">=</span> <span class="n">centers</span><span class="p">[</span><span class="n">k</span><span class="p">]</span>
+
+                    <span class="c1"># Check if the center is a metastable position or not</span>
+                    <span class="c1"># Convert cartesian coordinates to direct (fractional) coordinates</span>
+                    <span class="n">direct_center</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">center</span><span class="p">,</span> <span class="n">inv_cell</span><span class="p">)</span>
+
+                    <span class="c1"># Get the distance between every positions of the POSCAR and the center</span>
+                    <span class="n">diff</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">stc_positions</span> <span class="o">-</span> <span class="n">direct_center</span><span class="p">)</span>
+
+                    <span class="c1"># Apply periodic boundary conditions</span>
+                    <span class="k">while</span> <span class="n">np</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="n">diff</span> <span class="o">&gt;</span> <span class="mf">0.5</span><span class="p">):</span>
+                        <span class="n">diff</span><span class="p">[</span><span class="n">diff</span> <span class="o">&gt;</span> <span class="mf">0.5</span><span class="p">]</span> <span class="o">-=</span> <span class="mi">1</span>
+
+                    <span class="c1"># Convert to cartesian distances</span>
+                    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">diff</span><span class="p">)):</span>
+                        <span class="n">diff</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">diff</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">cell</span><span class="p">)</span>
+
+                    <span class="c1"># Get distance</span>
+                    <span class="n">diff</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">diff</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+                    <span class="c1"># It is meta-stable if it is far from a position of the POSCAR</span>
+                    <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">diff</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">threshold</span><span class="p">:</span>
+                        <span class="c1"># Sum the number of positions linked to that center</span>
+                        <span class="n">residence_time</span>         <span class="o">+=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">classification</span> <span class="o">==</span> <span class="n">k</span><span class="p">)</span>
+                        <span class="n">residence_time_counter</span> <span class="o">+=</span> <span class="mi">1</span>
+                        <span class="n">metastable</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">direct_center</span><span class="p">)</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="n">non_metastable</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">direct_center</span><span class="p">)</span>
+
+        <span class="c1"># Average and pass to ps</span>
+        <span class="n">average_residence_time</span> <span class="o">=</span> <span class="n">residence_time</span> <span class="o">*</span> <span class="n">delta_t</span> <span class="o">*</span> <span class="n">n_steps</span> <span class="o">*</span> <span class="mf">1e-3</span> <span class="o">/</span> <span class="n">residence_time_counter</span>
+        <span class="k">return</span> <span class="n">average_residence_time</span><span class="p">,</span> <span class="n">metastable</span><span class="p">,</span> <span class="n">non_metastable</span></div>
+</div>
+
+</pre></div>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Cibrán López Álvarez
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2024, Cibrán López Álvarez.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>
