@@ -102,14 +102,10 @@ In terms of memory resources, this implementation scales linearly with the lengt
 
 Our method for identifying vibrational centers from sequential ionic configurations relies on k-means clustering, an unsupervised machine learning algorithm. This method assumes isotropy in the fluctuations of non-diffusive particles. Importantly, our approach circumvents the need for defining arbitrary, materials-dependent threshold distances to analyze ionic hops.
 
-K-means algorithm constructs spherical groups that, for every subgroup $G = \{G_1, G_2, \dots, G_k\}$ in a dataset, minimize the sum of squares:
+K-means algorithm constructs spherical groups that, for every subgroup $G_j$ in a dataset, minimize the sum of squares:
 
 \begin{equation}
     \sum_{i \in G_j} \min \left( \| \mathbf{x}_i - \boldsymbol{\mu}_j \|^2 \right)
-\end{equation}
-
-\begin{equation}
-    \sum_{i \in G_j} \min{\| \mathbf{x}_i - \boldsymbol{\mu}_j \|^2}
 \end{equation}
 
 where $\mathbf{x}_i$ are data points and $\boldsymbol{\mu}_j$ the mean at $G_j$.
@@ -127,7 +123,7 @@ where:
 \begin{equation}
     \begin{gathered}
         a(k) = \frac{1}{|G_i| - 1} \sum_{l \in G_i, l \neq k} \| \mathbf{x}_k - \mathbf{x}_l \|^2  \\
-        b(k) = \min{_{j \neq i} \frac{1}{|G_j|} \sum_{l \in G_j} \| \mathbf{x}_k - \mathbf{x}_l \|^2}
+        b(k) = \min_{j \neq i} \left( \frac{1}{|G_j|} \sum_{l \in G_j} \| \mathbf{x}_k - \mathbf{x}_l \|^2 \right(
     \end{gathered}
 \end{equation}
 
