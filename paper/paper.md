@@ -58,43 +58,43 @@ Mainly, our code is based on the sklearn [@Pedregosa2011] implementation of the 
 
 ## Ionic conductivity
 
-The (full) ionic diffusion coefficient consists on two parts [@Molinari2021; @Sasaki2023], one that involves the mean-square displacement of a particle with itself ($\mathrm{MSD_{self}}$) and another that represents the mean-squared displacement of a particle with all others (MSD$_{distinct}$). MSD$_{distinct}$ accounts for the influence of many-atoms correlations in ionic diffusive events. Typically, the distinct part of the MSD is neglected in order to accelerate the estimation and convergence of diffusion coefficients. However, many-ions correlations have been recently demonstrated to be essential in FIC [@Lopez2024] hence should not be disregarded in practice. IonDiff provides a novel implementation of the full ionic diffusion coefficient, exploiting the matricial representation of this calculation.
+The (full) ionic diffusion coefficient consists on two parts [@Molinari2021; @Sasaki2023], one that involves the mean-square displacement of a particle with itself ($\mathrm{MSD_{self}}$) and another that represents the mean-squared displacement of a particle with all others ($\mathrm{MSD_{distinct}}$). $\mathrm{MSD_{distinct}}$ accounts for the influence of many-atom correlations in ionic diffusive events. Typically, the distinct part of the MSD is neglected in order to accelerate the estimation and convergence of diffusion coefficients. However, many-ion correlations have been recently demonstrated to be essential in FIC [@Lopez2024] and hence should not be disregarded in practice. IonDiff provides a novel implementation of the full ionic diffusion coefficient calculation, exploiting the matrix representation of this calculation.
 
-The ionic conductivity ($\sigma$) is computed like [@Sasaki2023]:
+The ionic conductivity ($\sigma$) is computed as [@Sasaki2023]:
 
 \begin{equation}
     \begin{gathered}
-        \sigma = \lim_{\Delta t \to \infty} \frac{e^2}{2 n_d V k_B T} \left[ \sum_i z_i^2 \langle \left[ \mathbf{r}_i(t_0 + \Delta t) - \mathbf{r}_i(t_0) \right]^2 \rangle_{t_0} + \right. \\
+        \sigma = \lim_{\Delta t \to \infty} \frac{e^2}{2 n_d V k_{\mathrm{B}} T} \left[ \sum_i z_i^2 \langle \left[ \mathbf{r}_i(t_0 + \Delta t) - \mathbf{r}_i(t_0) \right]^2 \rangle_{t_0} + \right. \\
         \left. + \sum_{i, j \neq i} z_i z_j \langle \left[ \mathbf{r}_i(t_0 + \Delta t) - \mathbf{r}_i(t_0) \right] \cdot \left[ \mathbf{r}_j(t_0 + \Delta t) - \mathbf{r}_j(t_0) \right] \rangle_{t_0} \right]
     \end{gathered}
 \end{equation}
 
-where $e$, $V$, $k_B$, and $T$ are the elementary charge, system volume, Boltzmann constant, and temperature of the MD simulation, respectively, $z_i$ the ionic charge and $\mathbf{r}_i = x_{1i} \hat{i} + x_{2i} \hat{j} + x_{3i} \hat{k}$ the Cartesian position of particle $i$, $n_d$ the number of spatial dimensions, $\Delta t$ the time window, and $t_0$ the temporal offset of $\Delta t$. Thus, for those simulations in which only one atomic species diffusses, the three-dimensional ionic diffusion coefficient reads: 
+where $e$, $V$, $k_{\mathrm{B}}$, and $T$ are the elementary charge, system volume, Boltzmann constant, and temperature of the MD simulation, respectively, $z_i$ the ionic charge and $\mathbf{r}_i = x_{1i} \hat{i} + x_{2i} \hat{j} + x_{3i} \hat{k}$ the Cartesian position of particle $i$, $n_d$ the number of spatial dimensions, $\Delta t$ the time window, and $t_0$ the temporal offset of $\Delta t$. Thus, for those simulations in which only one atomic species diffuses, the three-dimensional ionic diffusion coefficient reads: 
 
 \begin{equation}
     \begin{gathered}
         D = \lim_{\Delta t \to \infty} \frac{1}{6 \Delta t} \left[ \sum_i \langle \left[ \mathbf{r}_i(t_0 + \Delta t) - \mathbf{r}_i(t_0) \right]^2 \rangle_{t_0} + \right. \\
         \left. + \sum_{i, j \neq i} \langle \left[ \mathbf{r}_i(t_0 + \Delta t) - \mathbf{r}_i(t_0) \right] \cdot \left[ \mathbf{r}_j(t_0 + \Delta t) - \mathbf{r}_j(t_0) \right] \rangle_{t_0} \right] = \\
-        = \lim_{\Delta t \to \infty} \frac{1}{6 \Delta t} \left[ \text{MSD}_{self} (\Delta t) + \text{MSD}_{distinct} (\Delta t) \right]
+        = \lim_{\Delta t \to \infty} \frac{1}{6 \Delta t} \left[ \mathrm{MSD_{self}} (\Delta t) + \mathrm{MSD_{distinct}} (\Delta t) \right]
     \end{gathered}
 \end{equation}
 
-All the ionic displacements appearing in Eq. (2) can be computed just once and stored in a four-dimensional tensor thus allowing for simple vectorization and very much fast processing with python libraries (e.g., numpy) as compared to traditional calculation loops. Then, for a simulation with $n_t$ time steps, $n_{\Delta t}$ temporal windows, and $n_p$ number of atoms for the diffusive species, we only need to compute:
+All the ionic displacements appearing in Eq. (2) can be computed just once and stored in a four-dimensional array, thus allowing for simple vectorization and fast processing with python libraries (e.g., numpy) as compared to traditional calculation loops. Then, for a simulation with $n_t$ time steps, $n_{\Delta t}$ temporal windows, and $n_p$ atoms for the diffusive species, we only need to compute:
 
 \begin{equation}
     \Delta x (\Delta t, i, d, t_0) = x_{di} (t_0 + \Delta t) - x_{di} (t_0)
 \end{equation}
 
-being $\Delta x(\Delta t, i, d, t_0)$ a four rank tensor of dimension $n_{\Delta t} \times n_t \times n_p \times n_d$ that stores all mean displacements of temporal length $\Delta t$ for particle $i$ in space dimension $d$. This leads to:
+being $\Delta x(\Delta t, i, d, t_0)$ a four-dimensional array of dimension $n_{\Delta t} \times n_t \times n_p \times n_d$ that stores all mean displacements of temporal length $\Delta t$ for particle $i$ in space dimension $d$. This leads to:
 
 \begin{equation}
     \begin{gathered}
-        \text{MSD}_{self} (\Delta t) = \frac{1}{n_p} \sum_{i = 1}^{n_p} \langle \sum_{d} \Delta x (\Delta t, i, d, t_0) \cdot \Delta x (\Delta t, i, d, t_0) \rangle_{t_0} \\
-        \text{MSD}_{distinct} (\Delta t) = \frac{2}{n_p (n_p-1)} \sum_{i = 1}^{n_p} \sum_{j = i+1}^{n_p} \langle \sum_{d} \Delta x (\Delta t, i, d, t_0) \cdot \Delta x (\Delta t, j, d, t_0) \rangle_{t_0}
+        \mathrm{MSD_{self}} (\Delta t) = \frac{1}{n_p} \sum_{i = 1}^{n_p} \langle \sum_{d} \Delta x (\Delta t, i, d, t_0) \cdot \Delta x (\Delta t, i, d, t_0) \rangle_{t_0} \\
+        \mathrm{MSD_{distinct}} (\Delta t) = \frac{2}{n_p (n_p-1)} \sum_{i = 1}^{n_p} \sum_{j = i+1}^{n_p} \langle \sum_{d} \Delta x (\Delta t, i, d, t_0) \cdot \Delta x (\Delta t, j, d, t_0) \rangle_{t_0}
     \end{gathered}
 \end{equation}
 
-Note that we keep $D_{self}$ and $D_{distinct}$ separate since this allows for a straightforward evaluation of the $D$ contributions resulting from the ionic correlations without increasing the code complexity. 
+Note that we keep $D_{\mathrm{self}$ and $D_{\mathrm{distinct}}$ separate since this allows for a straightforward evaluation of the $D$ contributions resulting from the ionic correlations without increasing the code complexity. 
 
 In terms of memory resources, this implementation scales linearly with the length of the temporal window, the total duration of the simulation and the number of mobile ions.
 
@@ -102,7 +102,7 @@ In terms of memory resources, this implementation scales linearly with the lengt
 
 Our method for identifying vibrational centers from sequential ionic configurations relies on k-means clustering, an unsupervised machine learning algorithm. This method assumes isotropy in the fluctuations of non-diffusive particles. Importantly, our approach circumvents the need for defining arbitrary, materials-dependent threshold distances to analyze ionic hops.
 
-K-means algorithm conforms spherical groups that, for every subgroup $G = \{G_1, G_2, \dots, G_k\}$ in a dataset, minimize the sum of squares:
+K-means algorithm constructs spherical groups that, for every subgroup $G = \{G_1, G_2, \dots, G_k\}$ in a dataset, minimize the sum of squares:
 
 \begin{equation}
     \sum_{i = 1}^N \min_{\boldsymbol{\mu}_j \in G_j} \left( \| \mathbf{x}_i - \boldsymbol{\mu}_j \|^2 \right)
@@ -112,18 +112,18 @@ where $\mathbf{x}_1, \mathbf{x}_2, \dots, \mathbf{x}_N$ are the $N$ data points 
 
 This approach is particularly well-suited for crystals, as atoms typically fluctuate isotropically around their equilibrium positions. For materials where atoms exhibit strong anisotropic vibrations, IonDiff also permits the selection of alternative clustering schemes, such as spectral clustering, which is effective for cases where group adjacency is significant. Nevertheless, in a previous work [@Lopez2024], it was found that the performance of k-means clustering in identifying ionic hops in standard and technologically relevant fast-ion conductors was generally superior to that of other clustering approaches.      
 
-The number of clusters, or equivalently, ionic vibrational centers, determined by IonDiff for a molecular dynamics (MD) simulation is the one that maximizes the average silhouette ratio. This metric assesses the similarity of a point within its own cluster and its dissimilarity in comparison to other clusters. The average silhouette ratio is defined as:
+The number of clusters, or equivalently, ionic vibrational centers, determined by IonDiff for a molecular dynamics (MD) simulation is the one that maximizes the average silhouette ratio. This metric assesses the similarity of a point within its own cluster and its dissimilarity in comparison to other clusters. The average silhouette ratio for one data p is defined as:
 
 \begin{equation}
-    S(k) = \frac{b(k) - a(k)}{\max{(a(k), b(k))}}
+    S = \langle \frac{b(k) - a(k)}{\max{(a(k), b(k))}} \rangle_k
 \end{equation}
 
 where:
 
 \begin{equation}
     \begin{gathered}
-        a(k) = \frac{1}{|G_{I}| - 1} \sum_{j = 1}^k \| \mathbf{x}_k - \mathbf{x}_j \|^2  \\
-        b(k) = \min_{J \neq I} \frac{1}{|G_{J}|} \sum_{j = 1}^k \| \mathbf{x}_k - \mathbf{x}_j \|^2
+        a(k) = \frac{1}{|G_i| - 1} \sum_{l \in G_i, l \new k} \| \mathbf{x}_k - \mathbf{x}_l \|^2  \\
+        b(k) = \min_{j \neq i} \frac{1}{|G_j|} \sum_{l \in G_j} \| \mathbf{x}_k - \mathbf{x}_l \|^2
     \end{gathered}
 \end{equation}
 
