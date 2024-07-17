@@ -118,16 +118,14 @@ The number of clusters, or equivalently, ionic vibrational centers, determined b
     S = \left \langle \frac{b(k) - a(k)}{\max{(a(k), b(k))}} \right \rangle_k
 \end{equation}
 
-where:
+where $k \in G_i$ and:
 
 \begin{equation}
     \begin{gathered}
-        a(k) = \frac{1}{|G_i| - 1} \sum_{l \in G_i, l \neq k} \| \mathbf{x}_k - \mathbf{x}_l \|^2  \\
+        a(k) = \frac{1}{|G_i| - 1} \sum_{l \in G_i} \| \mathbf{x}_k - \mathbf{x}_l \|^2  \\
         b(k) = \min_{j \neq i} \left( \frac{1}{|G_j|} \sum_{l \in G_j} \| \mathbf{x}_k - \mathbf{x}_l \|^2 \right(
     \end{gathered}
 \end{equation}
-
-where $k \in G_i$.
 
 Once the number of vibrational centers, along with their real-space location and temporal evolution, are determined, ionic diffusion paths are delineated as the segments connecting two distinct vibrational centers over time \autoref{fig:diffusion-detection}. In other words, the points located between different ionic vibrational centers, that is, different k-means clusters, are regarded as part of the ionic diffusion path connecting them. Due to the discrete nature of the generated trajectories and intricacies of the k-means clustering approach, establishing the precise start and end points of ionic diffusion paths is challenging. Consequently, we adopt an arbitrary yet physically plausible threshold distance of 0.5 Å from the midpoint of the vibrational centers to define the extremities of diffusive trajectories. Tests performed in [@Lopez2024] have shown that reasonable variations of this parameter value have negligible effects on the analysis results obtained with IonDiff. 
 
