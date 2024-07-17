@@ -123,7 +123,7 @@ where $k \in G_i$ and:
 \begin{equation}
     \begin{gathered}
         a(k) = \frac{1}{|G_i| - 1} \sum_{l \in G_i} \| \mathbf{x}_k - \mathbf{x}_l \|^2  \\
-        b(k) = \min_{j \neq i} \left( \frac{1}{|G_j|} \sum_{l \in G_j} \| \mathbf{x}_k - \mathbf{x}_l \|^2 \right(
+        b(k) = \min_{j \neq i} \left( \frac{1}{|G_j|} \sum_{l \in G_j} \| \mathbf{x}_k - \mathbf{x}_l \|^2 \right)
     \end{gathered}
 \end{equation}
 
