@@ -122,7 +122,7 @@ where:
 
 \begin{equation}
     \begin{gathered}
-        a(k) = \frac{1}{|G_i| - 1} \sum_{l \in G_i, l \new k} \| \mathbf{x}_k - \mathbf{x}_l \|^2  \\
+        a(k) = \frac{1}{|G_i| - 1} \sum_{l \in G_i, l \neq k} \| \mathbf{x}_k - \mathbf{x}_l \|^2  \\
         b(k) = \min_{j \neq i} \frac{1}{|G_j|} \sum_{l \in G_j} \| \mathbf{x}_k - \mathbf{x}_l \|^2
     \end{gathered}
 \end{equation}
