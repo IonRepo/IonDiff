@@ -105,17 +105,21 @@ Our method for identifying vibrational centers from sequential ionic configurati
 K-means algorithm constructs spherical groups that, for every subgroup $G = \{G_1, G_2, \dots, G_k\}$ in a dataset, minimize the sum of squares:
 
 \begin{equation}
-    \sum_{i = 1}^N \min_{\boldsymbol{\mu}_j \in G_j} \left( \| \mathbf{x}_i - \boldsymbol{\mu}_j \|^2 \right)
+    \sum_{i \in G_j} \min \left( \| \mathbf{x}_i - \boldsymbol{\mu}_j \|^2 \right)
 \end{equation}
 
-where $\mathbf{x}_1, \mathbf{x}_2, \dots, \mathbf{x}_N$ are the $N$ data points and $\boldsymbol{\mu}_j$ the mean at $G_j$.
+\begin{equation}
+    \sum_{i \in G_j} \min{\| \mathbf{x}_i - \boldsymbol{\mu}_j \|^2}
+\end{equation}
+
+where $\mathbf{x}_i$ are data points and $\boldsymbol{\mu}_j$ the mean at $G_j$.
 
 This approach is particularly well-suited for crystals, as atoms typically fluctuate isotropically around their equilibrium positions. For materials where atoms exhibit strong anisotropic vibrations, IonDiff also permits the selection of alternative clustering schemes, such as spectral clustering, which is effective for cases where group adjacency is significant. Nevertheless, in a previous work [@Lopez2024], it was found that the performance of k-means clustering in identifying ionic hops in standard and technologically relevant fast-ion conductors was generally superior to that of other clustering approaches.      
 
-The number of clusters, or equivalently, ionic vibrational centers, determined by IonDiff for a molecular dynamics (MD) simulation is the one that maximizes the average silhouette ratio. This metric assesses the similarity of a point within its own cluster and its dissimilarity in comparison to other clusters. The average silhouette ratio for one data p is defined as:
+The number of clusters, or equivalently, ionic vibrational centers, determined by IonDiff for a molecular dynamics (MD) simulation is the one that maximizes the average silhouette ratio. This metric assesses the similarity of a point within its own cluster and its dissimilarity in comparison to other clusters. The average silhouette ratio is defined as:
 
 \begin{equation}
-    S = \langle \frac{b(k) - a(k)}{\max{(a(k), b(k))}} \rangle_k
+    S = \left \langle \frac{b(k) - a(k)}{\max{(a(k), b(k))}} \right \rangle_k
 \end{equation}
 
 where:
@@ -123,9 +127,11 @@ where:
 \begin{equation}
     \begin{gathered}
         a(k) = \frac{1}{|G_i| - 1} \sum_{l \in G_i, l \neq k} \| \mathbf{x}_k - \mathbf{x}_l \|^2  \\
-        b(k) = \min_{j \neq i} \frac{1}{|G_j|} \sum_{l \in G_j} \| \mathbf{x}_k - \mathbf{x}_l \|^2
+        b(k) = \min{_{j \neq i} \frac{1}{|G_j|} \sum_{l \in G_j} \| \mathbf{x}_k - \mathbf{x}_l \|^2}
     \end{gathered}
 \end{equation}
+
+where $k \in G_i$.
 
 Once the number of vibrational centers, along with their real-space location and temporal evolution, are determined, ionic diffusion paths are delineated as the segments connecting two distinct vibrational centers over time \autoref{fig:diffusion-detection}. In other words, the points located between different ionic vibrational centers, that is, different k-means clusters, are regarded as part of the ionic diffusion path connecting them. Due to the discrete nature of the generated trajectories and intricacies of the k-means clustering approach, establishing the precise start and end points of ionic diffusion paths is challenging. Consequently, we adopt an arbitrary yet physically plausible threshold distance of 0.5 Å from the midpoint of the vibrational centers to define the extremities of diffusive trajectories. Tests performed in [@Lopez2024] have shown that reasonable variations of this parameter value have negligible effects on the analysis results obtained with IonDiff. 
 
