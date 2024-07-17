@@ -102,28 +102,28 @@ In terms of memory resources, this implementation scales linearly with the lengt
 
 Our method for identifying vibrational centers from sequential ionic configurations relies on k-means clustering, an unsupervised machine learning algorithm. This method assumes isotropy in the fluctuations of non-diffusive particles. Importantly, our approach circumvents the need for defining arbitrary, materials-dependent threshold distances to analyze ionic hops.
 
-K-means algorithm constructs spherical groups that, for every subgroup $G_j$ in a dataset, minimize the sum of squares:
+K-means algorithm constructs spherical groups that, for every subgroup $G_I$ in a dataset, minimize the sum of squares:
 
 \begin{equation}
-    \sum_{i \in G_j} \min \left( \| \mathbf{x}_i - \boldsymbol{\mu}_j \|^2 \right)
+    \sum_{i \in G_I} \min \left( \| \mathbf{x}_i - \boldsymbol{\mu}_I \|^2 \right)
 \end{equation}
 
-where $\mathbf{x}_i$ are data points and $\boldsymbol{\mu}_j$ the mean at $G_j$.
+where $\mathbf{x}_i$ are data points and $\boldsymbol{\mu}_I$ the mean at $G_I$.
 
 This approach is particularly well-suited for crystals, as atoms typically fluctuate isotropically around their equilibrium positions. For materials where atoms exhibit strong anisotropic vibrations, IonDiff also permits the selection of alternative clustering schemes, such as spectral clustering, which is effective for cases where group adjacency is significant. Nevertheless, in a previous work [@Lopez2024], it was found that the performance of k-means clustering in identifying ionic hops in standard and technologically relevant fast-ion conductors was generally superior to that of other clustering approaches.      
 
 The number of clusters, or equivalently, ionic vibrational centers, determined by IonDiff for a molecular dynamics (MD) simulation is the one that maximizes the average silhouette ratio. This metric assesses the similarity of a point within its own cluster and its dissimilarity in comparison to other clusters. The average silhouette ratio is defined as:
 
 \begin{equation}
-    S = \left \langle \frac{b(k) - a(k)}{\max{(a(k), b(k))}} \right \rangle_k
+    S = \left \langle \frac{b(i) - a(i)}{\max{(a(i), b(i))}} \right \rangle_i
 \end{equation}
 
-where $k \in G_i$ and:
+where:
 
 \begin{equation}
     \begin{gathered}
-        a(k) = \frac{1}{|G_i| - 1} \sum_{l \in G_i} \| \mathbf{x}_k - \mathbf{x}_l \|^2  \\
-        b(k) = \min_{j \neq i} \left( \frac{1}{|G_j|} \sum_{l \in G_j} \| \mathbf{x}_k - \mathbf{x}_l \|^2 \right)
+        a(i) = \frac{1}{|G_I| - 1} \sum_{l \in G_I} \| \mathbf{x}_i - \mathbf{x}_l \|^2  \\
+        b(i) = \min_{J \neq I} \left( \frac{1}{|G_J|} \sum_{l \in G_J} \| \mathbf{x}_i - \mathbf{x}_l \|^2 \right)
     \end{gathered}
 \end{equation}
 
