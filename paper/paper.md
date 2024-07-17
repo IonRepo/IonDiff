@@ -18,7 +18,7 @@ authors:
 affiliations:
  - name: Departament de Física, Universitat Politècnica de Catalunya, 08034 Barcelona, Spain.
    index: 1
- - name: Barcelona Research Center in Multiscale Science and Egineering, Universitat Politècnica de Catalunya, 08019 Barcelona, Spain.
+ - name: Barcelona Research Center in Multiscale Science and Engineering, Universitat Politècnica de Catalunya, 08019 Barcelona, Spain.
    index: 2
  - name: Institut de Ciència de Materials de Barcelona, ICMAB-CSIC, Campus UAB, 08193 Bellaterra, Spain.
    index: 3
@@ -28,7 +28,7 @@ bibliography: paper.bib
 
 # Summary
 
-Molecular dynamics (MD) simulations of fast-ion conductors render the trajectories of the atoms comprising them. However, extracting meaningful insights from this data is often a challenge since most common analysis techniques rely on active supervision of the simulations and definition of arbitrary material-dependent parameters, thus frustrating high-throughput screenings. In particular, to the best of our knowledge, determination of exact ionic migration paths and the level of coordination between mobile particles in diffusive events has not been previously addressed in a systematic and quantitative manner, despite its central role in the understanding and design of high-performance solid-state electrolytes. Here, we introduce a completely unsupervised approach for analysing ion-hopping events in MD simulations. Based on k-means clustering, our algorithm identifies with precision which particles diffuse and when during a simulation, thus identifying their exact migration paths. This analysis allows also for the quantification of correlations between many diffusing ions as well as of key atomistic descriptors like the duration/length of diffusion events and residence times. Moreover, the present implementation introduces an optimized code for computing the full ion diffusion coefficient, that is, entirely considering ionic correlations, thus going beyond the dilute limit approximation.
+Molecular dynamics (MD) simulations of fast-ion conductors render the trajectories of the atoms comprising them. However, extracting meaningful insights from this data is often a challenge since most common analysis techniques rely on active supervision of the simulations and definition of arbitrary material-dependent parameters, thus frustrating high-throughput screenings. In particular, to the best of our knowledge, determination of exact ionic migration paths and the level of coordination between mobile particles in diffusive events has not been previously addressed in a systematic and quantitative manner, despite its central role in the understanding and design of high-performance solid-state electrolytes. Here, we introduce a completely unsupervised approach for analysing ion-hopping events in MD simulations. Based on k-means clustering, our algorithm identifies with precision which particles diffuse and when during a simulation, thus identifying their exact migration paths. This analysis also allows for the quantification of correlations between many diffusing ions as well as of key atomistic descriptors like the duration/length of diffusion events and residence times. Moreover, the present implementation introduces an optimized code for computing the full ion diffusion coefficient, that is, entirely considering ionic correlations, thus going beyond the dilute limit approximation.
 
 # Statement of need
 
@@ -50,7 +50,7 @@ The script allows graphing the identified diffusion paths for each simulated par
 
 ![Example of the performance of our unsupervised algorithm at extracting the diffusive path for an arbitrary particle in an AIMD simulation of SrCoO\textsubscript{3-x} at a temperature of 400K. Green and orange dots reproduce two different ionic vibrational centers while the blue dots represent the ion diffusion path between them. \label{fig:diffusion-detection}](figure.pdf){width=100%}
 
-Moreover, users may find information regarding their previous executions of the scripts in the *logs* folder, which should be used to track possible errors on the data format and more. Finally, a number of tests for checking out all **IonDiff** functions can be found in the *tests* folder.
+Moreover, users may find information regarding their previous executions of the scripts in the *logs* folder, which should be used to track possible errors inn the data format and more. Finally, a number of tests for checking out all **IonDiff** functions can be found in the *tests* folder.
 
 Mainly, our code is based on the sklearn [@Pedregosa2011] implementation of the k-means clustering method. The default values of the sklearn hyperparameters are the ones used by IonDiff,  although these can be varied at wish by the user. Additionally, the python libraries numpy [@Harris2020] and matplotlib [@Hunter2007] are used to perform numerical analysis and plotting, respectively. The current IonDiff version reads information from VASP [@Kresse1996] simulations; future releases, already under active development, will extend its scope to simulation data obtained from other quantum and classical molecular dynamics packages.
 
@@ -58,7 +58,7 @@ Mainly, our code is based on the sklearn [@Pedregosa2011] implementation of the 
 
 ## Ionic conductivity
 
-The (full) ionic diffusion coefficient consists on two parts [@Molinari2021; @Sasaki2023], one that involves the mean-square displacement of a particle with itself ($\mathrm{MSD_{self}}$) and another that represents the mean-squared displacement of a particle with all others ($\mathrm{MSD_{distinct}}$). $\mathrm{MSD_{distinct}}$ accounts for the influence of many-atom correlations in ionic diffusive events. Typically, the distinct part of the MSD is neglected in order to accelerate the estimation and convergence of diffusion coefficients. However, many-ion correlations have been recently demonstrated to be essential in FIC [@Lopez2024] and hence should not be disregarded in practice. IonDiff provides a novel implementation of the full ionic diffusion coefficient calculation, exploiting the matrix representation of this calculation.
+The (full) ionic diffusion coefficient consists of two parts [@Molinari2021; @Sasaki2023], one that involves the mean-square displacement of a particle with itself ($\mathrm{MSD_{self}}$) and another that represents the mean-squared displacement of a particle with all others ($\mathrm{MSD_{distinct}}$). $\mathrm{MSD_{distinct}}$ accounts for the influence of many-atom correlations in ionic diffusive events. Typically, the distinct part of the MSD is neglected in order to accelerate the estimation and convergence of diffusion coefficients. However, many-ion correlations have been recently demonstrated to be essential in FIC [@Lopez2024] and hence should not be disregarded in practice. IonDiff provides a novel implementation of the full ionic diffusion coefficient calculation, exploiting the matrix representation of this calculation.
 
 The ionic conductivity ($\sigma$) is computed as [@Sasaki2023]:
 
