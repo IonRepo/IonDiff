@@ -94,7 +94,7 @@ being $\Delta x(\Delta t, i, d, t_0)$ a four-dimensional array of dimension $n_{
     \end{gathered}
 \end{equation}
 
-Note that we keep $D_{\mathrm{self}$ and $D_{\mathrm{distinct}}$ separate since this allows for a straightforward evaluation of the $D$ contributions resulting from the ionic correlations without increasing the code complexity. 
+Note that we keep $D_{\mathrm{self}}$ and $D_{\mathrm{distinct}}$ separate since this allows for a straightforward evaluation of the $D$ contributions resulting from the ionic correlations without increasing the code complexity. 
 
 In terms of memory resources, this implementation scales linearly with the length of the temporal window, the total duration of the simulation and the number of mobile ions.
 
