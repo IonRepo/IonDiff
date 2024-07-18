@@ -21,7 +21,7 @@ sys.path.insert(0, os.path.abspath('..'))
 project = 'IonDiff'
 copyright = '2024, Cibrán López Álvarez'
 author = 'Cibrán López Álvarez'
-release = '1.4'
+release = '1.5'
 
 # -- General configuration ---------------------------------------------------
 

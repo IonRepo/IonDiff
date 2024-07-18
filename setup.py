@@ -1,8 +1,5 @@
 from distutils.core import setup
 
-with open('docs/index.rst') as f:
-    readme = f.read()
-
 with open('LICENSE') as f:
     license = f.read()
 
@@ -12,7 +9,6 @@ setup(
   version = '1.5',
   license=license,
   description = 'Unsupervised identification and analysis of ion-hopping events in solid state electrolytes.',
-  long_description=readme,
   author = 'Cibrán López Álvarez',
   author_email = 'cibran.lopez@upc.edu',
   url = 'https://github.com/IonRepo/IonDiff',
