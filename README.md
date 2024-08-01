@@ -71,7 +71,7 @@ There is already a myriad of open-source codes and scripts that can be used for 
 
 If you use this repository in your work, please consider citing:
 
-[`López et al., (2024). IonDiff: command-line tool to identify ionic diffusion events and hopping correlations in molecular dynamics simulations. JOSS, 9(99), 6616`](https://iondiff.readthedocs.io/en/latest/)
+[`López et al., (2024). IonDiff: command-line tool to identify ionic diffusion events and hopping correlations in molecular dynamics simulations. JOSS, 9(99), 6616`](https://doi.org/10.21105/joss.06616)
 
 ## Authors
 
