@@ -78,6 +78,9 @@ class xdatcar:
         # Defining the attribute of window=1 variation in position and velocity
         self.velocity = self.dpos / self.time_step
 
+        # Initialize back-hopping variable
+        self.n_back_hopping = 0
+
     
     def get_diffusion(self, args):
         """Obtains diffusion information from the simulation data.
@@ -111,7 +114,13 @@ class xdatcar:
                                                                                        n_clusters,
                                                                                        args.classifier,
                                                                                        args.distance_thd)
-            
+
+            # Determine back-hopping for this particle
+            # Count how many times the distance between consecutive centers is below the threshold
+            n_back_hopping = np.sum(np.linalg.norm(centers[1:] - centers[:-1], axis=1) < args.back_hopping_thd)
+            print(f'Back-hopping events for particle {particle}: {n_back_hopping}')
+            self.n_back_hopping += n_back_hopping
+
             # Whenever any group change is found,
             # the initial and ending configurations are obtained regarding the distance threshold
             if cluster_change.size:
