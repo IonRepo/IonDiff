@@ -67,6 +67,12 @@ ID_parser.add_argument(
     default=10,
     help='Number of considered possible diffusive events during a simulation.',
 )
+ID_parser.add_argument(
+    '--back_hopping_thd',
+    type=float,
+    default=0.2,
+    help='Distance threshold between two clusters to be back-hopping.',
+)
 
 AC_parser = task_subparser.add_parser('analyze_correlations')  # Analysis of correlations (AC)
 
