@@ -73,6 +73,18 @@ ID_parser.add_argument(
     default=0.2,
     help='Distance threshold between two clusters to be back-hopping.',
 )
+ID_parser.add_argument(
+    '--i_idx',
+    type=int,
+    default=0,
+    help='Starting particle index to which diffusion is determined.',
+)
+ID_parser.add_argument(
+    '--f_idx',
+    type=int,
+    default=None,
+    help='Ending particle index to which diffusion is determined.',
+)
 
 AC_parser = task_subparser.add_parser('analyze_correlations')  # Analysis of correlations (AC)
 

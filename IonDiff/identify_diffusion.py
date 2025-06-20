@@ -41,6 +41,10 @@ class xdatcar:
         
         # Time step between consecutive XDATCAR configurations
         self.time_step = self.n_steps * self.delta_t
+
+        # Starting and ending indexes for identifying diffusion
+        self.i_idx = args.i_idx
+        self.f_idx = args.f_idx
         
         # Reading the simulation data
         try:
@@ -100,7 +104,9 @@ class xdatcar:
             ax.set_ylabel('y')
             ax.set_zlabel('z')
         
-        for particle in range(self.n_ions):
+	# Define f_idx as given index or last index is not provided
+        self.f_idx = args.f_idx if args.f_idx is not None else self.n_ions
+        for particle in np.arange(self.i_idx, self.f_idx):
             coordinates = self.cartesian_coordinates[:, particle]
             
             # Recommended number of clusters
