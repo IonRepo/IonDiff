@@ -6,3 +6,4 @@ dist
 .idea
 setup.cfg
 IonDiff.egg-info
+logs/*.log
