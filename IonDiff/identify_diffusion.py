@@ -122,12 +122,17 @@ class xdatcar:
                                                                                        args.distance_thd)
 
             # Determine back-hopping for this particle
-            # Count how many times the distance between consecutive centers is below the threshold
+            # Count how many times we visit a previously-visited cluster
+            visited = set()
+            prev = None
             n_back_hopping = 0
-            for i in range(len(centers)):
-                for j in range(i+1, len(centers)):  # Only check pairs once
-                    if np.linalg.norm(centers[i] - centers[j]) < args.back_hopping_thd:
+            for val in classification:
+                if val != prev:  # change detected
+                    if val in visited:
                         n_back_hopping += 1
+                    else:
+                        visited.add(val)
+                    prev = val
             
             print(f'Back-hopping events for particle {particle}: {n_back_hopping}')
             self.n_back_hopping += n_back_hopping
