@@ -82,7 +82,32 @@ class xdatcar:
         # Defining the attribute of window=1 variation in position and velocity
         self.velocity = self.dpos / self.time_step
 
-    
+
+    def smooth_classification(self, classification, min_length=3):
+        smoothed = classification.copy()
+        i = 1
+        while i < len(smoothed) - 1:
+            curr = smoothed[i]
+            prev = smoothed[i - 1]
+
+            # Look for start of a new cluster
+            if curr != prev:
+                start = i
+                while i < len(smoothed) and smoothed[i] == curr:
+                    i += 1
+                end = i
+
+                # Check if it's a short excursion
+                if end - start < min_length and start > 0 and end < len(smoothed):
+                    if smoothed[start - 1] == smoothed[end]:  # A → B (short) → A
+                        for j in range(start, end):
+                            smoothed[j] = smoothed[start - 1]  # overwrite with A
+            else:
+                i += 1
+
+        return smoothed
+
+
     def get_diffusion(self, args):
         """Obtains diffusion information from the simulation data.
 
@@ -121,12 +146,14 @@ class xdatcar:
             # Determine total and direct back-hopping for this particle
             # Count how many times we visit a previously-visited and a just-visited cluster
 
+            smoothed_classification = self.smooth_classification(classification, min_length=3)
+
             visited = set()
             prev      = None
             prev_prev = None
             n_total_backhopping  = 0
             n_direct_backhopping = 0
-            for val in classification:
+            for val in smoothed_classification:
                 if val != prev:  # change detected
                     # It has been visited at some point
                     if val in visited:
@@ -134,12 +161,12 @@ class xdatcar:
                     else:
                         visited.add(val)
 
-                   # It has been just visited
-                   if val == prev_prev:
+                    # It has been just visited
+                    if val == prev_prev:
                         n_direct_backhopping += 1
 
-                   prev_prev = prev
-                   prev = val
+                    prev_prev = prev
+                    prev = val
 
             print(f'Total and direct back-hopping events for particle {particle}: {n_total_backhopping} & {n_direct_backhopping}')
 
