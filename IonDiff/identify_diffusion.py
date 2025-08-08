@@ -82,9 +82,6 @@ class xdatcar:
         # Defining the attribute of window=1 variation in position and velocity
         self.velocity = self.dpos / self.time_step
 
-        # Initialize back-hopping variable
-        self.n_back_hopping = 0
-
     
     def get_diffusion(self, args):
         """Obtains diffusion information from the simulation data.
@@ -120,22 +117,31 @@ class xdatcar:
                                                                                        n_clusters,
                                                                                        args.classifier,
                                                                                        args.distance_thd)
+            
+            # Determine total and direct back-hopping for this particle
+            # Count how many times we visit a previously-visited and a just-visited cluster
 
-            # Determine back-hopping for this particle
-            # Count how many times we visit a previously-visited cluster
             visited = set()
-            prev = None
-            n_back_hopping = 0
+            prev      = None
+            prev_prev = None
+            n_total_backhopping  = 0
+            n_direct_backhopping = 0
             for val in classification:
                 if val != prev:  # change detected
+                    # It has been visited at some point
                     if val in visited:
-                        n_back_hopping += 1
+                        n_total_backhopping += 1
                     else:
                         visited.add(val)
-                    prev = val
-            
-            print(f'Back-hopping events for particle {particle}: {n_back_hopping}')
-            self.n_back_hopping += n_back_hopping
+
+                   # It has been just visited
+                   if val == prev_prev:
+                        n_direct_backhopping += 1
+
+                   prev_prev = prev
+                   prev = val
+
+            print(f'Total and direct back-hopping events for particle {particle}: {n_total_backhopping} & {n_direct_backhopping}')
 
             # Whenever any group change is found,
             # the initial and ending configurations are obtained regarding the distance threshold
