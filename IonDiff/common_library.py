@@ -516,6 +516,9 @@ def calculate_clusters(coordinates, n_clusters, method, distance_thd):
         classification = clustering.fit_predict(coordinates)
         cluster_change = np.where(classification[1:] != classification[:-1])[0]
         
+        # Check it does not erroneously find a change in 0
+        cluster_change = cluster_change[1:] if cluster_change[0] == 0 else cluster_change
+        
         centers = np.zeros((n_clusters, 3))
         distances_to_center = np.zeros(len(coordinates))
         
