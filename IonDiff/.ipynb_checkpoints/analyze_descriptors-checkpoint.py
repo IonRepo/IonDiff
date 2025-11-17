@@ -236,7 +236,7 @@ class descriptors:
             sys.exit('Error: stoichiometric not available for comparing')
         
         # Load simulation data
-        cartesian_coordinates = self.get_cartesian_coordinates()
+        cartesian_coordinates = get_cartesian_coordinates()
         
         # Compute inverse cell
         inv_cell = np.linalg.inv(self.cell)
