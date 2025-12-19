@@ -9,6 +9,7 @@ setup(
   version = '1.6',
   license=license,
   description = 'Unsupervised identification and analysis of ion-hopping events in solid state electrolytes.',
+  long_description_content_type='docs/index.rst',
   author = 'Cibrán López Álvarez',
   author_email = 'cibran.lopez@upc.edu',
   url = 'https://github.com/IonRepo/IonDiff',
