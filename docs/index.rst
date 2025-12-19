@@ -74,10 +74,3 @@ Contact, questions and contributing
 -----------------------------------
 
 If you have questions, please don't hesitate to reach out at: cibran.lopez@upc.edu
-
-.. toctree::
-   :hidden:
-   :caption: Usage
-   :maxdepth: 4
-
-   source/IonDiff
